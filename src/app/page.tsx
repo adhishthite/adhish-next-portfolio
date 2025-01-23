@@ -52,6 +52,7 @@ export default function Page() {
                         href={social.url}
                         className="text-muted-foreground hover:text-foreground transition-colors"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <social.icon className="h-6 w-6" />
                       </Link>
@@ -240,6 +241,8 @@ export default function Page() {
                   <Link
                     href={DATA.contact.social.X.url}
                     className="text-blue-500 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     with a direct question on twitter
                   </Link>{" "}
