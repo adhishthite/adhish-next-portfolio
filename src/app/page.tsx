@@ -18,10 +18,10 @@ export default function Page() {
     <main className="flex flex-col min-h-[100dvh] relative">
       <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black">
         <GridPattern
-          width={30}
-          height={30}
+          width={40}
+          height={40}
           strokeDasharray={"4 2"}
-          className="fill-neutral-300/20 stroke-neutral-300/60 dark:fill-neutral-700/20 dark:stroke-neutral-700/60"
+          className="fill-neutral-200/10 stroke-neutral-200/40 dark:fill-neutral-800/10 dark:stroke-neutral-800/40"
           x={-1}
           y={-1}
         />

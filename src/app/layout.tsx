@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
+import { DotPattern } from "@/components/ui/dot-pattern";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -57,16 +58,28 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased max-w-2xl mx-auto py-12 sm:py-24 px-6",
+          "min-h-screen bg-background font-sans antialiased relative",
           fontSans.variable
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <TooltipProvider delayDuration={0}>
-            {children}
-            <Navbar />
-          </TooltipProvider>
-        </ThemeProvider>
+        <div className="absolute inset-0 -z-10 h-full w-full">
+          <DotPattern
+            width={40}
+            height={40}
+            cx={1}
+            cy={1}
+            cr={1}
+            className="fill-neutral-300/70 dark:fill-neutral-700/70"
+          />
+        </div>
+        <div className="max-w-2xl mx-auto py-12 sm:py-24 px-6">
+          <ThemeProvider attribute="class" defaultTheme="light">
+            <TooltipProvider delayDuration={0}>
+              {children}
+              <Navbar />
+            </TooltipProvider>
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );
