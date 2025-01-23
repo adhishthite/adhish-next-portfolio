@@ -244,10 +244,9 @@ export default function Page() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    with a direct question on twitter
+                    with a direct question on X
                   </Link>{" "}
-                  and I&apos;ll respond whenever I can. I will ignore all
-                  soliciting.
+                  and I&apos;ll respond whenever I can.
                 </p>
               </div>
             </div>
