@@ -5,6 +5,7 @@ import { ProjectCard } from "@/components/project-card";
 import { ResumeCard } from "@/components/resume-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
@@ -123,17 +124,19 @@ export default function Page() {
           </BlurFade>
           <BlurFade delay={BLUR_FADE_DELAY * 10}>
             <Card className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                {DATA.skills.map((skill, index) => (
-                  <div key={skill} className="flex items-center gap-2">
-                    <BlurFade delay={BLUR_FADE_DELAY * 10 + index * 0.02}>
-                      <Badge variant="secondary" className="text-sm">
-                        {skill}
-                      </Badge>
-                    </BlurFade>
-                  </div>
-                ))}
-              </div>
+              <ScrollArea className="h-[500px] w-full">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 pt-8">
+                  {DATA.skills.map((skill, index) => (
+                    <div key={skill} className="flex items-center gap-2">
+                      <BlurFade delay={BLUR_FADE_DELAY * 10 + index * 0.02}>
+                        <Badge variant="secondary" className="text-sm">
+                          {skill}
+                        </Badge>
+                      </BlurFade>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </Card>
           </BlurFade>
         </div>
