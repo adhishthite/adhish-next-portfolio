@@ -123,14 +123,14 @@ export const DATA = {
     social: {
       GitHub: {
         name: "GitHub",
-        url: "https://github.com/adhish-thite",
+        url: "https://github.com/adhishthite",
         icon: Icons.github,
 
         navbar: true,
       },
       LinkedIn: {
         name: "LinkedIn",
-        url: "https://www.linkedin.com/in/adhishthite/",
+        url: "https://www.linkedin.com/in/adhish-thite/",
         icon: Icons.linkedin,
 
         navbar: true,
