@@ -9,13 +9,23 @@ import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import { Card } from "@/components/ui/card";
+import { GridPattern } from "@/components/ui/grid-pattern";
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
     <main className="flex flex-col min-h-[100dvh] relative">
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black">
+        <GridPattern
+          width={30}
+          height={30}
+          strokeDasharray={"4 2"}
+          className="fill-neutral-300/20 stroke-neutral-300/60 dark:fill-neutral-700/20 dark:stroke-neutral-700/60"
+          x={-1}
+          y={-1}
+        />
+      </div>
       {/* Hero Section */}
       <section id="hero" className="relative py-24 md:py-32">
         <div className="mx-auto w-full max-w-5xl px-6 space-y-8">
