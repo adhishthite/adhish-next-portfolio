@@ -144,7 +144,7 @@ export default function Page() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-16">
+      {/* <section id="projects" className="py-16">
         <div className="mx-auto w-full max-w-5xl px-6 space-y-12">
           <BlurFade delay={BLUR_FADE_DELAY * 11}>
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -183,7 +183,7 @@ export default function Page() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Certifications Section */}
       <section id="certifications" className="py-16 bg-muted/50">
@@ -216,6 +216,7 @@ export default function Page() {
                       issuer={cert.issuer}
                       date={cert.date}
                       url={cert.url}
+                      iconUrl={cert.iconUrl}
                     />
                   </BlurFade>
                 ))}

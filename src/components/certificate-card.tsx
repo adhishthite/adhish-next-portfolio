@@ -8,6 +8,7 @@ interface Props {
   issuer: string;
   date: string;
   url?: string;
+  iconUrl?: string;
 }
 
 export function CertificateCard({
@@ -15,12 +16,13 @@ export function CertificateCard({
   issuer,
   date,
   url,
+  iconUrl,
 }: Props) {
   return (
     <li className="relative ml-16 py-6 group">
       <div className="absolute -left-16 top-6 flex items-center justify-center">
         <Avatar className="size-12 border-2 border-muted">
-          <AvatarImage src={`/${issuer.toLowerCase()}.svg`} alt={issuer} className="object-contain p-1" />
+          <AvatarImage src={iconUrl ?? `/${issuer.toLowerCase()}.svg`} alt={issuer} className="object-contain p-1" />
           <AvatarFallback>{issuer[0]}</AvatarFallback>
         </Avatar>
       </div>
