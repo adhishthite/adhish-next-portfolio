@@ -244,6 +244,56 @@ export const DATA = {
       end: "2014",
     },
   ],
+  certificates: [
+    {
+      name: "Salesforce Certified Platform Developer 1",
+      issuer: "Salesforce",
+      date: "Aug 2016",
+      url: undefined,
+    },
+    {
+      name: "Salesforce Certified Administrator",
+      issuer: "Salesforce",
+      date: "Nov 2015",
+      url: undefined,
+    },
+    {
+      name: "Splunk Certified Knowledge Manager",
+      issuer: "Splunk",
+      date: "Oct 2015",
+      url: undefined,
+    },
+    {
+      name: "Complete Guide to TensorFlow for Deep Learning with Python",
+      issuer: "Udemy",
+      date: "Mar 2018",
+      url: "https://www.udemy.com/certificate/UC-0K0WASCO/",
+    },
+    {
+      name: "Ensemble Machine Learning in Python: Random Forest, AdaBoost",
+      issuer: "Udemy",
+      date: "Mar 2018",
+      url: "https://www.udemy.com/certificate/UC-T239CF7J/",
+    },
+    {
+      name: "Deep Learning Prerequisites: The Numpy Stack in Python",
+      issuer: "Udemy",
+      date: "Feb 2018",
+      url: "https://www.udemy.com/certificate/UC-4LTPZ28A/",
+    },
+    {
+      name: "Google Analytics for Beginners",
+      issuer: "Google",
+      date: "Feb 2018",
+      url: undefined,
+    },
+    {
+      name: "Salesforce DEV 502 (Integrating with Force.com)",
+      issuer: "Salesforce",
+      date: "Aug 2016",
+      url: undefined,
+    },
+  ] as const,
   projects: [
     {
       title: "Chat Collect",

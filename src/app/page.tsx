@@ -1,8 +1,8 @@
-import { HackathonCard } from "@/components/hackathon-card";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectCard } from "@/components/project-card";
 import { ResumeCard } from "@/components/resume-card";
+import { CertificateCard } from "@/components/certificate-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -186,7 +186,7 @@ export default function Page() {
       </section>
 
       {/* Certifications Section */}
-      <section id="hackathons" className="py-16 bg-muted/50">
+      <section id="certifications" className="py-16 bg-muted/50">
         <div className="mx-auto w-full max-w-5xl px-6 space-y-12">
           <BlurFade delay={BLUR_FADE_DELAY * 13}>
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -195,11 +195,10 @@ export default function Page() {
                   Certifications
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  I like exploring
+                  Professional Development
                 </h2>
                 <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Throughout my career, I have completed a number of
-                  certifications.
+                  Continuous learning and skill development through professional certifications
                 </p>
               </div>
             </div>
@@ -207,18 +206,16 @@ export default function Page() {
           <BlurFade delay={BLUR_FADE_DELAY * 14}>
             <Card className="p-6">
               <ul className="divide-y divide-border">
-                {DATA.hackathons.map((project, id) => (
+                {DATA.certificates.map((cert, id) => (
                   <BlurFade
-                    key={project.title + project.dates}
+                    key={cert.name + cert.date}
                     delay={BLUR_FADE_DELAY * 15 + id * 0.05}
                   >
-                    <HackathonCard
-                      title={project.title}
-                      description={project.description}
-                      location={project.location}
-                      dates={project.dates}
-                      image={project.image}
-                      links={project.links}
+                    <CertificateCard
+                      name={cert.name}
+                      issuer={cert.issuer}
+                      date={cert.date}
+                      url={cert.url}
                     />
                   </BlurFade>
                 ))}
@@ -231,7 +228,7 @@ export default function Page() {
       {/* Contact Section */}
       <section id="contact" className="py-16">
         <div className="mx-auto w-full max-w-5xl px-6 space-y-12">
-          <BlurFade delay={BLUR_FADE_DELAY * 16}>
+          <BlurFade delay={BLUR_FADE_DELAY * 19}>
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
