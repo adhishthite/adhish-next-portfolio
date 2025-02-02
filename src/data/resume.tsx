@@ -333,7 +333,7 @@ export const DATA = {
       "name": "Google Analytics for Beginners",
       "issuer": "Google",
       "date": "Issued Feb 2018",
-      "url": "https://www.linkedin.com/learning/certificates/google-analytics-for-beginners",
+      "url": "",
       "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/240px-Google_%22G%22_logo.svg.png"
     },
     {
