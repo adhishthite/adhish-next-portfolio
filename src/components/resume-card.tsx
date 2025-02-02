@@ -41,10 +41,10 @@ export const ResumeCard = ({
   return (
     <Link
       href={href || "#"}
-      className="block cursor-pointer"
+      className="block cursor-pointer group/card"
       onClick={handleClick}
     >
-      <Card className="flex p-4">
+      <Card className="flex p-4 group-hover/card:border-primary/50 transition-all duration-300">
         <div className="flex-none pt-1">
           <Avatar className="border size-12 bg-muted-background dark:bg-foreground">
             <AvatarImage
@@ -55,16 +55,16 @@ export const ResumeCard = ({
             <AvatarFallback>{altText[0]}</AvatarFallback>
           </Avatar>
         </div>
-        <div className="flex-grow ml-4">
+        <div className="flex-grow ml-4 min-w-0">
           <CardHeader className="p-0">
-            <div className="flex items-start justify-between gap-x-4 text-base">
-              <div className="flex flex-col gap-1">
-                <h3 className="inline-flex items-center gap-1 font-semibold leading-none text-xs sm:text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-x-4 gap-y-1 text-base">
+              <div className="flex flex-col gap-1 min-w-0">
+                <h3 className="inline-flex items-center gap-1 font-semibold leading-none text-xs sm:text-sm truncate">
                   {title}
                   <ChevronRightIcon
                     className={cn(
-                      "size-4 translate-x-0 transform opacity-0 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:opacity-100",
-                      isExpanded ? "rotate-90" : "rotate-0"
+                      "size-4 transform transition-all duration-300 ease-out shrink-0",
+                      isExpanded ? "rotate-90 opacity-100" : "opacity-0 group-hover/card:opacity-100 group-hover/card:translate-x-1"
                     )}
                   />
                 </h3>
