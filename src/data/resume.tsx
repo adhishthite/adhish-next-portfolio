@@ -139,7 +139,7 @@ export const DATA = {
       start: "Feb 2024",
       end: "Present",
       description:
-        "Implemented the Bitcoin discreet log contract (DLC) protocol specifications as an open source Typescript SDK. Dockerized all microservices and setup production kubernetes cluster. Architected a data lake using AWS S3 and Athena for historical backtesting of bitcoin trading strategies. Built a mobile app using react native and typescript.",
+        "• Leading the design and deployment of innovative AI solutions that drive generative AI initiatives.\n• Steering teams to integrate advanced machine learning techniques with customer-centric software features.\n• Shaping product strategy and influencing the broader technical roadmap at Elastic.",
     },
     {
       company: "Synapse Financial Technologies Inc.",
@@ -151,7 +151,7 @@ export const DATA = {
       start: "Nov 2019",
       end: "Feb 2024",
       description:
-        "Implemented a custom Kubernetes controller in Go to automate the deployment of MySQL and ProxySQL custom resources in order to enable 2,000+ internal developers to instantly deploy their app databases to production. Wrote several scripts in Go to automate MySQL database failovers while maintaining master-slave replication topologies and keeping Zookeeper nodes consistent with changes.",
+        "•	Progressed from developing deep learning-based risk management and automated ID verification systems to leading full-stack, customer-facing ML features.\n•	Spearheaded the design, deployment, and optimization of advanced pipelines for sign-up risk and fraud detection while mentoring teams and refining product strategies.\n•	Collaborated with cross-functional stakeholders to ensure robust, scalable, and production-ready ML solutions across the organization.",
     },
     {
       company: "Gemini Data Inc.",
@@ -163,7 +163,7 @@ export const DATA = {
       start: "May 2019",
       end: "Nov 2019",
       description:
-        "Architected and wrote the entire MVP of the GeForce Now Cloud Gaming internal admin and A/B testing dashboard using React, Redux, TypeScript, and Python.",
+        "•	Engineered data science solutions to unlock enterprise value from complex data silos through sophisticated pipelines in Python and Apache Calcite.\n•	Delivered actionable insights that boosted performance and enhanced real-time log analytics.",
     },
     {
       company: "Welch Labs",
@@ -175,7 +175,7 @@ export const DATA = {
       start: "Sep 2018",
       end: "April 2019",
       description:
-        "Co-developed a prototype iOS app with another intern in Swift for the new Splunk Phantom security orchestration product (later publicly demoed and launched at .conf annual conference in Las Vegas). Implemented a realtime service for the iOS app in Django (Python) and C++; serialized data using protobufs transmitted over gRPC resulting in an approximate 500% increase in data throughput.",
+        "•	Designed ensemble models combining Convolutional SVMs and CNNs to eliminate false positives in windshield defect detection, collaborating with industry leaders like Microsoft.\n•	Focused on reducing inference times and ensuring robust, production-ready ML solutions for quality assurance.",
     },
     {
       company: "Zuora, Inc.",
@@ -187,7 +187,7 @@ export const DATA = {
       start: "June 2018",
       end: "Aug 2018",
       description:
-        "Proposed and implemented an internal ruby API for sending/receiving commands to scooters over LTE networks. Developed a fully automated bike firmware update system to handle asynchronous firmware updates of over 100,000+ scooters worldwide, and provide progress reports in real-time using React, Ruby on Rails, PostgreSQL and AWS EC2 saving hundreds of developer hours.",
+        "•	Developed ML models to streamline customer support by correlating support tickets with internal knowledge bases, leveraging both topic modeling and deep learning.\n•	Enhanced access validation processes to accelerate ticket resolution and boost live support efficiency.",
     },
     {
       company: "UNC Charlotte",
@@ -199,7 +199,7 @@ export const DATA = {
       start: "Feb 2018",
       end: "June 2018",
       description:
-        "Designed and implemented a robust password encryption and browser cookie storage system in Ruby on Rails. Leveraged the Yahoo finance API to develop the dividend.com equity screener",
+        "•	Conducted advanced data analysis and visualization projects using Tableau and statistical methods to predict student outcomes and improve engagement.\n•	Automated data extraction processes, significantly reducing analysis time and supporting operational decision-making.",
     },
     {
       company: "Accenture Services Pvt Ltd",
@@ -211,7 +211,19 @@ export const DATA = {
       start: "April 2015",
       end: "July 2017",
       description:
-        "Designed and implemented a robust password encryption and browser cookie storage system in Ruby on Rails. Leveraged the Yahoo finance API to develop the dividend.com equity screener",
+        "•	Contributed to the end-to-end delivery of eCommerce platforms through Salesforce customization and advanced Java development.\n•	Led teams in automating testing processes, managing agile projects, and overhauling sales and service processes to drive operational excellence.\n•	Delivered scalable, high-quality software solutions that enhanced both client and internal business processes.",
+    },
+    {
+      company: "Tata Research Development and Design Center",
+      href: "https://www.linkedin.com/company/tata-research-development-and-design-centre-trddc/",
+      badges: ["Internship"],
+      location: "Pune, India",
+      title: "Software Engineer",
+      logoUrl: "https://media.licdn.com/dms/image/v2/C4D0BAQFx0CXgtzwB_g/company-logo_200_200/company-logo_200_200/0/1631328256501?e=1746662400&v=beta&t=rnV7SmUncXBSlJKnhJC05ln8r3AE4A14xEIcrdGgJ3w",
+      start: "July 2013",
+      end: "April 2014",
+      description:
+        "•	Progressed from developing deep learning-based risk management and automated ID verification systems to leading full-stack, customer-facing ML features.\n•	Spearheaded the design, deployment, and optimization of advanced pipelines for sign-up risk and fraud detection while mentoring teams and refining product strategies.\n•	Collaborated with cross-functional stakeholders to ensure robust, scalable, and production-ready ML solutions across the organization.",
     },
   ],
   education: [
