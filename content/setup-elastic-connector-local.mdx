@@ -1,0 +1,125 @@
+---
+title: "Setting Up the Elastic Connector Locally via Docker"
+publishedAt: "2025-02-03"
+summary: "A step-by-step guide to configuring the Elastic Connector for Confluence locally using Docker."
+---
+
+In this post, we’ll take you through every step of setting up the Elastic Connector locally with Docker. Whether you're a seasoned dev or a curious newcomer, this guide will get you up and running with clear instructions and helpful visuals.
+
+> **Note:** This guide focuses on the Elastic Connector for Confluence. (The Elasticsearch Project, as you may know, is serverless.)
+
+> **FYI:** As of February 3, 2025, the Elastic Connector for Confluence doesn’t include a native UI. There are two ways to set it up:
+>
+> 1. **Via Docker:** Using the pre-built Docker image.
+> 2. **From Source:** Building and running the connector locally.
+>
+> Today, we’re diving into the Docker method!
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- **Docker** installed and running.
+- Access to the **Elastic Serverless Project**.
+- **Confluence Cloud Admin Access** or the necessary API keys.
+
+## Step 1: Create Your Connector via the Elastic Cloud UI
+
+1. **Navigate** to the Elastic Cloud UI.
+2. Click on the **"Connectors"** tab.
+3. Hit the **"Create Connector"** button.
+
+   ![Create Connector](/blog/setup-elastic-connector-local/image1.png)
+
+4. From the dropdown, select **"Confluence Cloud & Server"**. (See Image 2, Step 3.)
+
+   ![Select Connector](/blog/setup-elastic-connector-local/image2.png)
+
+5. When you select **"Confluence Cloud & Server"**, the right-hand side will display pre-populated data.
+
+   ![Data Populated](/blog/setup-elastic-connector-local/image3.png)
+
+6. **Copy** the code snippet provided for the **"Confluence Cloud & Server"** option. You'll need this for the next steps.
+
+## Step 2: Prepare the Configuration File
+
+1. **Open your terminal** and navigate to the directory where you want to set up the Docker image. It’s a good idea to create a dedicated directory for the connector:
+
+```bash
+mkdir elastic-connector-confluence
+cd elastic-connector-confluence
+mkdir connectors-config
+cd ..
+```
+
+2. **Clone the sample configuration file:**
+
+```bash
+curl https://raw.githubusercontent.com/elastic/connectors/main/config.yml.example --output ./connectors-config/config.yml
+```
+
+3. **Update the configuration:**
+
+   - Open `config.yml` in your favorite text editor.
+   - Clear its current contents.
+   - **Paste** the code snippet you copied in Step 1.
+
+   ![Update Config](/blog/setup-elastic-connector-local/image4.png)
+
+4. **Save and close** the file.
+
+## Step 3: Build the Docker Image
+
+1. **Run the following command** from the root directory of your connector setup. This command builds and runs the Docker image using your custom configuration:
+
+2. **Tip:** Check the Elastic Cloud UI; you should see the connector status labeled as **"Waiting for connection."**
+
+   ![Waiting for Connection](/blog/setup-elastic-connector-local/image5.png)
+
+## Step 4: Start the Connector
+
+1. **Make sure Docker is running.**
+2. **Start the connector** by executing:
+
+```bash
+docker run \
+-v "serverless-confluence-connector/connectors-config:/config" \
+--tty \
+--rm \
+docker.elastic.co/enterprise-search/elastic-connectors:8.17.1 \
+/app/bin/elastic-ingest \
+-c /config/config.yml
+```
+
+3. **Watch your terminal:** You should see output similar to the image below, indicating that the connector is up and running.
+
+   ![Start Connector](/blog/setup-elastic-connector-local/image6.png)
+
+## Step 5: Verify the Connector
+
+Now, verify that everything is working as expected:
+
+1. **Navigate** back to the Elastic Cloud UI.
+2. When prompted, **enter the details** for your Confluence Cloud service.
+
+   ![Enter Details](/blog/setup-elastic-connector-local/image7.png)
+
+3. After you submit the details, you'll be redirected to the Confluence Cloud UI, and a new index should be created in Elasticsearch.
+
+   ![Config Check](/blog/setup-elastic-connector-local/image8.png)
+
+## Step 6: Start Syncing!
+
+With the connector running, it's time to sync your data:
+
+1. Simply click the **"Sync"** button in the UI.
+
+   ![Sync](/blog/setup-elastic-connector-local/image9.png)
+
+2. The sync process will kick off, and you can monitor its progress directly in the UI.
+
+---
+
+Congratulations! You’ve successfully set up the Elastic Connector locally using Docker. Happy syncing, and enjoy exploring the powerful capabilities of Elastic and Confluence together!
+
+To end the connection, go to the terminal and press `Ctrl + C`.
