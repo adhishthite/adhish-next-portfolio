@@ -8,6 +8,7 @@ import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -95,6 +96,7 @@ export default function RootLayout({
             </TooltipProvider>
           </ThemeProvider>
         </div>
+        <Analytics />
       </body>
     </html>
   );
