@@ -4,6 +4,8 @@ import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { MDXImage, MDXLink, MDXParagraph } from "@/components/mdx-components";
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -64,6 +66,13 @@ export default async function Blog({
     notFound();
   }
 
+  // Use the client components for MDX rendering
+  const components = {
+    Image: MDXImage,
+    a: MDXLink,
+    p: MDXParagraph,
+  };
+
   return (
     <section id="blog">
       <script
@@ -98,10 +107,9 @@ export default async function Blog({
           </p>
         </Suspense>
       </div>
-      <article
-        className="prose dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: post.source }}
-      ></article>
+      <article className="prose dark:prose-invert">
+        <MDXRemote source={post.rawContent} components={components} />
+      </article>
     </section>
   );
 }
