@@ -31,6 +31,11 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    * @default 4
    */
   repeat?: number;
+  /**
+   * Whether to apply a fade mask to the edges
+   * @default false
+   */
+  fade?: boolean;
 }
 
 export function Marquee({
@@ -40,6 +45,7 @@ export function Marquee({
   children,
   vertical = false,
   repeat = 4,
+  fade = false,
   ...props
 }: MarqueeProps) {
   return (
@@ -50,6 +56,10 @@ export function Marquee({
         {
           "flex-row": !vertical,
           "flex-col": vertical,
+          "[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]":
+            fade && !vertical,
+          "[mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]":
+            fade && vertical,
         },
         className,
       )}

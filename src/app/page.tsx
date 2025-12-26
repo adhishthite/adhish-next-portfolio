@@ -235,7 +235,7 @@ export default function Page() {
 
           <div className="space-y-6">
             {/* AI/ML Row - Left to Right */}
-            <Marquee className="py-4" pauseOnHover>
+            <Marquee className="py-4" pauseOnHover fade>
               {aiMlSkills.map((skill) => (
                 <Badge
                   key={skill}
@@ -248,7 +248,7 @@ export default function Page() {
             </Marquee>
 
             {/* Languages/Frameworks Row - Right to Left */}
-            <Marquee className="py-4" reverse pauseOnHover>
+            <Marquee className="py-4" reverse pauseOnHover fade>
               {languagesFrameworks.map((skill) => (
                 <Badge
                   key={skill}
@@ -261,7 +261,7 @@ export default function Page() {
             </Marquee>
 
             {/* Cloud/Data Row - Left to Right */}
-            <Marquee className="py-4" pauseOnHover>
+            <Marquee className="py-4" pauseOnHover fade>
               {cloudData.map((skill) => (
                 <Badge
                   key={skill}
@@ -274,7 +274,7 @@ export default function Page() {
             </Marquee>
 
             {/* Tools Row - Right to Left */}
-            <Marquee className="py-4 [--duration:150s]" reverse pauseOnHover>
+            <Marquee className="py-4 [--duration:150s]" reverse pauseOnHover fade>
               {tools.map((skill) => (
                 <Badge
                   key={skill}
