@@ -1,8 +1,0 @@
-name = "adhish-portfolio"
-compatibility_date = "2023-12-01"
-
-# Note: For Cloudflare Pages, most configuration is done in the dashboard
-# This file is mainly for Workers. For Pages deployment:
-# - Build command: pnpm build
-# - Build output directory: out
-# - Node.js version: 18 or later

@@ -39,7 +39,11 @@ linkedin_resume.json
 # AI generated files
 CLAUDE.md
 GEMINI.md
-AGENTS.md
 .claude/
 .gemini/
 .codex/
+.cursor/
+.plans/
+.vercel/
+.pnpm-store/
+out/

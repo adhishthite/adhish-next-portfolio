@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -66,7 +66,9 @@ export const ResumeCard = ({
                   <ChevronRightIcon
                     className={cn(
                       "size-4 transform transition-all duration-300 ease-out shrink-0",
-                      isExpanded ? "rotate-90 opacity-100" : "opacity-0 group-hover/card:opacity-100 group-hover/card:translate-x-1"
+                      isExpanded
+                        ? "rotate-90 opacity-100"
+                        : "opacity-0 group-hover/card:opacity-100 group-hover/card:translate-x-1",
                     )}
                   />
                 </h3>
@@ -112,8 +114,10 @@ export const ResumeCard = ({
               }}
               className="mt-3 text-xs sm:text-sm text-muted-foreground"
             >
-              {description.split('\n').map((line, index) => (
-                <p key={index} className="mb-1.5">{line}</p>
+              {description.split("\n").map((line, index) => (
+                <p key={index} className="mb-1.5">
+                  {line}
+                </p>
               ))}
             </motion.div>
           )}
