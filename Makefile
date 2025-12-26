@@ -1,4 +1,4 @@
-.PHONY: lint format check build dev clean help
+.PHONY: lint format check build dev clean install help
 
 # Default target
 .DEFAULT_GOAL := help
@@ -39,13 +39,20 @@ clean:
 	rm -rf out
 	@echo "Clean complete!"
 
+# Install dependencies
+install:
+	@echo "Installing dependencies..."
+	pnpm install
+	@echo "Installation complete!"
+
 # Help target
 help:
 	@echo "Available targets:"
+	@echo "  make install  - Install dependencies"
+	@echo "  make dev      - Start development server"
+	@echo "  make build    - Build production bundle"
 	@echo "  make lint     - Run Biome lint with autofix"
 	@echo "  make format   - Run Biome format"
 	@echo "  make check    - Run format and lint checks (no autofix)"
-	@echo "  make build    - Build production bundle"
-	@echo "  make dev      - Start development server"
 	@echo "  make clean    - Clean build artifacts and dependencies"
 	@echo "  make help     - Show this help message"

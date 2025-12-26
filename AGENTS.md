@@ -14,6 +14,7 @@
 
 **IMPORTANT:** Always use the Makefile commands for consistency across all agents and developers.
 
+- `make install` — Install dependencies.
 - `make dev` — Start local dev server (Next.js).
 - `make build` — Production build.
 - `make lint` — Lint with Biome (includes autofix).
@@ -23,7 +24,7 @@
 
 Alternative: Use pnpm directly (see `packageManager`):
 
-- `pnpm dev`, `pnpm build`, `pnpm biome lint --write .`, `pnpm biome format --write .`
+- `pnpm install`, `pnpm dev`, `pnpm build`, `pnpm biome lint --write .`, `pnpm biome format --write .`
 
 ## Coding Style & Naming Conventions
 
@@ -53,7 +54,7 @@ Alternative: Use pnpm directly (see `packageManager`):
 ## Security & Configuration Tips
 
 - Environment variables: configure via platform secrets; avoid committing `.env`.
-- Deployment: Cloudflare Pages. Typical settings — Build: `make build` or `pnpm build`; Node 18+.
+- Deployment: Vercel. Typical settings — Build: `make build` or `pnpm build`; Node 18+.
 - Content safety: sanitize or trust-only MDX sources; keep dependencies updated.
 
 ## Architecture Overview
@@ -62,5 +63,5 @@ Alternative: Use pnpm directly (see `packageManager`):
 - Content pipeline: MDX in `content/` rendered via `next-mdx-remote`, `remark/rehype`, and `rehype-pretty-code` with Shiki highlighting.
 - UI & Theming: TailwindCSS + shadcn/ui + magic-ui components, dark mode via `next-themes` (`ThemeProvider` under `src/components`).
 - Data model: Structured data in `src/data/*` feeds components/pages; shared helpers in `src/lib`.
-- Deployment: Built output served by Cloudflare Pages.
+- Deployment: Built output served by Vercel.
 - Code Quality: Uses Biome for linting and formatting (replaced ESLint); accessible via Makefile commands.

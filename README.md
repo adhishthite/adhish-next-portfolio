@@ -31,7 +31,8 @@ git clone https://github.com/adhishthite/adhish-next-portfolio
 cd adhish-next-portfolio
 
 # Install dependencies
-pnpm install
+make install
+# or: pnpm install
 
 # Start dev server
 make dev
@@ -50,6 +51,7 @@ make dev
 ## Available Commands
 
 ```bash
+make install   # Install dependencies
 make dev       # Start development server
 make build     # Build production bundle
 make lint      # Lint with Biome (autofix)
