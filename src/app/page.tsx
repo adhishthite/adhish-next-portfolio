@@ -87,7 +87,7 @@ export default function Page() {
                 by="word"
                 className="text-sm uppercase tracking-widest text-muted-foreground font-medium"
               >
-                AI/ML Engineer • Lead Engineer
+                End-to-End AI • 0→1 Products • Engineering Leadership
               </TextAnimate>
 
               {/* Name */}

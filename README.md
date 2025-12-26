@@ -1,67 +1,95 @@
-<div align="center">
-<img alt="Portfolio" src="https://github.com/dillionverma/portfolio/assets/16860528/57ffca81-3f0a-4425-b31d-094f61725455" width="90%">
-</div>
+# Adhish Thite's Portfolio
 
-# Portfolio [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdillionverma%2Fportfolio)
+Personal portfolio website showcasing my work in AI/ML engineering, product development, and technical leadership. Built with modern web technologies and deployed on Vercel.
 
-Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://magicui.design/), deployed on Cloudflare Pages.
+**Live Site:** [adhishthite.com](https://adhishthite.com)
 
-# Features
+## Tech Stack
 
-- Setup only takes a few minutes by editing the [single config file](./src/data/resume.tsx)
-- Built using Next.js 16, React, Typescript, Shadcn/UI, TailwindCSS, Framer Motion, Magic UI
-- Includes a blog with MDX support
-- Responsive for different devices
-- Optimized for Next.js and Cloudflare Pages
-- Code quality with Biome linting and formatting
-- Makefile for consistent development workflow
+- **Framework:** Next.js 15 (App Router) with React 19
+- **Language:** TypeScript
+- **Styling:** TailwindCSS with [shadcn/ui](https://ui.shadcn.com/) and [magic-ui](https://magicui.design/)
+- **Content:** MDX with syntax highlighting (Shiki)
+- **Animations:** Framer Motion
+- **Code Quality:** Biome (linting + formatting)
+- **Deployment:** Vercel
 
-# Getting Started Locally
+## Key Features
 
-1. Clone this repository to your local machine:
+- **Single-config Setup** — All personal data lives in [`src/data/resume.tsx`](./src/data/resume.tsx)
+- **MDX Blog** — Write posts in Markdown with React components
+- **Interactive UI** — Animated components (word rotation, number tickers, marquees)
+- **Responsive Design** — Optimized for mobile, tablet, and desktop
+- **Dark Mode** — System-aware theme switching
+- **Production-Ready** — Type-safe, linted, and optimized for Vercel
 
-   ```bash
-   git clone https://github.com/dillionverma/portfolio
-   ```
+## Local Development
 
-2. Move to the cloned directory
+```bash
+# Clone the repository
+git clone https://github.com/adhishthite/adhish-next-portfolio
+cd adhish-next-portfolio
 
-   ```bash
-   cd portfolio
-   ```
+# Install dependencies
+pnpm install
 
-3. Install dependencies:
+# Start dev server
+make dev
+# or: pnpm dev
 
-   ```bash
-   pnpm install
-   ```
+# Open http://localhost:3000
+```
 
-4. Start the local Server:
+## Customization
 
-   ```bash
-   make dev
-   ```
+1. **Edit Personal Data** — Update [`src/data/resume.tsx`](./src/data/resume.tsx) with your info
+2. **Add Blog Posts** — Create `.mdx` files in the `content/` directory
+3. **Modify Styling** — Adjust TailwindCSS classes or theme in `tailwind.config.ts`
+4. **Add Components** — Use shadcn/ui CLI: `pnpm dlx shadcn@latest add [component]`
 
-   Or using pnpm directly:
+## Available Commands
 
-   ```bash
-   pnpm dev
-   ```
+```bash
+make dev       # Start development server
+make build     # Build production bundle
+make lint      # Lint with Biome (autofix)
+make format    # Format code with Biome
+make check     # Check formatting and linting (CI-friendly)
+make clean     # Remove build artifacts and dependencies
+make help      # Show all commands
+```
 
-5. Open the [Config file](./src/data/resume.tsx) and make changes
+Or use `pnpm` directly: `pnpm dev`, `pnpm build`, etc.
 
-# Available Commands
+## Project Structure
 
-This project uses a Makefile for common tasks:
+```text
+├── src/
+│   ├── app/          # Next.js App Router (pages, layouts)
+│   ├── components/   # React components (UI, magic-ui, mdx)
+│   ├── data/         # Content configuration (resume, blog)
+│   └── lib/          # Utilities and helpers
+├── content/          # MDX blog posts
+├── public/           # Static assets (images, icons)
+└── Makefile          # Development commands
+```
 
-- `make dev` — Start development server
-- `make build` — Build production bundle
-- `make lint` — Lint with Biome (includes autofix)
-- `make format` — Format code with Biome
-- `make check` — Run format and lint checks (no autofix)
-- `make clean` — Clean build artifacts and dependencies
-- `make help` — Show all available commands
+## Deployment
 
-# License
+Deployed on **Vercel** with automatic builds from the `main` branch.
 
-Licensed under the [MIT license](https://github.com/dillionverma/portfolio/blob/main/LICENSE.md).
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/adhishthite/adhish-next-portfolio)
+
+Vercel handles the build configuration automatically for Next.js projects. Manual settings:
+
+- **Build command:** `make build` or `pnpm build`
+- **Output directory:** `.next`
+- **Node version:** 18+
+
+## License
+
+MIT License — feel free to fork and customize for your own portfolio!
+
+---
+
+Built with ☕ by [Adhish Thite](https://github.com/adhishthite)
