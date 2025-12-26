@@ -1,11 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'export',
+  output: "export",
   trailingSlash: true,
   images: {
     unoptimized: true,
   },
+  transpilePackages: ["next-mdx-remote"],
 };
 
 export default nextConfig;

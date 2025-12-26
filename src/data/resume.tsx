@@ -138,6 +138,8 @@ export const DATA = {
       logoUrl: "/elastic.svg",
       start: "Feb 2024",
       end: "Present",
+      summary:
+        "Leading the design and deployment of innovative AI solutions that drive generative AI initiatives.",
       description:
         "• Leading the design and deployment of innovative AI solutions that drive generative AI initiatives.\n• Steering teams to integrate advanced machine learning techniques with customer-centric software features.\n• Shaping product strategy and influencing the broader technical roadmap at Elastic.",
     },
@@ -150,6 +152,8 @@ export const DATA = {
       logoUrl: "/synapse.jpeg",
       start: "Nov 2019",
       end: "Feb 2024",
+      summary:
+        "Led full-stack ML features for fraud detection and risk management while mentoring teams.",
       description:
         "•	Progressed from developing deep learning-based risk management and automated ID verification systems to leading full-stack, customer-facing ML features.\n•	Spearheaded the design, deployment, and optimization of advanced pipelines for sign-up risk and fraud detection while mentoring teams and refining product strategies.\n•	Collaborated with cross-functional stakeholders to ensure robust, scalable, and production-ready ML solutions across the organization.",
     },
@@ -162,6 +166,8 @@ export const DATA = {
       logoUrl: "/geminidata.jpeg",
       start: "May 2019",
       end: "Nov 2019",
+      summary:
+        "Engineered data science solutions unlocking enterprise value from complex data silos.",
       description:
         "•	Engineered data science solutions to unlock enterprise value from complex data silos through sophisticated pipelines in Python and Apache Calcite.\n•	Delivered actionable insights that boosted performance and enhanced real-time log analytics.",
     },
@@ -174,6 +180,8 @@ export const DATA = {
       logoUrl: "/welch-labs.jpeg",
       start: "Sep 2018",
       end: "April 2019",
+      summary:
+        "Designed ensemble models for windshield defect detection, collaborating with Microsoft.",
       description:
         "•	Designed ensemble models combining Convolutional SVMs and CNNs to eliminate false positives in windshield defect detection, collaborating with industry leaders like Microsoft.\n•	Focused on reducing inference times and ensuring robust, production-ready ML solutions for quality assurance.",
     },
@@ -186,6 +194,8 @@ export const DATA = {
       logoUrl: "/zuora.jpeg",
       start: "June 2018",
       end: "Aug 2018",
+      summary:
+        "Developed ML models to streamline customer support through intelligent ticket correlation.",
       description:
         "•	Developed ML models to streamline customer support by correlating support tickets with internal knowledge bases, leveraging both topic modeling and deep learning.\n•	Enhanced access validation processes to accelerate ticket resolution and boost live support efficiency.",
     },
@@ -198,6 +208,8 @@ export const DATA = {
       logoUrl: "/uncc.png",
       start: "Feb 2018",
       end: "June 2018",
+      summary:
+        "Conducted advanced data analysis to predict student outcomes and improve engagement.",
       description:
         "•	Conducted advanced data analysis and visualization projects using Tableau and statistical methods to predict student outcomes and improve engagement.\n•	Automated data extraction processes, significantly reducing analysis time and supporting operational decision-making.",
     },
@@ -210,6 +222,8 @@ export const DATA = {
       logoUrl: "/accenture.svg",
       start: "April 2015",
       end: "July 2017",
+      summary:
+        "Delivered eCommerce platforms through Salesforce customization and Java development.",
       description:
         "•	Contributed to the end-to-end delivery of eCommerce platforms through Salesforce customization and advanced Java development.\n•	Led teams in automating testing processes, managing agile projects, and overhauling sales and service processes to drive operational excellence.\n•	Delivered scalable, high-quality software solutions that enhanced both client and internal business processes.",
     },
@@ -223,6 +237,8 @@ export const DATA = {
         "https://media.licdn.com/dms/image/v2/C4D0BAQFx0CXgtzwB_g/company-logo_200_200/company-logo_200_200/0/1631328256501?e=1746662400&v=beta&t=rnV7SmUncXBSlJKnhJC05ln8r3AE4A14xEIcrdGgJ3w",
       start: "July 2013",
       end: "April 2014",
+      summary:
+        "Designed and implemented a web portal for internal parcel tracking and management.",
       description:
         "•	Designed and implemented a web portal to manage internal parcel tracking, laying the foundation for comprehensive system design and lifecycle management.\n	•	Gained hands-on experience in full-stack development during a pivotal internship project, establishing a strong technical base for future roles.",
     },

@@ -4,12 +4,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { Space_Grotesk, Outfit } from "next/font/google";
 import "./globals.css";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import Script from "next/script";
 
-const fontSans = FontSans({
+const fontHeading = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
+
+const fontSans = Outfit({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -74,7 +79,8 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased relative",
-          fontSans.variable
+          fontSans.variable,
+          fontHeading.variable,
         )}
       >
         <div className="absolute inset-0 -z-10 h-full w-full">
@@ -87,7 +93,7 @@ export default function RootLayout({
             className="fill-neutral-300/70 dark:fill-neutral-700/70"
           />
         </div>
-        <div className="max-w-2xl mx-auto py-12 sm:py-24 px-6">
+        <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
           <ThemeProvider attribute="class" defaultTheme="light">
             <TooltipProvider delayDuration={0}>
               {children}
@@ -95,11 +101,6 @@ export default function RootLayout({
             </TooltipProvider>
           </ThemeProvider>
         </div>
-        <Script
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN"}'
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
