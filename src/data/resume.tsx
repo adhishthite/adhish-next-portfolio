@@ -1,16 +1,18 @@
 import { Icons } from "@/components/icons";
 import { HomeIcon, NotebookIcon } from "lucide-react";
 
+// Career start year - used to dynamically calculate years of experience
+const CAREER_START_YEAR = 2014;
+export const YEARS_OF_EXPERIENCE = new Date().getFullYear() - CAREER_START_YEAR;
+
 export const DATA = {
   name: "Adhish Thite",
   initials: "AT",
   url: "https://adhishthite.com",
   location: "Pune, India",
   locationLink: "https://www.google.com/maps/place/pune",
-  description:
-    "AI/ML Engineer with 8+ years of experience building end-to-end AI systems, GenAI applications, and leading engineering teams. Specializing in LLMs, RAG, and production ML.",
-  summary:
-    "I architect and ship production AI systems that solve real problems. With 8+ years in the field, I've led teams building GenAI applications, multi-agent systems, and enterprise ML pipelines from the ground up. I turn complex research into reliable, scalable products.",
+  description: `AI/ML Engineer with ${YEARS_OF_EXPERIENCE}+ years of experience building end-to-end AI systems, GenAI applications, and leading engineering teams. Specializing in LLMs, RAG, and production ML.`,
+  summary: `I architect and ship production AI systems that solve real problems. With ${YEARS_OF_EXPERIENCE}+ years in the field, I've led teams building GenAI applications, multi-agent systems, and enterprise ML pipelines from the ground up. I turn complex research into reliable, scalable products.`,
   avatarUrl: "/me.png",
   skills: [
     "Generative AI",

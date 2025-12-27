@@ -6,7 +6,7 @@ import { BorderBeam } from "@/components/ui/border-beam";
 import { Marquee } from "@/components/ui/marquee";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { DATA } from "@/data/resume";
+import { DATA, YEARS_OF_EXPERIENCE } from "@/data/resume";
 import Link from "next/link";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { WorkExperienceSection } from "@/components/work-experience-section";
@@ -247,7 +247,7 @@ export default async function Page() {
             <div className="space-y-2">
               <div className="flex items-baseline gap-2">
                 <NumberTicker
-                  value={8}
+                  value={YEARS_OF_EXPERIENCE}
                   className="text-4xl font-heading font-bold"
                 />
                 <span className="text-2xl font-heading font-bold">+</span>
