@@ -7,7 +7,8 @@ export const DATA = {
   url: "https://adhishthite.com",
   location: "Pune, India",
   locationLink: "https://www.google.com/maps/place/pune",
-  description: "AI and ML enthusiast",
+  description:
+    "AI/ML Engineer with 8+ years of experience building end-to-end AI systems, GenAI applications, and leading engineering teams. Specializing in LLMs, RAG, and production ML.",
   summary:
     "I am a passionate AI and ML enthusiast with a keen interest in leveraging cutting-edge technologies to solve complex problems. With a strong foundation in machine learning and a passion for innovation, I am dedicated to pushing the boundaries of what is possible.",
   avatarUrl: "/me.png",
