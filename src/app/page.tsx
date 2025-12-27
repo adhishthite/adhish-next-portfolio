@@ -280,9 +280,10 @@ export default async function Page() {
       )}
 
       {/* Work Experience Section - Bento Grid */}
+      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-transparent" />
       <section
         id="work"
-        className="py-24 md:py-32 bg-[hsl(32,50%,80%)] dark:bg-transparent"
+        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-transparent"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
@@ -297,6 +298,7 @@ export default async function Page() {
           <WorkExperienceSection work={DATA.work} />
         </div>
       </section>
+      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-transparent" />
 
       {/* Skills Section - Marquee */}
       <section id="skills" className="py-24 md:py-32 overflow-hidden">
@@ -373,9 +375,10 @@ export default async function Page() {
       </section>
 
       {/* Certifications Section */}
+      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-transparent" />
       <section
         id="certifications"
-        className="py-24 md:py-32 bg-[hsl(32,50%,80%)] dark:bg-transparent"
+        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-transparent"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
@@ -428,6 +431,7 @@ export default async function Page() {
           </div>
         </div>
       </section>
+      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-transparent" />
 
       {/* Contact Section */}
       <section id="contact" className="py-24 md:py-32">
