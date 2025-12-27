@@ -8,6 +8,7 @@ import { Space_Grotesk, Outfit } from "next/font/google";
 import "./globals.css";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 const fontHeading = Space_Grotesk({
   subsets: ["latin"],
@@ -148,6 +149,7 @@ export default function RootLayout({
             </TooltipProvider>
           </ThemeProvider>
         </div>
+        <Analytics />
       </body>
     </html>
   );

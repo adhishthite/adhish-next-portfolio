@@ -7,7 +7,6 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { MDXImage, MDXLink, MDXParagraph } from "@/components/mdx-components";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
@@ -183,12 +182,11 @@ export default async function Blog({
               </p>
             </div>
             <div className="flex gap-3">
-              <Link href={`mailto:${DATA.contact.email}`}>
-                <ShimmerButton className="shadow-lg">
-                  <span className="text-sm font-medium text-white">
-                    Get in Touch
-                  </span>
-                </ShimmerButton>
+              <Link
+                href={`mailto:${DATA.contact.email}`}
+                className="inline-flex items-center justify-center px-6 py-2.5 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
+              >
+                Get in Touch
               </Link>
               <Link
                 href={DATA.contact.social.X.url}

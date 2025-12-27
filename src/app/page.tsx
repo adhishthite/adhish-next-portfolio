@@ -1,7 +1,6 @@
 import { TextAnimate } from "@/components/ui/text-animate";
 import { WordRotate } from "@/components/ui/word-rotate";
 import { NumberTicker } from "@/components/ui/number-ticker";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { MagicCard } from "@/components/ui/magic-card";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Marquee } from "@/components/ui/marquee";
@@ -141,12 +140,11 @@ export default async function Page() {
 
               {/* CTA Buttons */}
               <div className="flex flex-wrap gap-4 pt-4">
-                <Link href={`mailto:${DATA.contact.email}`}>
-                  <ShimmerButton className="shadow-lg">
-                    <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-base">
-                      Get in Touch
-                    </span>
-                  </ShimmerButton>
+                <Link
+                  href={`mailto:${DATA.contact.email}`}
+                  className="inline-flex items-center justify-center px-8 py-3 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
+                >
+                  Get in Touch
                 </Link>
                 <Link
                   href="/resume.pdf"
@@ -441,12 +439,11 @@ export default async function Page() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-8">
-            <Link href={`mailto:${DATA.contact.email}`}>
-              <ShimmerButton className="shadow-lg">
-                <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-base">
-                  Email Me
-                </span>
-              </ShimmerButton>
+            <Link
+              href={`mailto:${DATA.contact.email}`}
+              className="inline-flex items-center justify-center px-8 py-3 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
+            >
+              Email Me
             </Link>
             {Object.values(DATA.contact.social)
               .filter((social) => social.navbar)
