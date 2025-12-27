@@ -11,14 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  ZoomIn,
-  ZoomOut,
-  Loader2,
-} from "lucide-react";
+import { Download, ZoomIn, ZoomOut, Loader2 } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -32,8 +25,7 @@ export function ResumeViewerModal({
   onOpenChange,
 }: ResumeViewerModalProps) {
   const [numPages, setNumPages] = useState<number>(0);
-  const [pageNumber, setPageNumber] = useState<number>(1);
-  const [scale, setScale] = useState<number>(1.0);
+  const [scale, setScale] = useState<number>(1.5);
   const [loading, setLoading] = useState<boolean>(true);
 
   const onDocumentLoadSuccess = useCallback(
@@ -44,17 +36,12 @@ export function ResumeViewerModal({
     [],
   );
 
-  const goToPrevPage = () => setPageNumber((prev) => Math.max(prev - 1, 1));
-  const goToNextPage = () =>
-    setPageNumber((prev) => Math.min(prev + 1, numPages));
-
   const zoomIn = () => setScale((prev) => Math.min(prev + 0.25, 2.0));
   const zoomOut = () => setScale((prev) => Math.max(prev - 0.25, 0.5));
 
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
-      setPageNumber(1);
-      setScale(1.0);
+      setScale(1.5);
       setLoading(true);
     }
     onOpenChange(isOpen);
@@ -112,41 +99,20 @@ export function ResumeViewerModal({
             file="/resume.pdf"
             onLoadSuccess={onDocumentLoadSuccess}
             loading=""
-            className="flex flex-col items-center"
+            className="flex flex-col items-center gap-4"
           >
-            <Page
-              pageNumber={pageNumber}
-              scale={scale}
-              className="shadow-lg rounded-lg overflow-hidden"
-              renderTextLayer={true}
-              renderAnnotationLayer={true}
-            />
+            {Array.from(new Array(numPages), (_, index) => (
+              <Page
+                key={`page_${index + 1}`}
+                pageNumber={index + 1}
+                scale={scale}
+                className="shadow-lg rounded-lg overflow-hidden"
+                renderTextLayer={true}
+                renderAnnotationLayer={true}
+              />
+            ))}
           </Document>
         </div>
-
-        {numPages > 1 && (
-          <div className="flex items-center justify-center gap-4 p-4 border-t border-border/40 shrink-0">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={goToPrevPage}
-              disabled={pageNumber <= 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm text-muted-foreground">
-              Page {pageNumber} of {numPages}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={goToNextPage}
-              disabled={pageNumber >= numPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
       </DialogContent>
     </Dialog>
   );
