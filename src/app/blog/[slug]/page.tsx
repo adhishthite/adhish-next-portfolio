@@ -10,7 +10,6 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -113,10 +112,7 @@ export default async function Blog({
         {/* Back Button */}
         <div className="mb-8">
           <Link href="/blog">
-            <InteractiveHoverButton className="group">
-              <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Blog
-            </InteractiveHoverButton>
+            <InteractiveHoverButton>Back to Blog</InteractiveHoverButton>
           </Link>
         </div>
 
@@ -201,10 +197,7 @@ export default async function Blog({
           </div>
 
           <Link href="/blog">
-            <InteractiveHoverButton className="group">
-              <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Blog
-            </InteractiveHoverButton>
+            <InteractiveHoverButton>Back to Blog</InteractiveHoverButton>
           </Link>
         </div>
       </section>

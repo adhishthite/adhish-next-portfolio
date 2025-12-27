@@ -103,14 +103,27 @@ export default async function Page() {
           <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-12 md:gap-16 items-center">
             {/* Left Column - Text */}
             <div className="space-y-8">
-              {/* Small Tag */}
-              <TextAnimate
-                animation="blurInUp"
-                by="word"
-                className="text-sm uppercase tracking-widest text-muted-foreground font-medium"
-              >
-                End-to-End AI • 0→1 Products • Engineering Leadership
-              </TextAnimate>
+              {/* Small Tag - Static on desktop, rotating on mobile */}
+              <div className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+                {/* Desktop: show all */}
+                <TextAnimate
+                  animation="blurInUp"
+                  by="word"
+                  className="hidden md:block"
+                >
+                  End-to-End AI • 0→1 Products • Engineering Leadership
+                </TextAnimate>
+                {/* Mobile: rotate */}
+                <WordRotate
+                  words={[
+                    "End-to-End AI",
+                    "0→1 Products",
+                    "Engineering Leadership",
+                  ]}
+                  duration={2500}
+                  className="md:hidden"
+                />
+              </div>
 
               {/* Name */}
               <TextAnimate
@@ -177,9 +190,48 @@ export default async function Page() {
         </div>
       </section>
 
+      {/* About Section */}
+      <section id="about" className="py-24 md:py-32 border-t border-border/40">
+        <div className="mx-auto w-full max-w-4xl px-6 space-y-8">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+            About
+          </p>
+
+          <TextAnimate
+            animation="blurInUp"
+            by="word"
+            className="text-2xl md:text-3xl font-heading font-medium leading-relaxed text-foreground/90"
+          >
+            {DATA.summary}
+          </TextAnimate>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-8">
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <NumberTicker
+                  value={YEARS_OF_EXPERIENCE}
+                  className="text-4xl font-heading font-bold"
+                />
+                <span className="text-2xl font-heading font-bold">+</span>
+              </div>
+              <p className="text-sm text-muted-foreground">Years Experience</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Location</p>
+              <p className="text-base font-medium">{DATA.location}</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Focus</p>
+              <p className="text-base font-medium">AI/ML Engineering</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Blog Post */}
       {latestPost && (
-        <section className="py-12 md:py-16 border-t border-border/40">
+        <section className="py-12 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-6">
             <div className="flex items-center justify-between mb-6">
               <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
@@ -226,45 +278,6 @@ export default async function Page() {
           </div>
         </section>
       )}
-
-      {/* About Section */}
-      <section id="about" className="py-24 md:py-32">
-        <div className="mx-auto w-full max-w-4xl px-6 space-y-8">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-            About
-          </p>
-
-          <TextAnimate
-            animation="blurInUp"
-            by="word"
-            className="text-2xl md:text-3xl font-heading font-medium leading-relaxed text-foreground/90"
-          >
-            {DATA.summary}
-          </TextAnimate>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-8">
-            <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <NumberTicker
-                  value={YEARS_OF_EXPERIENCE}
-                  className="text-4xl font-heading font-bold"
-                />
-                <span className="text-2xl font-heading font-bold">+</span>
-              </div>
-              <p className="text-sm text-muted-foreground">Years Experience</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Location</p>
-              <p className="text-base font-medium">{DATA.location}</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Focus</p>
-              <p className="text-base font-medium">AI/ML Engineering</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Work Experience Section - Bento Grid */}
       <section id="work" className="py-24 md:py-32 bg-muted/30">
