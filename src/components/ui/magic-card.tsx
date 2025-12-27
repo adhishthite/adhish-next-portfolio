@@ -83,12 +83,13 @@ export function MagicCard({
       onPointerEnter={reset}
     >
       <motion.div
+        suppressHydrationWarning
         className="bg-border pointer-events-none absolute inset-0 rounded-[inherit] duration-300 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
           radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
-          ${gradientFrom}, 
-          ${gradientTo}, 
+          ${gradientFrom},
+          ${gradientTo},
           var(--border) 100%
           )
           `,
@@ -96,6 +97,7 @@ export function MagicCard({
       />
       <div className="bg-background absolute inset-px rounded-[inherit]" />
       <motion.div
+        suppressHydrationWarning
         className="pointer-events-none absolute inset-px rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
