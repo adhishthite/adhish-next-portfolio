@@ -10,7 +10,7 @@ export const DATA = {
   description: "AI and ML enthusiast",
   summary:
     "I am a passionate AI and ML enthusiast with a keen interest in leveraging cutting-edge technologies to solve complex problems. With a strong foundation in machine learning and a passion for innovation, I am dedicated to pushing the boundaries of what is possible.",
-  avatarUrl: "/me.jpeg",
+  avatarUrl: "/me.png",
   skills: [
     "Generative AI",
     "Prompt Engineering",

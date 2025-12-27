@@ -10,6 +10,7 @@ import { DATA } from "@/data/resume";
 import Link from "next/link";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { WorkExperienceSection } from "@/components/work-experience-section";
+import { ResumeViewerTrigger } from "@/components/resume-viewer-trigger";
 import { getBlogPosts } from "@/data/blog";
 
 export default async function Page() {
@@ -146,12 +147,7 @@ export default async function Page() {
                 >
                   Get in Touch
                 </Link>
-                <Link
-                  href="/resume.pdf"
-                  className="inline-flex items-center justify-center px-8 py-3 border border-border rounded-lg text-sm font-medium hover:bg-muted/50 transition-colors"
-                >
-                  View Resume
-                </Link>
+                <ResumeViewerTrigger />
               </div>
 
               {/* Social Links */}

@@ -31,6 +31,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-markdown": "^9.0.1",
+    "react-pdf": "^10.2.0",
     "rehype-pretty-code": "^0.13.2",
     "rehype-stringify": "^10.0.0",
     "remark-html": "^16.0.1",
