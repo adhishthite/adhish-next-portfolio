@@ -7,6 +7,9 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { MDXImage, MDXLink, MDXParagraph } from "@/components/mdx-components";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -31,7 +34,7 @@ export async function generateMetadata({
   } = post.metadata;
   const ogImage = image
     ? `${DATA.url}${image}`
-    : `${DATA.url}/og?title=${title}`;
+    : `${DATA.url}${DATA.avatarUrl}`;
 
   return {
     title,
@@ -98,7 +101,7 @@ export default async function Blog({
               description: post.metadata.summary,
               image: post.metadata.image
                 ? `${DATA.url}${post.metadata.image}`
-                : `${DATA.url}/og?title=${post.metadata.title}`,
+                : `${DATA.url}${DATA.avatarUrl}`,
               url: `${DATA.url}/blog/${post.slug}`,
               author: {
                 "@type": "Person",
@@ -163,8 +166,42 @@ export default async function Blog({
           <MDXRemote source={post.rawContent} components={components} />
         </article>
 
-        {/* Back to Blog - Footer */}
-        <div className="mt-16 pt-8 border-t border-border/40">
+        {/* Author CTA */}
+        <div className="mt-16 pt-8 border-t border-border/40 space-y-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 p-6 rounded-2xl bg-muted/30 border border-border/40">
+            <Avatar className="size-16 border">
+              <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
+              <AvatarFallback>{DATA.initials}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 space-y-2">
+              <h3 className="font-heading font-semibold text-lg">
+                Want to discuss this further?
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                I&apos;m always happy to chat about AI, ML, or interesting
+                engineering challenges.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Link href={`mailto:${DATA.contact.email}`}>
+                <ShimmerButton className="shadow-lg">
+                  <span className="text-sm font-medium text-white">
+                    Get in Touch
+                  </span>
+                </ShimmerButton>
+              </Link>
+              <Link
+                href={DATA.contact.social.X.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted/50 transition-colors gap-2"
+              >
+                <Icons.x className="h-4 w-4" />
+                DM on X
+              </Link>
+            </div>
+          </div>
+
           <Link href="/blog">
             <InteractiveHoverButton className="group">
               <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />

@@ -77,7 +77,9 @@ export function WorkExperienceModal({
                 <>
                   <span>•</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-foreground">Location:</span>
+                    <span className="font-medium text-foreground">
+                      Location:
+                    </span>
                     <span>{work.location}</span>
                   </div>
                 </>

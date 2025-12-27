@@ -33,7 +33,9 @@ export function ScrollMask({
       <div
         className={cn(
           "h-full w-full overflow-auto",
-          orientation === "vertical" ? "overflow-x-hidden" : "overflow-y-hidden",
+          orientation === "vertical"
+            ? "overflow-x-hidden"
+            : "overflow-y-hidden",
         )}
       >
         {children}

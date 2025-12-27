@@ -11,53 +11,75 @@ import { DATA } from "@/data/resume";
 import Link from "next/link";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { WorkExperienceSection } from "@/components/work-experience-section";
+import { getBlogPosts } from "@/data/blog";
 
-export default function Page() {
-  // Group skills by category for Marquee
-  const aiMlSkills = DATA.skills.filter((s) =>
-    [
-      "Python",
-      "PyTorch",
-      "TensorFlow",
-      "Scikit-Learn",
-      "Pandas",
-      "NumPy",
-      "LangChain",
-      "LlamaIndex",
-      "Hugging Face",
-      "OpenAI",
-    ].some((tech) => s.includes(tech)),
-  );
-  const languagesFrameworks = DATA.skills.filter((s) =>
-    [
-      "TypeScript",
-      "JavaScript",
-      "React",
-      "Next.js",
-      "Node.js",
-      "FastAPI",
-      "Django",
-      "Flask",
-    ].some((tech) => s.includes(tech)),
-  );
-  const cloudData = DATA.skills.filter((s) =>
-    [
-      "AWS",
-      "GCP",
-      "Azure",
-      "Docker",
-      "Kubernetes",
-      "PostgreSQL",
-      "MongoDB",
-      "Redis",
-    ].some((tech) => s.includes(tech)),
-  );
-  const tools = DATA.skills.filter(
-    (s) =>
-      !aiMlSkills.includes(s) &&
-      !languagesFrameworks.includes(s) &&
-      !cloudData.includes(s),
-  );
+export default async function Page() {
+  // Fetch latest blog post
+  const posts = await getBlogPosts();
+  const latestPost = posts.sort(
+    (a, b) =>
+      new Date(b.metadata.publishedAt).getTime() -
+      new Date(a.metadata.publishedAt).getTime(),
+  )[0];
+  // Curated skills by category for Marquee (12-15 items each)
+  const aiMlSkills = [
+    "Generative AI",
+    "Prompt Engineering",
+    "Fine-Tuning",
+    "Retrieval-Augmented Generation (RAG)",
+    "GenAI Agents",
+    "Deep Learning",
+    "PyTorch",
+    "TensorFlow",
+    "Machine Learning",
+    "Natural Language Processing",
+    "Computer Vision",
+    "LLM Fine-Tuning",
+    "Hugging Face",
+  ];
+
+  const languagesFrameworks = [
+    "Python",
+    "TypeScript",
+    "Java",
+    "React",
+    "Next.js",
+    "Node.js",
+    "FastAPI",
+    "Django",
+    "LangChain",
+    "LlamaIndex",
+    "Scikit-Learn",
+    "Pandas",
+    "NumPy",
+  ];
+
+  const cloudData = [
+    "AWS",
+    "GCP",
+    "Azure",
+    "Docker",
+    "Kubernetes",
+    "PostgreSQL",
+    "MongoDB",
+    "Redis",
+    "ElasticSearch",
+    "MLFlow",
+    "AWS SageMaker",
+    "MLOps",
+  ];
+
+  const tools = [
+    "Git",
+    "GitHub",
+    "GitHub Actions",
+    "Jenkins",
+    "DataDog",
+    "OpenCV",
+    "Microservice Architecture",
+    "RESTful and GraphQL Services",
+    "Edge AI",
+  ];
 
   return (
     <main className="flex flex-col min-h-[100dvh] relative">
@@ -165,6 +187,56 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+      {/* Featured Blog Post */}
+      {latestPost && (
+        <section className="py-12 md:py-16 border-t border-border/40">
+          <div className="mx-auto w-full max-w-6xl px-6">
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+                Latest from the Blog
+              </p>
+              <Link
+                href="/blog"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                View all posts →
+              </Link>
+            </div>
+            <Link href={`/blog/${latestPost.slug}`} className="group block">
+              <MagicCard
+                className="p-8 rounded-2xl border border-border/40 hover:border-foreground/20 transition-all"
+                gradientColor="#3b82f6"
+                gradientColorDark="#ffffff"
+                gradientOpacity={0.15}
+              >
+                <div className="space-y-4">
+                  <time className="text-xs uppercase tracking-widest text-muted-foreground">
+                    {new Date(
+                      latestPost.metadata.publishedAt,
+                    ).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <h3 className="text-2xl md:text-3xl font-heading font-bold group-hover:text-foreground/80 transition-colors">
+                    {latestPost.metadata.title}
+                  </h3>
+                  {latestPost.metadata.summary && (
+                    <p className="text-muted-foreground leading-relaxed">
+                      {latestPost.metadata.summary}
+                    </p>
+                  )}
+                  <span className="inline-flex items-center text-muted-foreground group-hover:text-foreground text-sm transition-colors">
+                    Read article →
+                  </span>
+                </div>
+              </MagicCard>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* About Section */}
       <section id="about" className="py-24 md:py-32">

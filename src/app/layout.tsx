@@ -33,6 +33,14 @@ export const metadata: Metadata = {
     siteName: `${DATA.name}`,
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: DATA.avatarUrl,
+        width: 400,
+        height: 400,
+        alt: DATA.name,
+      },
+    ],
   },
   robots: {
     index: true,
@@ -75,6 +83,45 @@ export default function RootLayout({
             gtag('config', 'G-Y62X0MYQ59');
           `}
         </Script>
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: DATA.name,
+              url: DATA.url,
+              image: `${DATA.url}${DATA.avatarUrl}`,
+              sameAs: [
+                DATA.contact.social.GitHub.url,
+                DATA.contact.social.LinkedIn.url,
+                DATA.contact.social.X.url,
+              ],
+              jobTitle: "Lead AI Engineer",
+              worksFor: {
+                "@type": "Organization",
+                name: "Elastic Co.",
+              },
+              alumniOf: [
+                {
+                  "@type": "EducationalOrganization",
+                  name: "University of North Carolina at Charlotte",
+                },
+                {
+                  "@type": "EducationalOrganization",
+                  name: "University of Pune",
+                },
+              ],
+              knowsAbout: [
+                "Artificial Intelligence",
+                "Machine Learning",
+                "Deep Learning",
+                "Python",
+              ],
+            }),
+          }}
+        />
       </head>
       <body
         className={cn(

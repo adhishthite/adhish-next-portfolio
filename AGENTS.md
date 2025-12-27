@@ -4,6 +4,8 @@
 
 - `src/app`: Next.js App Router (routes, `layout.tsx`, `page.tsx`, global CSS).
 - `src/components`: Reusable React components (UI, magicui, mdx).
+- `src/components/ui`: Reusable Shadcn/UI components.
+- `src/components/magic-ui`: Reusable Magic UI components.
 - `src/lib`: Utilities (e.g., `utils.ts`).
 - `src/data`: Typed content feeds (e.g., `blog.ts`, `resume.tsx`).
 - `content`: MDX posts/articles.
