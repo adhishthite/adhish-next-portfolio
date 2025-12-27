@@ -4,67 +4,67 @@
 
 @layer base {
   :root {
-    /* Editorial Minimalist - Light Mode */
-    --background: 0 0% 98%;
-    --foreground: 0 0% 9%;
+    /* Warm Minimal - Light Mode (Pale Wheat + Oil + American Berry) */
+    --background: 35 68% 87%;
+    --foreground: 20 25% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card: 35 55% 91%;
+    --card-foreground: 20 25% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover: 35 60% 90%;
+    --popover-foreground: 20 25% 15%;
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 20 25% 15%;
+    --primary-foreground: 35 68% 87%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 35 40% 82%;
+    --secondary-foreground: 20 25% 15%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 35 35% 80%;
+    --muted-foreground: 20 15% 40%;
 
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 338 67% 21%;
+    --accent-foreground: 35 70% 92%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 35 70% 92%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 217 91% 60%;
+    --border: 30 30% 75%;
+    --input: 30 30% 75%;
+    --ring: 338 67% 21%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Editorial Minimalist - Dark Mode */
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    /* Warm Minimal - Dark Mode (Oil + Pale Wheat + American Berry) */
+    --background: 20 20% 9%;
+    --foreground: 35 55% 88%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 98%;
+    --card: 20 15% 12%;
+    --card-foreground: 35 55% 88%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 20 15% 12%;
+    --popover-foreground: 35 55% 88%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 35 55% 88%;
+    --primary-foreground: 20 20% 9%;
 
-    --secondary: 0 0% 9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 20 12% 16%;
+    --secondary-foreground: 35 55% 88%;
 
-    --muted: 0 0% 9%;
-    --muted-foreground: 0 0% 64%;
+    --muted: 20 12% 16%;
+    --muted-foreground: 30 20% 60%;
 
-    --accent: 213 94% 68%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 338 55% 45%;
+    --accent-foreground: 35 60% 92%;
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 50% 35%;
+    --destructive-foreground: 35 60% 92%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 213 94% 68%;
+    --border: 20 15% 20%;
+    --input: 20 15% 20%;
+    --ring: 338 55% 45%;
   }
   .theme {
     --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite

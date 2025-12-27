@@ -82,7 +82,7 @@ export default async function Blog({
   const readingTime = Math.ceil(words / 200);
 
   return (
-    <>
+    <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
       <ScrollProgress className="top-0" />
 
       <section id="blog" className="relative">
@@ -201,6 +201,6 @@ export default async function Blog({
           </Link>
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -102,7 +102,7 @@ export default async function Page() {
         <div className="mx-auto w-full max-w-6xl px-6">
           <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-12 md:gap-16 items-center">
             {/* Left Column - Text */}
-            <div className="space-y-8">
+            <div className="space-y-8 text-center md:text-left">
               {/* Small Tag - Static on desktop, rotating on mobile */}
               <div className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
                 {/* Desktop: show all */}
@@ -135,7 +135,7 @@ export default async function Page() {
               </TextAnimate>
 
               {/* Rotating Roles */}
-              <div className="flex items-center gap-3 text-xl md:text-2xl text-muted-foreground">
+              <div className="flex items-center justify-center md:justify-start gap-3 text-xl md:text-2xl text-muted-foreground">
                 <WordRotate
                   words={[
                     "Building AI Systems",
@@ -148,7 +148,7 @@ export default async function Page() {
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
                 <Link
                   href={`mailto:${DATA.contact.email}`}
                   className="inline-flex items-center justify-center px-8 py-3 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
@@ -159,7 +159,7 @@ export default async function Page() {
               </div>
 
               {/* Social Links */}
-              <div className="flex gap-6 pt-2">
+              <div className="flex justify-center md:justify-start gap-6 pt-2">
                 {Object.values(DATA.contact.social)
                   .filter((social) => social.navbar)
                   .map((social) => (
@@ -247,8 +247,8 @@ export default async function Page() {
             <Link href={`/blog/${latestPost.slug}`} className="group block">
               <MagicCard
                 className="p-8 rounded-2xl border border-border/40 hover:border-foreground/20 transition-all"
-                gradientColor="#3b82f6"
-                gradientColorDark="#ffffff"
+                gradientColor="#5B122D"
+                gradientColorDark="#d4a5a5"
                 gradientOpacity={0.15}
               >
                 <div className="space-y-4">
@@ -280,7 +280,10 @@ export default async function Page() {
       )}
 
       {/* Work Experience Section - Bento Grid */}
-      <section id="work" className="py-24 md:py-32 bg-muted/30">
+      <section
+        id="work"
+        className="py-24 md:py-32 bg-[hsl(32,50%,80%)] dark:bg-transparent"
+      >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
@@ -370,7 +373,10 @@ export default async function Page() {
       </section>
 
       {/* Certifications Section */}
-      <section id="certifications" className="py-24 md:py-32 bg-muted/30">
+      <section
+        id="certifications"
+        className="py-24 md:py-32 bg-[hsl(32,50%,80%)] dark:bg-transparent"
+      >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
@@ -386,8 +392,8 @@ export default async function Page() {
               <MagicCard
                 key={cert.name + cert.date}
                 className="p-6 rounded-2xl border border-border/40 hover:border-accent/50 transition-all duration-300"
-                gradientColor="#3b82f6"
-                gradientColorDark="#ffffff"
+                gradientColor="#5B122D"
+                gradientColorDark="#d4a5a5"
                 gradientOpacity={0.15}
               >
                 <div className="space-y-4">

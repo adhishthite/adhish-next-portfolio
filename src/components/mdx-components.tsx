@@ -17,7 +17,7 @@ export const MDXImage = (props: any) => (
 export const MDXLink = (props: any) => (
   <a
     {...props}
-    className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+    className="text-accent hover:text-accent/80 transition-colors"
     target={props.href?.startsWith("http") ? "_blank" : undefined}
     rel={props.href?.startsWith("http") ? "noopener noreferrer" : undefined}
   />

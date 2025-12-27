@@ -27,99 +27,107 @@ export default async function BlogPage() {
   };
 
   return (
-    <section className="relative">
-      <div className="absolute inset-0 -z-10 h-full w-full">
-        <GridPattern
-          width={40}
-          height={40}
-          strokeDasharray={"4 2"}
-          className="fill-neutral-200/5 stroke-neutral-200/20 dark:fill-neutral-800/5 dark:stroke-neutral-800/20"
-          x={-1}
-          y={-1}
-        />
-      </div>
-
-      <div className="space-y-12">
-        {/* Header */}
-        <div className="space-y-4">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-            Blog
-          </p>
-          <TextAnimate
-            animation="blurInUp"
-            by="word"
-            className="text-4xl md:text-5xl font-heading font-bold tracking-tight"
-          >
-            Thoughts & Insights
-          </TextAnimate>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Writings on software development, AI/ML, and engineering best
-            practices.
-          </p>
+    <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
+      <section className="relative">
+        <div className="absolute inset-0 -z-10 h-full w-full">
+          <GridPattern
+            width={40}
+            height={40}
+            strokeDasharray={"4 2"}
+            className="fill-neutral-200/5 stroke-neutral-200/20 dark:fill-neutral-800/5 dark:stroke-neutral-800/20"
+            x={-1}
+            y={-1}
+          />
         </div>
 
-        {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sortedPosts.map((post, idx) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
-              <MagicCard
-                className={`p-8 h-full transition-all duration-300 rounded-2xl border border-border/40 hover:border-accent/50 ${
-                  idx === 0 ? "md:col-span-2" : ""
-                }`}
-                gradientColor="#3b82f6"
-                gradientColorDark="#ffffff"
-                gradientOpacity={0.15}
-              >
-                <div className="space-y-4">
-                  {/* Date */}
-                  <time className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-                    {new Date(post.metadata.publishedAt).toLocaleDateString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      },
-                    )}
-                  </time>
-
-                  {/* Title */}
-                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tight group-hover:text-accent transition-colors">
-                    {post.metadata.title}
-                  </h2>
-
-                  {/* Summary */}
-                  {post.metadata.summary && (
-                    <p className="text-muted-foreground leading-relaxed line-clamp-2">
-                      {post.metadata.summary}
-                    </p>
-                  )}
-
-                  {/* Reading Time & Arrow */}
-                  <div className="flex items-center justify-between pt-4">
-                    <span className="text-sm text-muted-foreground">
-                      {getReadingTime(post.rawContent)}
-                    </span>
-                    <span className="text-accent group-hover:translate-x-2 transition-transform">
-                      →
-                    </span>
-                  </div>
-                </div>
-                {idx === 0 && <BorderBeam size={250} duration={12} delay={9} />}
-              </MagicCard>
-            </Link>
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {sortedPosts.length === 0 && (
-          <div className="text-center py-24">
-            <p className="text-muted-foreground">
-              No posts yet. Check back soon!
+        <div className="space-y-12">
+          {/* Header */}
+          <div className="space-y-4">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+              Blog
+            </p>
+            <TextAnimate
+              animation="blurInUp"
+              by="word"
+              className="text-4xl md:text-5xl font-heading font-bold tracking-tight"
+            >
+              Thoughts & Insights
+            </TextAnimate>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Writings on software development, AI/ML, and engineering best
+              practices.
             </p>
           </div>
-        )}
-      </div>
-    </section>
+
+          {/* Blog Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {sortedPosts.map((post, idx) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="group"
+              >
+                <MagicCard
+                  className={`p-8 h-full transition-all duration-300 rounded-2xl border border-border/40 hover:border-accent/50 ${
+                    idx === 0 ? "md:col-span-2" : ""
+                  }`}
+                  gradientColor="#5B122D"
+                  gradientColorDark="#d4a5a5"
+                  gradientOpacity={0.15}
+                >
+                  <div className="space-y-4">
+                    {/* Date */}
+                    <time className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+                      {new Date(post.metadata.publishedAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
+                    </time>
+
+                    {/* Title */}
+                    <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tight group-hover:text-accent transition-colors">
+                      {post.metadata.title}
+                    </h2>
+
+                    {/* Summary */}
+                    {post.metadata.summary && (
+                      <p className="text-muted-foreground leading-relaxed line-clamp-2">
+                        {post.metadata.summary}
+                      </p>
+                    )}
+
+                    {/* Reading Time & Arrow */}
+                    <div className="flex items-center justify-between pt-4">
+                      <span className="text-sm text-muted-foreground">
+                        {getReadingTime(post.rawContent)}
+                      </span>
+                      <span className="text-accent group-hover:translate-x-2 transition-transform">
+                        →
+                      </span>
+                    </div>
+                  </div>
+                  {idx === 0 && (
+                    <BorderBeam size={250} duration={12} delay={9} />
+                  )}
+                </MagicCard>
+              </Link>
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {sortedPosts.length === 0 && (
+            <div className="text-center py-24">
+              <p className="text-muted-foreground">
+                No posts yet. Check back soon!
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }

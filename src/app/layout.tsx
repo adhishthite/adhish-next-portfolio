@@ -141,14 +141,12 @@ export default function RootLayout({
             className="fill-neutral-300/70 dark:fill-neutral-700/70"
           />
         </div>
-        <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
-          <ThemeProvider attribute="class" defaultTheme="light">
-            <TooltipProvider delayDuration={0}>
-              {children}
-              <Navbar />
-            </TooltipProvider>
-          </ThemeProvider>
-        </div>
+        <ThemeProvider attribute="class" defaultTheme="light">
+          <TooltipProvider delayDuration={0}>
+            {children}
+            <Navbar />
+          </TooltipProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>
