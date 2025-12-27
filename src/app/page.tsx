@@ -134,11 +134,6 @@ export default async function Page() {
                 />
               </div>
 
-              {/* Description */}
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                {DATA.description}
-              </p>
-
               {/* CTA Buttons */}
               <div className="flex flex-wrap gap-4 pt-4">
                 <Link
