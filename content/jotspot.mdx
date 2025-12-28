@@ -1,0 +1,138 @@
+---
+title: "JotSpot: A Scratchpad That Actually Gets Out of Your Way"
+publishedAt: "2025-08-29"
+summary: "I built a fast, local-first Markdown scratchpad. No accounts, no cloud, no nonsense. Just open it and start typing."
+---
+
+# JotSpot: A Scratchpad That Actually Gets Out of Your Way
+
+So you might remember <a href="https://pastedown.space" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>Pastedown</a>—that Markdown pastebin I made for sharing temporary snippets. It's great for stuff that needs to disappear in 3 days. But what about notes you actually want to *keep*?
+
+That's where <a href="https://jotspot.adhishthite.workers.dev" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>JotSpot</a> comes in.
+
+It's stupidly simple: open the page, start typing, and your notes save automatically. No login. No "syncing to cloud" spinners. Everything lives in your browser's localStorage. That's it.
+
+<Image
+  src="/blog/jotspot/1_welcome_dialog.png"
+  alt="JotSpot Welcome Dialog"
+  width={800}
+  height={450}
+/>
+
+## Why though?
+
+Honestly? I got tired of opening Notion or Google Docs just to jot down a quick thought. By the time the app loads and I navigate to the right page, I've already forgotten what I wanted to write.
+
+I wanted something that just... works. Instantly. Offline. Without asking me to create an account or "upgrade to Pro."
+
+So I built it.
+
+<Image
+  src="/blog/jotspot/3_editor_with_content.png"
+  alt="JotSpot Editor with Markdown Content"
+  width={800}
+  height={450}
+/>
+
+## What can it do?
+
+You get up to 10 "scratches" (basically tabs). Pin the ones you care about, delete the ones you don't. The tab title auto-updates based on your first heading, which is a small thing but surprisingly satisfying.
+
+The editor renders Markdown as you type—headings, bold, lists, blockquotes, all that good stuff. It uses TipTap under the hood, so it feels snappy.
+
+There's also three width modes: Small (focused), Big (more room), and Full (with a side-by-side preview). I usually stick with Small, but Full is nice when you're writing something longer.
+
+<Image
+  src="/blog/jotspot/5_width_options.png"
+  alt="Width Mode Options"
+  width={800}
+  height={450}
+/>
+
+<Image
+  src="/blog/jotspot/6_full_width.png"
+  alt="Full Width Mode"
+  width={800}
+  height={450}
+/>
+
+## Dark mode, obviously
+
+Because it's 2025 and we're not animals.
+
+<Image
+  src="/blog/jotspot/7_dark_theme.png"
+  alt="JotSpot Dark Theme"
+  width={800}
+  height={450}
+/>
+
+## Keyboard shortcuts
+
+If you're into that sort of thing:
+- **Ctrl+Alt+W** — Cycle through width modes
+- **Ctrl+Alt+T** — Toggle dark/light
+- **Ctrl+K** — Show all shortcuts
+- **Ctrl+Alt+M** — Smooth caret (try it, it's weirdly nice)
+
+## Export your stuff
+
+Look, your notes live in localStorage. That means if you clear your browser data, they're gone. So there's an export button—download as `.md` or `.txt`. Use it for anything you'd be sad to lose.
+
+<Image
+  src="/blog/jotspot/4_options_menu.png"
+  alt="Options Menu with Export"
+  width={800}
+  height={450}
+/>
+
+## Works on your phone too
+
+Not that you'd write essays on mobile, but sometimes you just need to check something quick. It works.
+
+<Image src="/blog/jotspot/9_mobile_light.png" alt="JotSpot Mobile Light Theme" />
+
+<Image src="/blog/jotspot/8_mobile_dark.png" alt="JotSpot Mobile Dark Theme" />
+
+## The nerdy bits
+
+For the curious:
+
+- Next.js 15 with Turbopack (fast builds, App Router)
+- React 19
+- TipTap for the editor
+- ShadCN/UI + Tailwind v4
+- Zustand for state
+- LZ-String to compress notes in localStorage
+- Framer Motion for the little animations
+- Deployed on Cloudflare Workers
+
+## No tracking, no accounts, no backend
+
+I want to be clear about this: there's no server storing your notes. No analytics watching what you type. Nothing leaves your browser. It's just a webpage that saves stuff locally.
+
+The tradeoff is obvious—different browser or device means starting fresh. But for quick notes and scratch work, that's usually fine. And if it's not, well, that's what the export button is for.
+
+## Go try it
+
+<a href="https://jotspot.adhishthite.workers.dev" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>jotspot.adhishthite.workers.dev</a>
+
+Open it, type something, close the tab, come back later. Your stuff will be there. That's the whole pitch.
+
+If you have ideas for making it better, hit me up on <a href="https://x.com/tweetadhish" target="_blank" rel="noopener noreferrer">X</a>. Always happy to hear feedback.
+
+<a
+  href="https://jotspot.adhishthite.workers.dev"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    display: "block",
+    color: "rgb(245, 135, 61)",
+    fontWeight: "bold",
+    textDecoration: "none",
+    marginTop: "1.5rem",
+    marginBottom: "1.5rem",
+  }}
+>
+  Try JotSpot
+</a>
