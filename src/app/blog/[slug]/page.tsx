@@ -10,6 +10,7 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
+import remarkGfm from "remark-gfm";
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -156,9 +157,20 @@ export default async function Blog({
           prose-img:rounded-lg prose-img:shadow-lg
           prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:italic
           prose-li:marker:text-muted-foreground
+          prose-table:w-full prose-table:border-collapse prose-table:my-6
+          prose-th:border prose-th:border-border/40 prose-th:bg-muted/30 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-semibold
+          prose-td:border prose-td:border-border/40 prose-td:px-4 prose-td:py-2
         "
         >
-          <MDXRemote source={post.rawContent} components={components} />
+          <MDXRemote
+            source={post.rawContent}
+            components={components}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm],
+              },
+            }}
+          />
         </article>
 
         {/* Author CTA */}

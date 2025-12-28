@@ -10,7 +10,7 @@ So I finally did it. I learned Rust.
 
 Well, "learned" might be generous. I built something in Rust that actually works, ships to real package managers, and doesn't segfault. Close enough, right?
 
-Meet <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>ocloc</a> (pronounced "oh-clock")—a lines-of-code counter that's stupidly fast. We're talking 2.3 million lines per second on my M2 MacBook. The entire Elasticsearch codebase (31,000 files, 5.5 million lines) analyzed in 2.35 seconds.
+Meet <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>ocloc</a> (pronounced "oh-clock"). It's a lines-of-code counter that's stupidly fast. We're talking 2.3 million lines per second on my M2 MacBook. The entire Elasticsearch codebase (31,000 files, 5.5 million lines) analyzed in 2.35 seconds.
 
 For comparison, cloc takes 56 seconds on the same repo. That's a **23x speedup**.
 
@@ -26,12 +26,12 @@ Also, I really wanted to learn Rust. And what better way to learn a systems lang
 
 Here's what's under the hood:
 
-- **Rayon** for dead-simple parallelism. Rust's fearless concurrency is real—I just slap `.par_iter()` on things and it spreads work across all CPU cores. No race conditions, no mutex nightmares.
+- **Rayon** for dead-simple parallelism. Rust's fearless concurrency is real. I just slap `.par_iter()` on things and it spreads work across all CPU cores. No race conditions, no mutex nightmares.
 - **memmap2** for memory-mapped file I/O on large files. Instead of reading files byte-by-byte, the kernel just maps them into memory. Massive syscall savings.
-- **memchr** for finding newlines. This uses SIMD instructions under the hood—we're talking vectorized searching that processes multiple bytes in a single CPU instruction.
+- **memchr** for finding newlines. This uses SIMD instructions under the hood, so we get vectorized searching that processes multiple bytes in a single CPU instruction.
 - **ignore** crate (from the ripgrep authors) for respecting `.gitignore`. Because nobody wants their `node_modules` counted.
 
-The analyzer itself is pretty straightforward: detect language by extension/filename/shebang, then count lines while tracking whether we're inside a block comment. The magic is in not doing stupid things—like reading files synchronously one at a time.
+The analyzer itself is pretty straightforward: detect language by extension/filename/shebang, then count lines while tracking whether we're inside a block comment. The magic is in not doing stupid things. Like reading files synchronously one at a time.
 
 ## The AI assist
 
@@ -41,7 +41,7 @@ I used **Claude Code** and **Claude Sonnet 4** heavily for the implementation. W
 
 I also used **OpenAI's o3** for some of the trickier algorithmic bits, especially around the block comment parsing logic. Different models have different strengths, and I found that mixing them worked well for a project like this.
 
-The result is code that's clean, idiomatic Rust—not the C-with-classes mess I would've written on my own.
+The result is code that's clean, idiomatic Rust. Not the C-with-classes mess I would've written on my own.
 
 ## Getting it into Homebrew and Cargo
 
@@ -87,7 +87,7 @@ ocloc . --json > stats.json
 ocloc /giant/monorepo --progress
 ```
 
-But the killer feature is **diff mode**—perfect for CI pipelines:
+But the killer feature is **diff mode**, which is perfect for CI pipelines:
 
 ```bash
 # See what changed between commits
@@ -106,21 +106,18 @@ You can literally add this to your GitHub Actions and have it comment on PRs wit
 
 I ran this on real repos, not synthetic tests:
 
-**elasticgpt-agents** (small repo)
-- 302 files, 53K lines
-- cloc: 0.45s → ocloc: 0.07s → **6.4x faster**
+| Repository | Files | Lines | cloc | ocloc | Speedup |
+|------------|-------|-------|------|-------|---------|
+| elasticgpt-agents (small) | 302 | 53K | 0.45s | 0.07s | **6.4x** |
+| elasticsearch (large) | 31K | 5.5M | 56s | 2.35s | **23.8x** |
 
-**elasticsearch** (large repo)
-- 31K files, 5.5M lines
-- cloc: 56s → ocloc: 2.35s → **23.8x faster**
-
-The speedup gets more dramatic as repos get larger. That's the parallelism paying off—more files means more work to distribute across cores.
+The speedup gets more dramatic as repos get larger. That's the parallelism paying off. More files means more work to distribute across cores.
 
 At 2.3 million lines per second, you could analyze the Linux kernel (~30M lines) in about 13 seconds. A typical microservice finishes in 20 milliseconds. Basically instant.
 
 ## What I learned about Rust
 
-The borrow checker is annoying until it isn't. After a while, you start thinking in terms of ownership, and the errors make sense. It's like learning to type—painful at first, then you can't imagine doing it any other way.
+The borrow checker is annoying until it isn't. After a while, you start thinking in terms of ownership, and the errors make sense. It's like learning to type. Painful at first, then you can't imagine doing it any other way.
 
 The ecosystem is incredible. Need parallelism? Rayon. Fast I/O? memmap2 + memchr. Git operations? git2. Everything just works, and the quality bar is high.
 
@@ -145,7 +142,7 @@ brew install ocloc
 
 Then run it on your codebase and watch it finish before you can blink.
 
-The code is all on <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>GitHub</a>. Issues and PRs welcome—especially if you want to add support for more languages.
+The code is all on <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>GitHub</a>. Issues and PRs welcome, especially if you want to add support for more languages.
 
 ---
 
