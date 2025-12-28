@@ -1,0 +1,170 @@
+---
+title: "ocloc: My First Rust Project (And It's 23x Faster Than cloc)"
+publishedAt: "2025-09-15"
+summary: "I built a blazingly fast lines-of-code counter in Rust. It's my first Rust project, it's on Homebrew and Cargo, and it absolutely smokes cloc."
+---
+
+# ocloc: My First Rust Project (And It's 23x Faster Than cloc)
+
+So I finally did it. I learned Rust.
+
+Well, "learned" might be generous. I built something in Rust that actually works, ships to real package managers, and doesn't segfault. Close enough, right?
+
+Meet <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>ocloc</a> (pronounced "oh-clock")—a lines-of-code counter that's stupidly fast. We're talking 2.3 million lines per second on my M2 MacBook. The entire Elasticsearch codebase (31,000 files, 5.5 million lines) analyzed in 2.35 seconds.
+
+For comparison, cloc takes 56 seconds on the same repo. That's a **23x speedup**.
+
+## Why build yet another LOC counter?
+
+Look, cloc is a fantastic tool. I've used it for years. But every time I ran it on a large monorepo, I'd go make coffee while waiting for it to finish.
+
+I wanted something that would just... finish. Instantly. Before I could even think about getting up.
+
+Also, I really wanted to learn Rust. And what better way to learn a systems language than to build something that actually needs to be fast?
+
+## The stack that makes it fast
+
+Here's what's under the hood:
+
+- **Rayon** for dead-simple parallelism. Rust's fearless concurrency is real—I just slap `.par_iter()` on things and it spreads work across all CPU cores. No race conditions, no mutex nightmares.
+- **memmap2** for memory-mapped file I/O on large files. Instead of reading files byte-by-byte, the kernel just maps them into memory. Massive syscall savings.
+- **memchr** for finding newlines. This uses SIMD instructions under the hood—we're talking vectorized searching that processes multiple bytes in a single CPU instruction.
+- **ignore** crate (from the ripgrep authors) for respecting `.gitignore`. Because nobody wants their `node_modules` counted.
+
+The analyzer itself is pretty straightforward: detect language by extension/filename/shebang, then count lines while tracking whether we're inside a block comment. The magic is in not doing stupid things—like reading files synchronously one at a time.
+
+## The AI assist
+
+I'm not going to pretend I wrote every line myself. This was very much a "vibe coding" session with AI assistance.
+
+I used **Claude Code** and **Claude Sonnet 4** heavily for the implementation. When I got stuck on Rust's borrow checker (which was... often), Claude would explain what I was doing wrong and suggest fixes that actually made sense. It's like pair programming with someone who has infinite patience for your "why won't this compile" questions.
+
+I also used **OpenAI's o3** for some of the trickier algorithmic bits, especially around the block comment parsing logic. Different models have different strengths, and I found that mixing them worked well for a project like this.
+
+The result is code that's clean, idiomatic Rust—not the C-with-classes mess I would've written on my own.
+
+## Getting it into Homebrew and Cargo
+
+Publishing to Cargo was surprisingly easy:
+
+```bash
+cargo login
+cargo publish
+```
+
+That's it. Two commands. Your crate is live on <a href="https://crates.io/crates/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>crates.io</a> and anyone can install it with `cargo install ocloc`.
+
+Homebrew was more involved. I had to:
+
+1. Create a separate tap repository (`homebrew-ocloc`)
+2. Write a formula that handles both Apple Silicon and Intel Macs
+3. Set up GitHub Actions to automatically build binaries for macOS, Linux, and Windows
+4. Auto-update the Homebrew formula when I push a new tag
+
+The CI pipeline builds binaries for four targets:
+- `aarch64-apple-darwin` (Apple Silicon)
+- `x86_64-apple-darwin` (Intel Mac)
+- `x86_64-unknown-linux-gnu` (Linux)
+- `x86_64-pc-windows-msvc` (Windows)
+
+Now when I push a tag like `v0.5.0`, GitHub automatically builds everything, creates a release with checksums, and updates the Homebrew formula. It's pretty satisfying to watch.
+
+## What can it do?
+
+The basics:
+
+```bash
+# Count lines in current directory
+ocloc .
+
+# Only Rust and Python files
+ocloc . --ext rs,py
+
+# Output as JSON for piping to other tools
+ocloc . --json > stats.json
+
+# Show progress bar for large repos
+ocloc /giant/monorepo --progress
+```
+
+But the killer feature is **diff mode**—perfect for CI pipelines:
+
+```bash
+# See what changed between commits
+ocloc diff --base HEAD~1 --head HEAD
+
+# Output markdown for GitHub PR summaries
+ocloc diff --merge-base origin/main --markdown
+
+# Fail CI if too many lines added
+ocloc diff --base origin/main --max-code-added 2500 --fail-on-threshold
+```
+
+You can literally add this to your GitHub Actions and have it comment on PRs with a breakdown of lines added/removed per language. Or gate merges if someone tries to dump 5000 lines of code in a single PR.
+
+## The benchmark numbers
+
+I ran this on real repos, not synthetic tests:
+
+**elasticgpt-agents** (small repo)
+- 302 files, 53K lines
+- cloc: 0.45s → ocloc: 0.07s → **6.4x faster**
+
+**elasticsearch** (large repo)
+- 31K files, 5.5M lines
+- cloc: 56s → ocloc: 2.35s → **23.8x faster**
+
+The speedup gets more dramatic as repos get larger. That's the parallelism paying off—more files means more work to distribute across cores.
+
+At 2.3 million lines per second, you could analyze the Linux kernel (~30M lines) in about 13 seconds. A typical microservice finishes in 20 milliseconds. Basically instant.
+
+## What I learned about Rust
+
+The borrow checker is annoying until it isn't. After a while, you start thinking in terms of ownership, and the errors make sense. It's like learning to type—painful at first, then you can't imagine doing it any other way.
+
+The ecosystem is incredible. Need parallelism? Rayon. Fast I/O? memmap2 + memchr. Git operations? git2. Everything just works, and the quality bar is high.
+
+The compile times are... not great. But the runtime performance makes up for it.
+
+And the tooling! `cargo clippy` catches so many bugs before they become bugs. `cargo fmt` means no more style arguments. `cargo test` just works. It's the best developer experience I've had with any compiled language.
+
+## Try it
+
+Install via Cargo:
+
+```bash
+cargo install ocloc
+```
+
+Or Homebrew on macOS:
+
+```bash
+brew tap adhishthite/ocloc
+brew install ocloc
+```
+
+Then run it on your codebase and watch it finish before you can blink.
+
+The code is all on <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>GitHub</a>. Issues and PRs welcome—especially if you want to add support for more languages.
+
+---
+
+This was a fun project. There's something deeply satisfying about writing fast code in a language designed for fast code. Rust's reputation is well-earned, and I'm definitely building more stuff with it.
+
+If you've been putting off learning Rust because it seems intimidating, just pick a small project and start. The compiler yells at you a lot, but it's always right. And when your code finally compiles, you know it works.
+
+<a
+  href="https://github.com/adhishthite/ocloc"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    display: "block",
+    color: "rgb(245, 135, 61)",
+    fontWeight: "bold",
+    textDecoration: "none",
+    marginTop: "1.5rem",
+    marginBottom: "1.5rem",
+  }}
+>
+  Check out ocloc on GitHub
+</a>
