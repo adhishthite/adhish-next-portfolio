@@ -4,7 +4,13 @@ import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { MDXImage, MDXLink, MDXParagraph } from "@/components/mdx-components";
+import {
+  MDXImage,
+  MDXLink,
+  MDXParagraph,
+  MDXPre,
+  MDXCode,
+} from "@/components/mdx-components";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -76,6 +82,8 @@ export default async function Blog({
     Image: MDXImage,
     a: MDXLink,
     p: MDXParagraph,
+    pre: MDXPre,
+    code: MDXCode,
   };
 
   // Calculate reading time
