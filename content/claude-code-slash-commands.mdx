@@ -1,0 +1,347 @@
+---
+title: "I Asked for a Tip Calculator. Claude Asked Me 27 Questions First."
+publishedAt: "2025-12-29"
+summary: "What started as a simple web app turned into a 20-minute interview about penny reconciliation, paste chaos, and wedding bills. Then Claude built and deployed it to production in 30 minutes total."
+pinned: true
+pinnedOrder: 1
+---
+
+# I Asked for a Tip Calculator. Claude Asked Me 27 Questions First.
+
+I just wanted to build a simple tip calculator. Enter bill amount, pick tip percentage, done. Maybe add bill splitting if I felt ambitious. Fifteen minutes of work, tops.
+
+30 minutes later (total time from empty directory to deployed on Vercel), I had a production-ready app.
+
+**[Try Tippr live →](https://tippr-cc.vercel.app/)**
+
+Not because I'm some coding genius. Because I let Claude interrogate me for 20 minutes about penny reconciliation, paste chaos, and what happens when someone tries to calculate a tip on a $470,000 wedding bill.
+
+This is what happens when you stop rushing to code and start answering uncomfortable questions about your "simple" idea.
+
+## The Setup: A Blank Terminal and Two Magic Words
+
+I created a directory called `tip-calculator`, opened my terminal, typed `claude code`, and then typed two characters: `/o`
+
+Autocomplete suggested `/onboard-project`. I hit enter.
+
+What I didn't know: I'd just started a 20-minute interview that would make me think about things I'd never considered.
+
+Quick context. Claude Code has this feature called **slash commands**. They're reusable workflows stored as Markdown files. You can make them yourself (stick them in `~/.claude/commands/` for personal use, or `.claude/commands/` for project-specific ones).
+
+Unlike Skills (in Claude Code) that activate automatically based on semantic matching, slash commands are explicit. You type `/onboard-project` and Claude runs the project scaffolding interview. You type `/break-it` and Claude becomes a QA specialist hunting for edge cases.
+
+I'd built these two commands over months of being frustrated with my scattered dev process. Now I was testing them on something "simple."
+
+## Act I: The Friendly Interrogation
+
+<a href="https://gist.github.com/adhishthite/3209f14852fa816e9bc4f1b1ef03d07e" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>View the full /onboard-project command on GitHub Gist</a>
+
+Claude's message popped up:
+
+> "Welcome! I'm excited to help you build something great. Think of me as your project architect. I'll handle the technical details while making sure we build exactly what you need. Let's start by getting to know each other a bit."
+
+Friendly. Disarming. I wasn't suspicious yet.
+
+![Claude Code onboarding interview starting](/blog/claude-code-slash-commands/cc-onboarding-1.png)
+
+### The Onboarding Questions
+
+Claude didn't just ask what I wanted to build. It systematically profiled me, my preferences, and my project:
+
+| Question | My Answer |
+|----------|-----------|
+| **What do you do?** | Developer / Engineer |
+| **Technical comfort level?** | Very technical—discuss architecture and code |
+| **Progress updates preference?** | Technical details—code reviews and implementation |
+| **What are you building?** | Simple tip calculator: minimal, fast, sleek, reliable |
+| **Preferred tech stack?** | React (Vite) |
+| **Visual/interaction feel?** | Modern clean (subtle shadows, smooth animations) |
+| **Special features?** | ☑ Split bill<br/>☑ Custom tips<br/>☑ Round totals<br/>☐ Save history |
+| **Code quality tooling?** | Strict—TypeScript, ESLint, Prettier, pre-commit hooks, testing |
+
+### The Naming Ceremony
+
+Claude didn't just ask for a project name. It *brainstormed*:
+
+| Name | Vibe |
+|------|------|
+| **Tippr** | Modern app-style, short, memorable |
+| **Divvy** | Action-oriented, about splitting |
+| **Settle** | "Settle the bill", elegant |
+| **QuickTip** | Speed-focused |
+| **Gratity** | Slightly formal |
+
+I picked Tippr. It felt right.
+
+Then Claude wrote everything to a spec file in `.plans/tippr-spec.md`. Every decision, every preference, every architectural choice documented.
+
+The spec included `CLAUDE.md` (my communication style), `TECHNICAL.md` (architecture decisions), and the full project structure.
+
+![Spec file saved after onboarding](/blog/claude-code-slash-commands/cc-onboarding-done.png)
+
+At this point I thought, okay this was thorough, but now we build, right?
+
+Wrong.
+
+## Act II: "Let's Break It"
+
+<a href="https://gist.github.com/adhishthite/d7ec154de478210f147d774aa9776750" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>View the full /break-it command on GitHub Gist</a>
+
+I typed `/break-it @.plans/tippr-spec.md`
+
+![Starting the edge case exploration](/blog/claude-code-slash-commands/cc-breakit-1.png)
+
+Claude's response:
+
+> "Let's systematically explore how users might break Tippr. I'll ask about specific scenarios one at a time."
+
+Then the bombardment began.
+
+### The Edge Case Questions
+
+Claude asked about one scenario at a time. Each one made me realize something I'd never considered:
+
+| Scenario | My Initial Reaction | My Answer |
+|----------|---------------------|-----------|
+| **$0.01 bill with 20% tip = $0.002** | "I've never thought about this" | Round to nearest cent |
+| **$470,000 typo for $47,000 wedding bill** | "Who calculates tips on weddings?" | Soft warning over $10k + thousand separators |
+| **User enters -$20 (refund scenario)** | "Didn't plan for negatives" | Block negative values |
+| **$99.99 split 3 ways = $38.3295 each** | "Wait, there's a rounding problem?" | Penny reconciliation (one person pays extra ¢) |
+| **Unequal splits (salad vs. wine)** | "THAT'S NOT MY PROBLEM" | Out of scope—Tippr ≠ Splitwise |
+| **Credit card number pasted: 4532...** | *laughs* → "Oh wait, people do this" | Detect invalid money, show error |
+| **Rapid tap 20% button 7 times** | "I forgot about debouncing" | Debounce—ignore for 0.5s after first tap |
+| **$24.50 vs 24,50 (decimal/comma)** | "For a tip calculator?" | Force decimal point (US format) |
+| **Split by 0 people** | "Obviously an error" → "I wouldn't have validated this" | Minimum 1 person |
+| **$0 bill amount** | "Empty state I'd miss" | Hide results until > 0 |
+
+Every single question caught something that would've been a production bug.
+
+### Why This Didn't Take Hours
+
+Here's what made this bearable: I wasn't typing essays. Every question had clickable options.
+
+When Claude asked about the credit card paste scenario, I didn't type a paragraph. I clicked: **"Detect invalid money, show error."**
+
+The interviews took ~20 minutes because I was *thinking* about each scenario, not writing responses. Clicking was fast. Thinking was slow. As it should be.
+
+### The Document That Changed Everything
+
+When the interrogation finally ended, Claude generated an edge cases document.
+
+![Edge case exploration complete](/blog/claude-code-slash-commands/cc-breakit-done.png)
+
+Every scenario. Every decision. Organized by category.
+
+**Money precision issues:**
+- Situation: Bill $0.01, tip 20% = $0.002
+- Handling: Round to nearest cent
+- User message: "Tip rounded to nearest penny"
+
+**Input validation:**
+- Situation: User pastes credit card number
+- Handling: Reject non-currency input
+- User message: "Please enter a valid dollar amount"
+
+**Split bill logic:**
+- Situation: $99.99 split 3 ways = $38.3295 each
+- Handling: Two people pay $38.33, one pays $38.34
+- User message: "Amounts adjusted by 1¢ to match total"
+
+The document had 40+ edge cases. For a tip calculator.
+
+And every single one was legitimate.
+
+## Act III: One Command to Build It All
+
+I had two files:
+- `.plans/tippr-spec.md` - My vision, preferences, architecture
+- `docs/edge-cases/tippr-edge-cases.md` - 40+ scenarios that would break the app
+
+20 minutes in. I hadn't written a single line of code. Hadn't even opened VS Code.
+
+This is where traditional development would start. Set up React, install dependencies, create components, wire up state, handle edge cases, debug, repeat.
+
+Instead, I typed one sentence:
+
+> "Using @.plans/tippr-spec.md as the spec and @docs/edge-cases/tippr-edge-cases.md as mandatory constraints, build the complete Tippr app from scratch. Use latest stable versions, handle all edge cases, output a runnable project with code, config, and README."
+
+![The one command that built everything](/blog/claude-code-slash-commands/cc-start-building.png)
+
+Then I hit enter.
+
+Claude built the entire app.
+
+Not a prototype. Not a proof of concept. A **production-ready application**:
+
+- React + Vite setup with TypeScript
+- Complete component architecture
+- All 40+ edge cases handled
+- Input validation with proper error states
+- Penny reconciliation logic for splits
+- Debounced interactions
+- Accessibility (ARIA labels, keyboard navigation)
+- Responsive design
+- ESLint + Prettier + pre-commit hooks configured
+- README with setup instructions
+- No runtime errors in my testing
+
+I typed `npm install`, then `npm run dev`.
+
+The app loaded. I started testing:
+- Entered $0.01 → Tip rounded correctly ✓
+- Pasted gibberish → Error message appeared ✓
+- Split $99.99 by 3 → Penny reconciliation worked ✓
+- Rapid-clicked 20% → Debounced properly ✓
+- Entered -$50 → Rejected as expected ✓
+
+Every edge case. Every scenario from the interview. Handled.
+
+**[See it live: tippr-cc.vercel.app](https://tippr-cc.vercel.app/)**
+
+Here's what the finished app looks like:
+
+![Tippr initial empty state](/blog/claude-code-slash-commands/tippr-screen-1.png)
+
+![Calculating an 18% tip on $4.95](/blog/claude-code-slash-commands/tippr-screen-2.png)
+
+![Splitting the bill among 3 people with penny reconciliation](/blog/claude-code-slash-commands/tippr-screen-3.png)
+
+![The large amount warning in action ($10,001)](/blog/claude-code-slash-commands/tippr-screen-5.png)
+
+### The Part That Broke My Brain
+
+I never opened my IDE during any of this.
+
+The entire process - idea to working app - happened in my terminal through conversation with Claude Code.
+
+No context-switching between editor and terminal. No "let me just open this file real quick." No fighting with import paths or missing dependencies.
+
+Just answer questions, then watch it build.
+
+**Full disclosure:** The first build had some bugs. I used Sonnet to generate it and there were a few minor issues. Asked Opus to fix them, now it's production-ready. But here's the key: every bug was an implementation detail, not a missed edge case. The penny reconciliation? Worked. The large amount warning? Worked. The input validation? Worked. The interview prevented the bugs that actually matter.
+
+## What I Actually Learned
+
+Every product I've shipped has taught me this: the edge cases you don't think about are the ones that bite you in production.
+
+I've been that developer firefighting at 2 AM because someone entered their name in Arabic. Or submitted a form twice because they got impatient. Or had their session expire mid-checkout.
+
+The traditional flow: idea → code → bugs → fixes → more bugs → ship → production bugs → burnout.
+
+These slash commands gave me something different: idea → systematic edge case analysis → code with awareness → ship with confidence.
+
+The magic isn't that Claude Code writes perfect code. The magic is that it forces you to think before you code.
+
+### The Uncomfortable Truth
+
+Most developers (me included) hate thinking about edge cases upfront. Feels like premature optimization. Feels like overthinking a "simple" problem.
+
+But a tip calculator isn't simple. Nothing is simple once real users touch it.
+
+The ~10-minute interrogation from `/break-it` felt excessive. Until I saw the app work on the first try.
+
+No debugging session for negative numbers breaking everything. No panic-fix when someone pasted a credit card number in the bill field. No "oh crap, I forgot to debounce" moment three months later.
+
+All those problems were already solved. I'd been forced to think about them in 10 minutes instead of discovering them over 3 months.
+
+### The Knowledge Transfer Principle
+
+Here's what building these commands taught me about AI-assisted development:
+
+**The power isn't in code generation. It's in knowledge transfer.**
+
+Claude doesn't know my project's context until I tell it. But once I've taught it - via slash commands, via `CLAUDE.md`, via the interview process - it can apply that knowledge consistently.
+
+Slash commands are reusable teaching:
+- I taught Claude once how I like projects scaffolded → Every new project starts right
+- I taught Claude once how to think about edge cases → I get systematic QA on demand
+- I taught Claude my communication style → It adapts appropriately
+
+It's not "AI writes code for me." It's "AI applies my expertise when I'm too tired to remember all of it myself."
+
+## Want These Commands?
+
+Both commands are available as GitHub Gists:
+
+**[/onboard-project](https://gist.github.com/adhishthite/3209f14852fa816e9bc4f1b1ef03d07e)** — The project scaffolding interview
+**[/break-it](https://gist.github.com/adhishthite/d7ec154de478210f147d774aa9776750)** — The edge case explorer
+
+To install them:
+
+```bash
+# Create personal commands directory
+mkdir -p ~/.claude/commands
+
+# Download the commands
+curl -o ~/.claude/commands/onboard-project.md \
+  https://gist.githubusercontent.com/adhishthite/3209f14852fa816e9bc4f1b1ef03d07e/raw/onboard-project.md
+
+curl -o ~/.claude/commands/break-it.md \
+  https://gist.githubusercontent.com/adhishthite/d7ec154de478210f147d774aa9776750/raw/break-it.md
+
+# Commands are available immediately in Claude Code
+# Command names match the filename without .md extension
+# Just type /onboard-project or /break-it to use them
+```
+
+### How They Work Under the Hood
+
+The commands use `allowed-tools` in Claude Code to scope their capabilities:
+
+- **`/onboard-project`**: Can write files (`Bash`, `Write`, `Edit`) because it scaffolds projects
+- **`/break-it`**: Documentation-focused (`Read`, `Write`, `Edit`, `AskUserQuestion`) - writes only to `docs/edge-cases/` for documentation, won't touch your app code
+
+When you invoke a slash command, its full instructions load into Claude's context. It's like giving Claude a specialized role with specific workflows to follow.
+
+## The Invitation
+
+These commands are opinionated. They work for how I think about products. Yours might look completely different. That's the point.
+
+If you've been sleeping on Claude Code slash commands, start small:
+- A command that enforces your commit message format
+- One that explains code in your preferred teaching style
+- A workflow for your specific code review process
+
+The goal isn't to copy mine. The goal is to codify your own expertise so you can apply it consistently, even when you're tired, rushing, or working on your 10th project of the month.
+
+---
+
+## Epilogue: 30 Minutes to Production
+
+I set out to build a simple tip calculator. Fifteen minutes of work, I thought.
+
+Instead, I answered 27 questions about penny reconciliation, paste chaos, and wedding bills.
+
+Then I typed one sentence and watched Claude build it. Pushed to GitHub. Deployed to Vercel.
+
+**→ [Try it yourself: tippr-cc.vercel.app](https://tippr-cc.vercel.app/)**
+
+**Total time: Under 30 minutes**
+- ~10 minutes: Project onboarding interview
+- ~10 minutes: Edge case exploration
+- ~5 minutes: Code generation and testing
+- ~5 minutes: Deploy to Vercel
+
+Every edge case that would've become a bug was caught in the interview.
+
+Go ahead. Try pasting a credit card number into Tippr's bill field. Enter $0.01. Split by zero. The app handles it all gracefully because I was forced to think about these scenarios before writing code.
+
+Next time you're about to start coding, ask yourself: "Have I thought about what happens when someone pastes their credit card number into the input field?"
+
+If the answer is no, maybe you need to be interrogated first.
+
+<a
+  href="https://gist.github.com/adhishthite"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    display: "block",
+    color: "rgb(245, 135, 61)",
+    fontWeight: "bold",
+    textDecoration: "none",
+    marginTop: "1.5rem",
+    marginBottom: "1.5rem",
+  }}
+>
+  View my GitHub Gists for more Claude Code commands
+</a>
