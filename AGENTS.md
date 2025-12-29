@@ -64,6 +64,24 @@ Alternative: Use pnpm directly (see `packageManager`):
 - Routing: Next.js App Router in `src/app` with server components by default; client components opt-in via `"use client"`.
 - Content pipeline: MDX in `content/` rendered via `next-mdx-remote`, `remark/rehype`, `remark-gfm` (GitHub Flavored Markdown), and `rehype-pretty-code` with Shiki highlighting. Supports Mermaid diagrams via `src/components/mermaid.tsx` (theme-aware).
 - UI & Theming: TailwindCSS + shadcn/ui + magic-ui components, dark mode via `next-themes` (`ThemeProvider` under `src/components`).
-- Data model: Structured data in `src/data/*` feeds components/pages; shared helpers in `src/lib`. Blog posts use `BlogMetadata` interface supporting pinned posts (`pinned`, `pinnedOrder` attributes).
+- Data model: Structured data in `src/data/*` feeds components/pages; shared helpers in `src/lib`. Blog posts use `BlogMetadata` interface supporting pinned posts (`pinned`, `pinnedOrder`) and OG images (`image` for social sharing).
 - Deployment: Built output served by Vercel.
 - Code Quality: Uses Biome for linting and formatting (replaced ESLint); accessible via Makefile commands.
+
+## Blog Post Guidelines
+
+MDX files in `content/` use frontmatter for metadata. Required and optional fields:
+
+```yaml
+---
+title: "Post Title"           # Required
+publishedAt: "YYYY-MM-DD"     # Required
+summary: "Brief description"  # Required (used for OG description)
+image: "/blog/slug/image.png" # Optional: OG image for social sharing (falls back to avatar)
+pinned: true                  # Optional: Feature in pinned section
+pinnedOrder: 1                # Optional: Priority (1-3, lower = higher)
+---
+```
+
+- Store blog images in `public/blog/<slug>/` directory
+- For OG images, prefer 1200×630px (1.91:1 ratio) for best social media display
