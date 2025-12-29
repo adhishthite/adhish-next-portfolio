@@ -62,8 +62,8 @@ Alternative: Use pnpm directly (see `packageManager`):
 ## Architecture Overview
 
 - Routing: Next.js App Router in `src/app` with server components by default; client components opt-in via `"use client"`.
-- Content pipeline: MDX in `content/` rendered via `next-mdx-remote`, `remark/rehype`, and `rehype-pretty-code` with Shiki highlighting.
+- Content pipeline: MDX in `content/` rendered via `next-mdx-remote`, `remark/rehype`, `remark-gfm` (GitHub Flavored Markdown), and `rehype-pretty-code` with Shiki highlighting. Supports Mermaid diagrams via `src/components/mermaid.tsx` (theme-aware).
 - UI & Theming: TailwindCSS + shadcn/ui + magic-ui components, dark mode via `next-themes` (`ThemeProvider` under `src/components`).
-- Data model: Structured data in `src/data/*` feeds components/pages; shared helpers in `src/lib`.
+- Data model: Structured data in `src/data/*` feeds components/pages; shared helpers in `src/lib`. Blog posts use `BlogMetadata` interface supporting pinned posts (`pinned`, `pinnedOrder` attributes).
 - Deployment: Built output served by Vercel.
 - Code Quality: Uses Biome for linting and formatting (replaced ESLint); accessible via Makefile commands.
