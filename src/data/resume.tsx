@@ -8,7 +8,7 @@ export const YEARS_OF_EXPERIENCE = new Date().getFullYear() - CAREER_START_YEAR;
 export const DATA = {
   name: "Adhish Thite",
   initials: "AT",
-  url: "https://adhishthite.com",
+  url: "https://www.adhishthite.com",
   location: "Pune, India",
   locationLink: "https://www.google.com/maps/place/pune",
   description: `AI/ML Engineer with ${YEARS_OF_EXPERIENCE}+ years of experience building end-to-end AI systems, GenAI applications, and leading engineering teams. Specializing in LLMs, RAG, and production ML.`,
