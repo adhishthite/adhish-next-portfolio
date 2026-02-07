@@ -1,0 +1,167 @@
+---
+title: "India Economic Intelligence: Three Apps Built on Government Open Data"
+publishedAt: "2026-02-07"
+summary: "Built three open-source tools for Indian economic data - a macro dashboard, an employment tracker with choropleth maps, and an AI agent that answers questions about the economy. All powered by MoSPI's MCP server."
+---
+
+# India Economic Intelligence: Three Apps Built on Government Open Data
+
+India's Ministry of Statistics and Programme Implementation quietly launched something interesting: an <a href="https://mcp.mospi.gov.in" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>MCP server</a> that exposes real-time economic data. GDP growth rates, inflation indices, industrial production, employment surveys - the same data that shows up in RBI policy documents and budget speeches, now accessible through a structured protocol.
+
+No API key required. No registration. Just connect and query.
+
+I built three things on top of it.
+
+## 1. India Economic Dashboard
+
+**[Live](https://india-economic-dashboard.vercel.app)** | **[GitHub](https://github.com/adhishthite/india-economic-dashboard)**
+
+The dashboard pulls four macro indicators in real-time:
+
+- **GDP and GVA** - Quarterly growth rates from National Accounts Statistics
+- **CPI** - Consumer Price Index across food, fuel, housing, and other categories
+- **WPI** - Wholesale Price Index for producer inflation
+- **IIP** - Index of Industrial Production across manufacturing, mining, and electricity
+
+Each indicator gets its own interactive chart with zoom and hover. The data is the same stuff economists and analysts use - straight from the source, no intermediary.
+
+The UI uses glassmorphism with dark mode and smooth loading skeletons. Looks nice, but the real value is that it's pulling live government data every time you visit. No stale CSVs, no manual updates.
+
+### How the MCP workflow works
+
+This is where it gets interesting. MoSPI's MCP server follows a strict 4-step workflow:
+
+1. **Initialize session** - Establish a connection via SSE + JSON-RPC 2.0
+2. **Discover datasets** - Call the API overview to see what's available
+3. **Fetch metadata** - Get indicator names, frequencies, available time periods
+4. **Retrieve data** - Actually pull the numbers with specific filters
+
+You can't skip steps. Try to fetch data without discovering datasets first, and you get an error. Each API route in my app (`/api/gdp`, `/api/cpi`, `/api/wpi`, `/api/iip`) implements this full workflow, with 6-hour server-side caching to avoid hammering the MoSPI server.
+
+## 2. India Employment Tracker
+
+**[Live](https://india-employment-tracker.vercel.app)** | **[GitHub](https://github.com/adhishthite/india-employment-tracker)**
+
+This one goes deeper. It visualizes data from the Periodic Labour Force Survey (PLFS) - India's primary employment survey covering 2017-18 through 2023-24 across all 36 states and union territories.
+
+The headline feature is an **interactive choropleth map** of India showing state-wise unemployment rates. Hover over any state and see its numbers. The color scale makes it immediately obvious which states are struggling and which aren't.
+
+Beyond the map:
+
+- **National summary** - Unemployment rate, labour force participation, worker population ratio
+- **State comparison** - Side-by-side analysis of up to five states
+- **Temporal trends** - Multi-year employment patterns
+- **Demographic breakdowns** - By age group and gender
+- **Sectoral distribution** - Agriculture, manufacturing, construction, services
+- **Rural vs urban** - Different employment patterns across India's divide
+
+I used `react-simple-maps` for the cartography with India's TopoJSON boundaries. The state codes needed manual mapping between MoSPI's naming convention and the GeoJSON standard, which was more tedious than difficult.
+
+## 3. India Economic Intelligence Agent
+
+**[Live](https://india-economic-intelligence.vercel.app)** | **[GitHub](https://github.com/adhishthite/india-economic-intelligence)**
+
+This is the one that ties everything together. An AI agent that can query MoSPI's data and answer natural language questions about the Indian economy.
+
+Ask it "What's the current GDP growth rate?" and it will:
+1. Initialize a session with MoSPI
+2. Discover available National Accounts datasets
+3. Fetch GDP metadata
+4. Pull the latest quarterly figures
+5. Synthesize an answer with citations
+
+Ask it "Compare CPI inflation across food and fuel categories for the last 6 quarters" and it chains multiple dataset queries together.
+
+The agent covers 7 datasets:
+- PLFS (employment and wages)
+- CPI (consumer inflation)
+- WPI (wholesale inflation)
+- IIP (industrial production)
+- NAS (GDP and GVA)
+- ASI (factory statistics - 57+ indicators)
+- ENERGY (production, consumption, supply-demand)
+
+Built with **LangGraph.js** running on Azure OpenAI's GPT-4o. The agent follows the same 4-step MoSPI workflow but does it autonomously - figuring out which datasets to query based on the user's question.
+
+The chat interface streams responses token-by-token and shows which datasets are being queried in real-time. Source citations link back to MoSPI so you can verify the numbers yourself.
+
+## The Hard Parts
+
+### MoSPI rate limiting
+
+This was the biggest challenge across all three projects. MoSPI's server is not designed for high-throughput API access. Hit it too fast and you get rate-limited or dropped.
+
+The solution was a combination of:
+- **Shared sessions** - Reuse MCP sessions across requests instead of creating new ones
+- **Sequential calls** - No parallel requests to MoSPI, ever. One at a time.
+- **Mandatory delays** - 1.5-second pause between consecutive API calls
+- **Aggressive caching** - 30 minutes for the employment tracker, 6 hours for the dashboard, and tiered caching (Vercel KV/Upstash Redis with in-memory fallback) for the AI agent
+
+It's slower than I'd like. Initial queries on the AI agent can take 30-60 seconds while the session initializes. But subsequent queries benefit from caching and respond much faster.
+
+### Zod v4 breaking changes
+
+I hit this during the employment tracker build. Zod v4 changed several APIs, and some of the libraries I was using hadn't caught up. Schema validation that worked fine in v3 started throwing cryptic errors. The fix was pinning specific versions and being careful about which Zod utilities I imported.
+
+Not a deep technical challenge, just the kind of dependency friction that eats time.
+
+### The 4-step workflow constraint
+
+Every single data fetch requires four sequential API calls. There's no shortcut. This means the minimum latency for any fresh data request is:
+
+```
+Session init (~500ms) +
+Dataset discovery (~300ms) +
+Metadata fetch (~300ms) +
+Data retrieval (~300ms) +
+Mandatory delays (4.5s for three 1.5s pauses) =
+~6 seconds minimum
+```
+
+For the AI agent, which might need to query multiple datasets for a single answer, this adds up. That's why caching is critical.
+
+## Tech stack (shared across all three)
+
+- **Next.js** with App Router and Turbopack
+- **TypeScript** (strict mode)
+- **Tailwind CSS** for styling
+- **shadcn/ui** and Radix UI for components
+- **Recharts** for data visualization
+- **Framer Motion** for animations
+- **Biome** for linting and formatting
+- **Bun** as the package manager
+- **Vercel** for hosting
+
+The AI agent adds **LangGraph.js**, **Azure OpenAI**, and **Vercel KV** for caching.
+
+## Why this matters
+
+India generates a massive amount of economic data. Most of it sits in PDFs and spreadsheets on government websites. The fact that MoSPI now exposes it through a machine-readable protocol is a big deal.
+
+These three projects are proof of concept: you can build real-time economic intelligence tools using nothing but open government data and open-source software. No proprietary data feeds. No expensive Bloomberg terminal. Just a free MCP endpoint and some TypeScript.
+
+Everything is MIT licensed. Clone it, fork it, build something better.
+
+## Try them
+
+- <a href="https://india-economic-dashboard.vercel.app" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>India Economic Dashboard</a> - Macro indicators at a glance
+- <a href="https://india-employment-tracker.vercel.app" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>India Employment Tracker</a> - State-wise employment data with choropleth maps
+- <a href="https://india-economic-intelligence.vercel.app" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>India Economic Intelligence Agent</a> - Ask questions about the Indian economy
+
+All open source. All powered by data your government already publishes.
+
+<a
+  href="https://github.com/adhishthite/india-economic-intelligence"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    display: "block",
+    color: "rgb(245, 135, 61)",
+    fontWeight: "bold",
+    textDecoration: "none",
+    marginTop: "1.5rem",
+    marginBottom: "1.5rem",
+  }}
+>
+  View all three projects on GitHub
+</a>

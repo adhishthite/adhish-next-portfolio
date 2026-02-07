@@ -1,0 +1,177 @@
+---
+title: "convex-jina: I Built a Convex Component and Published It to npm"
+publishedAt: "2026-02-07"
+summary: "Built a Convex component that wraps Jina AI's Reader and Search APIs - URL-to-markdown conversion and web search with durable caching. Published to npm, open source, built for the Convex Components Authoring Challenge."
+---
+
+# convex-jina: I Built a Convex Component and Published It to npm
+
+I've been building with Convex for a while now. GlucoWise runs on it. Every time I start a new project, Convex is the backend I reach for. So when they announced the <a href="https://docs.convex.dev/components" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>Components Authoring Challenge</a>, I figured it was time to stop just *using* components and start *building* them.
+
+The result: <a href="https://www.npmjs.com/package/convex-jina" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>convex-jina</a> - a Convex component that wraps Jina AI's Reader and Search APIs. Install it, pass a URL, get clean markdown back. Or pass a search query and get structured results optimized for LLMs.
+
+**[View on GitHub](https://github.com/adhishthite/convex-jina)** | **[Live Demo](https://convex-jina-demo.vercel.app)** | **[npm](https://www.npmjs.com/package/convex-jina)**
+
+## What it does
+
+Two things, both well:
+
+**Reader** - Give it any URL. It calls Jina AI's Reader API and returns clean markdown, HTML, or plain text. No more scraping HTML yourself, no more fighting with parsers. Jina handles the extraction; the component handles caching and state.
+
+**Search** - Give it a search query. It hits Jina's Search API and returns structured results with clean content. Think of it as web search that returns actually useful text instead of SEO-stuffed snippets.
+
+Both operations are durably cached in your Convex database with configurable TTL. You read a URL once, and subsequent requests hit the cache. Usage tracking is built in - you can see token consumption per user and per operation type.
+
+## Why Jina AI?
+
+I've tried a bunch of web extraction tools. Jina's Reader API is genuinely good. It handles JavaScript-rendered pages, strips navigation and ads, and returns markdown that actually looks like the article content. Their Search API returns results with clean extracted content instead of just titles and URLs.
+
+The free tier gives you 1 million tokens per month. That's plenty for most use cases. And the API is dead simple - one endpoint, straightforward params, reliable output.
+
+## The Component Architecture
+
+Convex components have a specific pattern. You expose a class-based client that wraps your internal actions and queries. Users install your package, instantiate the client in their `convex/` directory, and call methods.
+
+Here's what the integration looks like:
+
+```typescript
+// convex/jina.ts
+import { Jina } from "convex-jina";
+
+export const jina = new Jina(components.jina);
+```
+
+Then from your app:
+
+```typescript
+// Read a URL
+const cacheId = await jina.read(ctx, {
+  url: "https://example.com/article",
+  apiKey: userApiKey,
+  outputFormat: "markdown",
+});
+
+// Get the cached result reactively
+const result = await jina.getReaderContent(ctx, { cacheId });
+```
+
+The reactive part is key. Because this is Convex, your frontend automatically updates when the read operation completes. No polling, no WebSocket setup. The component triggers an action, stores the result, and your query subscription picks it up.
+
+## Design Decisions That Mattered
+
+### API key in args, not process.env
+
+Most integrations expect you to set an environment variable. I went a different route: the API key is passed as an argument to each action call. This means users can store their own Jina API key in localStorage (or wherever they want) and pass it at call time.
+
+Why? Because this is a *component* that other developers install. Their users might each have their own Jina API key. Hardcoding it as a server-side env var means one key for the whole app. Passing it per-call means each user can bring their own.
+
+The demo app stores it in localStorage. Enter your key, it persists in your browser, and every API call includes it. No server-side secrets needed.
+
+### Durable caching with TTL
+
+Every read and search result gets cached in the Convex database. The cache key is the URL (for Reader) or query (for Search). You can configure TTL per operation or invalidate specific entries manually.
+
+```typescript
+// Invalidate a specific URL's cache
+await jina.invalidateReader(ctx, { url: "https://example.com/stale" });
+
+// Invalidate search cache
+await jina.invalidateSearch(ctx, { query: "old query" });
+```
+
+This means repeated reads of the same URL don't burn through your Jina token quota. And because the cache lives in Convex, it's durable across deploys and server restarts.
+
+### What I skipped: embeddings
+
+Jina also has an Embeddings API. I considered wrapping it too, but Convex doesn't have native vector search. I could have stored embeddings and done brute-force cosine similarity, but that felt wrong. Ship the things that work well, skip the things that would be a hack.
+
+Reader + Search is the right scope for this component. If Convex adds vector search support, embeddings would be a natural addition.
+
+## Retry logic and rate limiting
+
+Jina's API has rate limits, and network requests fail. The component implements automatic retries with exponential backoff:
+
+- First retry after 1 second
+- Second retry after 2 seconds
+- Third retry after 4 seconds
+- Then it gives up and throws
+
+This is handled inside the Convex action, so the caller doesn't need to think about it. Either you get a result or you get a clean error.
+
+## Usage tracking
+
+Every API call logs token usage by user and operation type. You can query aggregated usage:
+
+```typescript
+const usage = await jina.getUsage(ctx, { userId: "user123" });
+// { totalTokens: 45000, readerTokens: 30000, searchTokens: 15000 }
+```
+
+Useful if you're building something where users have quotas or you want to monitor consumption.
+
+## The demo
+
+The <a href="https://convex-jina-demo.vercel.app" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>demo app</a> is a simple React frontend that lets you test both APIs. Enter your Jina API key, paste a URL or type a search query, and see the results. It shows the raw markdown output, cache status, and token usage.
+
+Nothing fancy, but it proves the component works end-to-end.
+
+## Publishing to npm
+
+Publishing a Convex component to npm is straightforward once you know the structure. The key files:
+
+- `src/component/` - Your Convex functions (actions, queries, mutations)
+- `src/client/` - The class-based client that users import
+- `component.config.ts` - Component metadata and dependencies
+
+```bash
+bun run build && npm publish
+```
+
+It's on npm as `convex-jina` at version 0.1.0. Install it with:
+
+```bash
+bun add convex-jina convex
+```
+
+## The Convex Components Authoring Challenge
+
+I entered this in the Third-Party Sync category. The idea behind this category is components that sync data between Convex and external services. Reader syncs web content into your Convex database. Search syncs search results. Both with caching and reactive queries.
+
+Whether or not it wins, building and publishing a real npm package that other developers can install and use was worth it. There's something satisfying about going from "I use this framework" to "I extended this framework."
+
+## Tech stack
+
+- **Convex** - Backend, database, reactive queries
+- **React** - Demo frontend
+- **TypeScript** - Everything
+- **Jina AI** - Reader and Search APIs
+- **Vitest** - Testing
+- **Biome** - Linting and formatting
+- **Bun** - Package manager
+- **Vercel** - Demo hosting
+
+## Try it
+
+```bash
+bun add convex-jina convex
+```
+
+Grab a free API key from <a href="https://jina.ai" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>jina.ai</a> (1M tokens/month free tier), and you're good to go.
+
+The code is all on <a href="https://github.com/adhishthite/convex-jina" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>GitHub</a>. Apache 2.0 license. Issues and PRs welcome.
+
+<a
+  href="https://github.com/adhishthite/convex-jina"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    display: "block",
+    color: "rgb(245, 135, 61)",
+    fontWeight: "bold",
+    textDecoration: "none",
+    marginTop: "1.5rem",
+    marginBottom: "1.5rem",
+  }}
+>
+  Check out convex-jina on GitHub
+</a>
