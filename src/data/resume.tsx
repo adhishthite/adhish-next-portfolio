@@ -116,7 +116,7 @@ export const DATA = {
       },
       X: {
         name: "X",
-        url: "https://x.com/tweetadhish",
+        url: "https://x.com/xadhish",
         icon: Icons.x,
 
         navbar: true,
