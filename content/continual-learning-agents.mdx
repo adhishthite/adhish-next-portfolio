@@ -1,0 +1,258 @@
+---
+title: "Your AI Agent Forgets Everything. Here's How I Fixed That."
+publishedAt: "2026-02-08"
+summary: "Building a continual learning system that makes AI agents compound over time. No RAG pipeline, no vector database — just markdown files, a local search engine, and an auto-capture loop that turns every failure into permanent knowledge."
+pinned: true
+pinnedOrder: 1
+---
+
+# Your AI Agent Forgets Everything. Here's How I Fixed That.
+
+**Building a continual learning system that makes AI agents compound over time.**
+
+---
+
+Every morning, my AI agent wakes up with amnesia.
+
+It doesn't remember the bug we spent two hours debugging yesterday. It doesn't remember that the deploy script needs a `--force` flag on staging. It doesn't remember that I hate verbose confirmations and prefer it to just do the thing.
+
+Session 1 with a fresh agent feels magical. Session 50 feels like Groundhog Day. You're re-teaching the same lessons, re-explaining the same preferences, re-discovering the same gotchas. The cold start problem isn't a minor annoyance — it's the thing that makes AI agents feel like toys instead of tools.
+
+So I built a memory system. Not a fancy RAG pipeline or a vector database with a monthly bill. A file-based, human-readable, version-controlled system that lets my agent learn from its own failures and come back sharper every session.
+
+Here's exactly how it works.
+
+---
+
+## The Architecture: Layered Memory
+
+The core insight is that not all memory is created equal. Some things change daily. Some things change weekly. Some things should never change. Treating all context the same — dumping everything into one giant prompt — is wasteful and noisy.
+
+Instead, I use five layers:
+
+```
+workspace/
+├── SOUL.md                    # Identity — who the agent IS
+├── MEMORY.md                  # Long-term curated memory
+├── memory/
+│   ├── 2026-02-05.md          # Daily log — raw, everything
+│   ├── 2026-02-06.md
+│   ├── 2026-02-07.md
+│   ├── error-log.md           # Failures and corrections (append-only)
+│   └── learnings.md           # Patterns, insights, preferences
+```
+
+Each layer has a different cadence, a different purpose, and a different update strategy.
+
+### Layer 1: SOUL.md — The Identity Layer
+
+This is the agent's personality, values, and core behaviors. Think of it as firmware. It answers the question: *What kind of agent are you?*
+
+```markdown
+# SOUL.md
+
+## Core Behaviors
+- Be direct. Skip the preamble.
+- Do things first, explain after (unless destructive).
+- When in doubt, ask — but only once.
+- Prefer trash over rm. Recoverable beats gone forever.
+
+## Communication Style
+- Concise. No corporate fluff.
+- Match the user's energy.
+- Use humor sparingly but naturally.
+```
+
+This file changes maybe once a month. It's loaded every single session, at the top of context. The agent reads it before doing anything else.
+
+### Layer 2: MEMORY.md — Curated Long-Term Memory
+
+This is the equivalent of a human's long-term memory. Not a raw log — a *distilled* collection of things worth remembering permanently. Decisions made, preferences discovered, important context about ongoing projects.
+
+```markdown
+# MEMORY.md
+
+## Projects
+- Dashboard uses Convex + Next.js. Don't suggest Firebase.
+- Deploy pipeline requires manual approval for prod.
+
+## Preferences
+- Always use TypeScript, never plain JS.
+- Package manager: bun (not npm).
+
+## Lessons
+- The calendar API returns times in UTC even when you specify a timezone.
+- Webhook payloads are nested one level deeper than documented.
+```
+
+This gets updated weekly — sometimes by me, sometimes by the agent during maintenance cycles. More on that later.
+
+### Layer 3: Daily Logs — Raw Session Memory
+
+Every session, the agent writes to `memory/YYYY-MM-DD.md`. These are raw, unfiltered notes about what happened.
+
+```markdown
+# 2026-02-07
+
+## Morning
+- Debugged failing cron jobs — timezone mismatch in the scheduler
+- Updated TOOLS.md with correct cron syntax
+- User wants weekly email digest — created ticket
+
+## Evening
+- SendGrid API requires verified sender domain
+- Hit rate limit during testing — need exponential backoff
+- User prefers HTML emails over plain text
+```
+
+These are the raw materials. Verbose, sometimes messy, and that's fine. Their job is to capture *everything* so nothing falls through the cracks.
+
+### Layer 4: Error Log — The Scar Tissue
+
+This is the most important file in the system.
+
+`memory/error-log.md` is an append-only log of every failure, correction, and gotcha. When a tool call fails, the agent logs it. When I correct the agent, it logs it. When something takes way longer than expected because of an undocumented quirk, it logs it.
+
+```markdown
+# Error Log
+
+- 🔧 **Cron tool bug** — Tool-created cron jobs silently fail. Use CLI instead.
+- 🧠 **Wrong assumption: API pagination** — Assumed offset-based, actually cursor-based. Cost 30 min.
+- 🔄 **User correction: commit messages** — Don't use conventional commits. User prefers descriptive prose.
+- ⚠️ **Gotcha: SendGrid sandbox** — Returns 200 but doesn't send. Check x-message-id header.
+- 💡 **Discovery: bun test** — No separate test runner config needed. Just works with .test.ts files.
+```
+
+The categories help with scanning:
+- 🔧 `tool-failure` — something broke
+- 🧠 `wrong-assumption` — the agent assumed wrong
+- 🔄 `user-correction` — the human said "no, do it this way"
+- 💡 `discovery` — learned something new
+- ⚠️ `gotcha` — undocumented behavior or subtle trap
+- 🏗️ `architecture` — structural decisions worth remembering
+
+This file is the agent's scar tissue. Every entry is a mistake it will never make again.
+
+### Layer 5: Learnings — Distilled Patterns
+
+`memory/learnings.md` captures higher-level patterns and technical insights that emerge over time. Not individual incidents — recurring themes.
+
+```markdown
+# Learnings
+
+## API Integration Patterns
+- Always check pagination strategy before building the client
+- Rate limits are rarely documented accurately. Build backoff from day one.
+
+## User Workflow
+- Morning sessions are quick tasks and triage
+- Evening sessions are deep work — bigger context windows
+- Don't suggest breaking changes before noon
+```
+
+---
+
+## The Auto-Capture Loop
+
+The memory system only works if it's *automatic*. Relying on the agent to "remember to remember" is a recipe for gaps.
+
+The rule is simple: **when any of these happen, log immediately.**
+
+1. A tool call returns an error or unexpected result → log to `error-log.md`
+2. The user says "no" or corrects behavior → log to `error-log.md`
+3. Something takes 3x longer than expected → log to `error-log.md`
+4. A new pattern or insight emerges → log to `learnings.md`
+
+The agent doesn't wait until end-of-session. It appends in real-time, mid-conversation. The format is lightweight enough that it takes two seconds and doesn't interrupt flow.
+
+Here's the instruction in the agent's system prompt:
+
+```markdown
+When ANY of these happen, immediately append to memory/error-log.md:
+- A tool call fails or returns unexpected results
+- User corrects you
+- You discover a gotcha or undocumented behavior
+- An assumption turns out wrong
+
+Format: - 🏷️ **Short title** — What happened. What to do instead.
+```
+
+That's it. No complex pipeline. No database writes. Just append a line to a markdown file.
+
+---
+
+## The Compounding Effect
+
+Session 1 with this system feels normal. The agent is helpful, makes some mistakes, you correct it, and it logs those corrections.
+
+Session 5 is where things shift. The agent boots up, reads its error log, and *avoids mistakes before being told*. It checks the cron syntax before running it. It uses cursor-based pagination without asking. It writes commit messages in the style you prefer.
+
+By session 20, the agent feels like a colleague who's been on the team for months. Not because it's smarter — because it's accumulated context that no prompt engineering could replicate.
+
+The compounding math is simple: if the agent avoids just one re-explanation per session, and each session is 30 minutes, you save 10+ hours per month. In practice, the savings are much larger because the avoided mistakes are often the expensive ones — the 45-minute debugging sessions that end with "oh right, that API does it differently."
+
+---
+
+## Local Search: Finding Your Own Memories
+
+As the memory files grow, the agent needs a way to search them before acting. You don't want it reading every daily log from the last three months on every session.
+
+I use <a href="https://github.com/tobi/qmd" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>QMD</a> — a local document indexer by Tobi Lütke that supports both BM25 (keyword) and vector search. Zero API cost, runs entirely on your machine.
+
+```bash
+# Index your workspace
+qmd collection add ./workspace --name workspace
+qmd embed
+
+# Agent searches before acting
+qmd search "SendGrid rate limiting"
+# ~240ms, instant results
+```
+
+The agent can query its own memory before starting a task. "Have I dealt with this API before? Did anything go wrong last time?" This turns the memory system from a passive context dump into an active knowledge base.
+
+The key insight: **BM25 + vector search together** catches both exact matches ("SendGrid") and semantic matches ("email delivery failures"). Either alone misses things.
+
+---
+
+## Heartbeat Maintenance: Keeping Memory Clean
+
+Raw daily logs accumulate noise. The agent runs periodic maintenance — I call them heartbeats — where it reviews recent daily logs and distills them into long-term memory.
+
+The process:
+
+1. Read the last 7 days of daily logs
+2. Identify significant events, lessons, and decisions
+3. Update `MEMORY.md` with anything worth keeping permanently
+4. Update `learnings.md` with new patterns
+5. Let old daily logs age out naturally
+
+Think of it like a human reviewing their journal on Sunday. The daily entries are raw notes. The long-term memory is curated wisdom. The heartbeat is the review process that bridges them.
+
+This keeps the system from growing unbounded while preserving everything that matters.
+
+---
+
+## What I Learned Building This
+
+The system is deliberately low-tech. Markdown files. No database. No embeddings pipeline (except local search). Version controlled with git so you can see how the agent's memory evolves over time.
+
+The reason is durability. Databases require maintenance. Vector stores have hosting costs. SaaS memory products disappear. Markdown files in a git repo will outlast all of them. Your agent's memory should be as portable and inspectable as a README.
+
+The other thing I learned: **the error log matters more than everything else combined.** If you implement only one piece of this system, make it the auto-capture loop. An agent that never repeats a mistake is worth ten agents that start fresh.
+
+---
+
+## Getting Started Today
+
+You don't need a framework. You don't need a product. Here's the minimum viable version:
+
+1. Create a `memory/` directory in your agent's workspace
+2. Add an instruction to your system prompt: "At session start, read `memory/error-log.md`. When something fails or I correct you, append it."
+3. Start working normally
+
+That's it. In a week, you'll have an error log that makes your agent meaningfully better. Add the other layers as you see the value.
+
+We keep waiting for AGI like it's going to be a press conference. It's not. It's going to be tools that remember where they failed and come back sharper. You can start building that today, with nothing more than markdown files and a system prompt.
+
+The agent that remembers its mistakes will always beat the agent that doesn't — no matter how smart the base model is.
