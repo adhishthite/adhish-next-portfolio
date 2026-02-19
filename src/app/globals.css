@@ -183,3 +183,35 @@ code[data-line-numbers-max-digits="3"] > [data-line]::before {
     }
   }
 }
+
+/* rehype-pretty-code overrides */
+
+/* Hide line numbers everywhere */
+code[data-line-numbers] > [data-line]::before {
+  display: none !important;
+}
+code > [data-line]::before {
+  display: none !important;
+}
+
+/* Fix inline code - remove block-level styling from rehype-pretty-code */
+:not(pre) > code {
+  display: inline !important;
+  padding: 0.15em 0.4em !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875em !important;
+  line-height: inherit !important;
+}
+:not(pre) > code > [data-line] {
+  display: inline !important;
+  padding: 0 !important;
+}
+:not(pre) > code::before,
+:not(pre) > code::after {
+  display: none !important;
+}
+
+/* Clean up code block line padding */
+code > [data-line] {
+  padding-left: 0 !important;
+}

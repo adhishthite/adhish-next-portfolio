@@ -10,6 +10,9 @@ import {
   MDXParagraph,
   MDXPre,
   MDXCode,
+  MDXFigure,
+  MDXFigcaption,
+  MDXDiv,
 } from "@/components/mdx-components";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
@@ -17,6 +20,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
 import remarkGfm from "remark-gfm";
+import { remarkMermaid } from "@/lib/remark-mermaid";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeRaw from "rehype-raw";
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -84,6 +90,9 @@ export default async function Blog({
     p: MDXParagraph,
     pre: MDXPre,
     code: MDXCode,
+    figure: MDXFigure,
+    figcaption: MDXFigcaption,
+    div: MDXDiv,
   };
 
   // Calculate reading time
@@ -175,7 +184,21 @@ export default async function Blog({
             components={components}
             options={{
               mdxOptions: {
-                remarkPlugins: [remarkGfm],
+                remarkPlugins: [remarkMermaid, remarkGfm],
+                rehypePlugins: [
+                  [rehypeRaw, { passThrough: ["mdxJsxFlowElement", "mdxJsxTextElement", "mdxFlowExpression", "mdxTextExpression"] }],
+                  [
+                    rehypePrettyCode,
+                    {
+                      theme: {
+                        dark: "github-dark-dimmed",
+                        light: "github-light",
+                      },
+                      keepBackground: true,
+                      defaultLang: "plaintext",
+                    },
+                  ],
+                ],
               },
             }}
           />
