@@ -3,6 +3,7 @@ import { DATA } from "@/data/resume";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import {
   MDXImage,
@@ -159,6 +160,20 @@ export default async function Blog({
           </div>
         </header>
 
+        {/* Hero Image */}
+        {post.metadata.image && (
+          <div className="relative w-full h-[400px] overflow-hidden rounded-xl shadow-md mb-10">
+            <Image
+              src={post.metadata.image}
+              alt={post.metadata.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 1024px"
+            />
+          </div>
+        )}
+
         {/* Article Content */}
         <article
           className="prose prose-lg dark:prose-invert max-w-none
@@ -186,7 +201,17 @@ export default async function Blog({
               mdxOptions: {
                 remarkPlugins: [remarkMermaid, remarkGfm],
                 rehypePlugins: [
-                  [rehypeRaw, { passThrough: ["mdxJsxFlowElement", "mdxJsxTextElement", "mdxFlowExpression", "mdxTextExpression"] }],
+                  [
+                    rehypeRaw,
+                    {
+                      passThrough: [
+                        "mdxJsxFlowElement",
+                        "mdxJsxTextElement",
+                        "mdxFlowExpression",
+                        "mdxTextExpression",
+                      ],
+                    },
+                  ],
                   [
                     rehypePrettyCode,
                     {

@@ -3,6 +3,7 @@ import { MagicCard } from "@/components/ui/magic-card";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { getPinnedPosts, getRegularPosts, type BlogPost } from "@/data/blog";
 import Link from "next/link";
+import Image from "next/image";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { PinIcon } from "lucide-react";
 
@@ -28,67 +29,92 @@ export default async function BlogPage() {
   const renderBlogCard = (
     post: BlogPost,
     options: { featured?: boolean; compact?: boolean } = {},
-  ) => (
-    <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
-      <MagicCard
-        className={`h-full transition-all duration-300 rounded-2xl border border-border/40 hover:border-accent/50 ${
-          options.featured ? "md:col-span-2 p-8" : ""
-        } ${options.compact ? "p-5" : "p-8"}`}
-        gradientColor="#5B122D"
-        gradientColorDark="#d4a5a5"
-        gradientOpacity={0.15}
-      >
-        <div className={options.compact ? "space-y-2" : "space-y-4"}>
-          {/* Date & Pin indicator */}
-          <div className="flex items-center justify-between">
-            <time className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-              {new Date(post.metadata.publishedAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-            {options.compact && (
-              <span className="flex items-center gap-1 text-xs text-accent font-medium">
-                <PinIcon className="size-3 fill-accent" />
-              </span>
-            )}
-          </div>
+  ) => {
+    const hasImage = !!post.metadata.image;
+    const contentPaddingClass = options.compact ? "p-5" : "p-8";
 
-          {/* Title */}
-          <h2
-            className={`font-heading font-bold tracking-tight group-hover:text-accent transition-colors ${
-              options.compact
-                ? "text-lg md:text-xl line-clamp-2"
-                : "text-2xl md:text-3xl"
-            }`}
-          >
-            {post.metadata.title}
-          </h2>
-
-          {/* Summary - hidden on compact */}
-          {!options.compact && post.metadata.summary && (
-            <p className="text-muted-foreground leading-relaxed line-clamp-2">
-              {post.metadata.summary}
-            </p>
+    return (
+      <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
+        <MagicCard
+          className={`h-full transition-all duration-300 rounded-2xl border border-border/40 hover:border-accent/50 overflow-hidden ${
+            options.featured ? "md:col-span-2" : ""
+          } ${hasImage ? "" : `${contentPaddingClass} flex flex-col justify-center`}`}
+          gradientColor="#5B122D"
+          gradientColorDark="#d4a5a5"
+          gradientOpacity={0.15}
+        >
+          {/* Thumbnail image */}
+          {hasImage && (
+            <div className="relative w-full aspect-[5/2]">
+              <Image
+                src={post.metadata.image as string}
+                alt={post.metadata.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+              />
+            </div>
           )}
 
-          {/* Reading Time & Arrow */}
           <div
-            className={`flex items-center justify-between ${options.compact ? "pt-2" : "pt-4"}`}
+            className={`${hasImage ? contentPaddingClass : ""} ${options.compact ? "space-y-2" : "space-y-4"}`}
           >
-            <span className="text-sm text-muted-foreground">
-              {getReadingTime(post.rawContent)}
-            </span>
-            <span className="text-accent group-hover:translate-x-2 transition-transform">
-              →
-            </span>
+            {/* Date & Pin indicator */}
+            <div className="flex items-center justify-between">
+              <time className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+                {new Date(post.metadata.publishedAt).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )}
+              </time>
+              {options.compact && (
+                <span className="flex items-center gap-1 text-xs text-accent font-medium">
+                  <PinIcon className="size-3 fill-accent" />
+                </span>
+              )}
+            </div>
+
+            {/* Title */}
+            <h2
+              className={`font-heading font-bold tracking-tight group-hover:text-accent transition-colors ${
+                options.compact
+                  ? "text-lg md:text-xl line-clamp-2"
+                  : "text-2xl md:text-3xl"
+              }`}
+            >
+              {post.metadata.title}
+            </h2>
+
+            {/* Summary - hidden on compact */}
+            {!options.compact && post.metadata.summary && (
+              <p className="text-muted-foreground leading-relaxed line-clamp-2">
+                {post.metadata.summary}
+              </p>
+            )}
+
+            {/* Reading Time & Arrow */}
+            <div
+              className={`flex items-center justify-between ${options.compact ? "pt-2" : "pt-4"}`}
+            >
+              <span className="text-sm text-muted-foreground">
+                {getReadingTime(post.rawContent)}
+              </span>
+              <span className="text-accent group-hover:translate-x-2 transition-transform">
+                →
+              </span>
+            </div>
           </div>
-        </div>
-        {options.featured && <BorderBeam size={250} duration={12} delay={9} />}
-      </MagicCard>
-    </Link>
-  );
+          {options.featured && (
+            <BorderBeam size={250} duration={12} delay={9} />
+          )}
+        </MagicCard>
+      </Link>
+    );
+  };
 
   return (
     <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
