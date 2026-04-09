@@ -61,12 +61,12 @@ export default async function BlogPage() {
           >
             {/* Date & Pin indicator */}
             <div className="flex items-center justify-between">
-              <time className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+              <time className="text-xs uppercase tracking-widest text-muted-foreground/70 font-medium font-mono tabular-nums">
                 {new Date(post.metadata.publishedAt).toLocaleDateString(
                   "en-US",
                   {
                     year: "numeric",
-                    month: "long",
+                    month: "short",
                     day: "numeric",
                   },
                 )}
@@ -80,7 +80,7 @@ export default async function BlogPage() {
 
             {/* Title */}
             <h2
-              className={`font-heading font-bold tracking-tight group-hover:text-accent transition-colors ${
+              className={`font-heading font-semibold tracking-tight text-balance group-hover:text-accent transition-colors ${
                 options.compact
                   ? "text-lg md:text-xl line-clamp-2"
                   : "text-2xl md:text-3xl"
@@ -91,7 +91,7 @@ export default async function BlogPage() {
 
             {/* Summary - hidden on compact */}
             {!options.compact && post.metadata.summary && (
-              <p className="text-muted-foreground leading-relaxed line-clamp-2">
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 text-pretty">
                 {post.metadata.summary}
               </p>
             )}
@@ -100,7 +100,7 @@ export default async function BlogPage() {
             <div
               className={`flex items-center justify-between ${options.compact ? "pt-2" : "pt-4"}`}
             >
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs text-muted-foreground/60 font-mono tabular-nums">
                 {getReadingTime(post.rawContent)}
               </span>
               <span className="text-accent group-hover:translate-x-2 transition-transform">
@@ -117,7 +117,7 @@ export default async function BlogPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
+    <div className="max-w-6xl mx-auto py-12 sm:py-24 px-6">
       <section className="relative">
         <div className="absolute inset-0 -z-10 h-full w-full">
           <GridPattern
@@ -133,17 +133,17 @@ export default async function BlogPage() {
         <div className="space-y-12">
           {/* Header */}
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
               Blog
             </p>
             <TextAnimate
               animation="blurInUp"
               by="word"
-              className="text-4xl md:text-5xl font-heading font-bold tracking-tight"
+              className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance"
             >
               Thoughts & Insights
             </TextAnimate>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-lg text-muted-foreground max-w-2xl text-pretty">
               Writings on software development, AI/ML, and engineering best
               practices.
             </p>
@@ -154,7 +154,7 @@ export default async function BlogPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <PinIcon className="size-4 text-accent fill-accent" />
-                <h2 className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+                <h2 className="text-sm uppercase tracking-widest text-muted-foreground font-medium font-mono">
                   Pinned
                 </h2>
               </div>
@@ -170,7 +170,7 @@ export default async function BlogPage() {
           {regularPosts.length > 0 && (
             <div className="space-y-6">
               {pinnedPosts.length > 0 && (
-                <h2 className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+                <h2 className="text-sm uppercase tracking-widest text-muted-foreground font-medium font-mono">
                   All Posts
                 </h2>
               )}

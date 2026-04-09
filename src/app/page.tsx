@@ -82,7 +82,7 @@ export default async function Page() {
   ];
 
   return (
-    <main className="flex flex-col min-h-[100dvh] relative">
+    <main className="isolate flex flex-col min-h-dvh relative">
       <div className="absolute inset-0 -z-10 h-full w-full bg-background">
         <GridPattern
           width={40}
@@ -104,7 +104,7 @@ export default async function Page() {
             {/* Left Column - Text */}
             <div className="space-y-8 text-center md:text-left">
               {/* Small Tag - Static on desktop, rotating on mobile */}
-              <div className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+              <div className="text-sm uppercase tracking-widest text-muted-foreground font-medium font-mono">
                 {/* Desktop: show all */}
                 <TextAnimate
                   animation="blurInUp"
@@ -129,13 +129,13 @@ export default async function Page() {
               <TextAnimate
                 animation="blurInUp"
                 by="word"
-                className="text-6xl md:text-7xl xl:text-8xl font-heading font-bold tracking-tight"
+                className="text-6xl md:text-7xl xl:text-8xl font-heading font-semibold tracking-tight text-balance"
               >
                 {DATA.name}
               </TextAnimate>
 
               {/* Rotating Roles */}
-              <div className="flex items-center justify-center md:justify-start gap-3 text-xl md:text-2xl text-muted-foreground">
+              <div className="flex items-center justify-center md:justify-start text-xl md:text-2xl text-muted-foreground">
                 <WordRotate
                   words={[
                     "Building AI Systems",
@@ -170,7 +170,7 @@ export default async function Page() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <social.icon className="h-6 w-6" />
+                      <social.icon className="size-6" />
                     </Link>
                   ))}
               </div>
@@ -192,15 +192,15 @@ export default async function Page() {
 
       {/* About Section */}
       <section id="about" className="py-24 md:py-32 border-t border-border/40">
-        <div className="mx-auto w-full max-w-4xl px-6 space-y-8">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+        <div className="mx-auto w-full max-w-6xl px-6 space-y-8">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
             About
           </p>
 
           <TextAnimate
             animation="blurInUp"
             by="word"
-            className="text-2xl md:text-3xl font-heading font-medium leading-relaxed text-foreground/90"
+            className="text-2xl md:text-3xl font-heading font-medium leading-relaxed text-foreground/90 max-w-4xl text-pretty"
           >
             {DATA.summary}
           </TextAnimate>
@@ -211,9 +211,9 @@ export default async function Page() {
               <div className="flex items-baseline gap-2">
                 <NumberTicker
                   value={YEARS_OF_EXPERIENCE}
-                  className="text-4xl font-heading font-bold"
+                  className="text-4xl font-heading font-semibold tabular-nums"
                 />
-                <span className="text-2xl font-heading font-bold">+</span>
+                <span className="text-2xl font-heading font-semibold">+</span>
               </div>
               <p className="text-sm text-muted-foreground">Years Experience</p>
             </div>
@@ -234,7 +234,7 @@ export default async function Page() {
         <section className="py-12 md:py-16">
           <div className="mx-auto w-full max-w-6xl px-6">
             <div className="flex items-center justify-between mb-6">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
                 Latest from the Blog
               </p>
               <Link
@@ -261,11 +261,11 @@ export default async function Page() {
                       day: "numeric",
                     })}
                   </time>
-                  <h3 className="text-2xl md:text-3xl font-heading font-bold group-hover:text-foreground/80 transition-colors">
+                  <h3 className="text-2xl md:text-3xl font-heading font-semibold text-balance group-hover:text-foreground/80 transition-colors">
                     {latestPost.metadata.title}
                   </h3>
                   {latestPost.metadata.summary && (
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed text-pretty">
                       {latestPost.metadata.summary}
                     </p>
                   )}
@@ -280,17 +280,17 @@ export default async function Page() {
       )}
 
       {/* Work Experience Section - Bento Grid */}
-      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-transparent" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
       <section
         id="work"
-        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-transparent"
+        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-[hsl(20,15%,13%)]"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
               Work Experience
             </p>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
               Career Journey
             </h2>
           </div>
@@ -298,94 +298,113 @@ export default async function Page() {
           <WorkExperienceSection work={DATA.work} />
         </div>
       </section>
-      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-transparent" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
 
       {/* Skills Section - Marquee */}
       <section id="skills" className="py-24 md:py-32 overflow-hidden">
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
               Skills & Technologies
             </p>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
               Technical Expertise
             </h2>
           </div>
 
-          <div className="space-y-6">
-            {/* AI/ML Row - Left to Right */}
-            <Marquee className="py-4" pauseOnHover fade magnify>
-              {aiMlSkills.map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="outline"
-                  className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
-                >
-                  {skill}
-                </Badge>
-              ))}
-            </Marquee>
+          <div className="space-y-8">
+            {/* AI/ML Row */}
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
+                AI / ML
+              </p>
+              <Marquee className="py-2" pauseOnHover fade>
+                {aiMlSkills.map((skill) => (
+                  <Badge
+                    key={skill}
+                    variant="outline"
+                    className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
+                  >
+                    {skill}
+                  </Badge>
+                ))}
+              </Marquee>
+            </div>
 
-            {/* Languages/Frameworks Row - Right to Left */}
-            <Marquee className="py-4" reverse pauseOnHover fade magnify>
-              {languagesFrameworks.map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="outline"
-                  className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
-                >
-                  {skill}
-                </Badge>
-              ))}
-            </Marquee>
+            {/* Languages/Frameworks Row */}
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
+                Languages & Frameworks
+              </p>
+              <Marquee className="py-2" reverse pauseOnHover fade>
+                {languagesFrameworks.map((skill) => (
+                  <Badge
+                    key={skill}
+                    variant="outline"
+                    className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
+                  >
+                    {skill}
+                  </Badge>
+                ))}
+              </Marquee>
+            </div>
 
-            {/* Cloud/Data Row - Left to Right */}
-            <Marquee className="py-4" pauseOnHover fade magnify>
-              {cloudData.map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="outline"
-                  className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
-                >
-                  {skill}
-                </Badge>
-              ))}
-            </Marquee>
+            {/* Cloud/Data Row */}
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
+                Cloud & Data
+              </p>
+              <Marquee className="py-2" pauseOnHover fade>
+                {cloudData.map((skill) => (
+                  <Badge
+                    key={skill}
+                    variant="outline"
+                    className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
+                  >
+                    {skill}
+                  </Badge>
+                ))}
+              </Marquee>
+            </div>
 
-            {/* Tools Row - Right to Left */}
-            <Marquee
-              className="py-4 [--duration:150s]"
-              reverse
-              pauseOnHover
-              fade
-              magnify
-            >
-              {tools.map((skill) => (
-                <Badge
-                  key={skill}
-                  variant="outline"
-                  className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
-                >
-                  {skill}
-                </Badge>
-              ))}
-            </Marquee>
+            {/* Tools Row */}
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
+                DevOps & Tools
+              </p>
+              <Marquee
+                className="py-2 [--duration:150s]"
+                reverse
+                pauseOnHover
+                fade
+              >
+                {tools.map((skill) => (
+                  <Badge
+                    key={skill}
+                    variant="outline"
+                    className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
+                  >
+                    {skill}
+                  </Badge>
+                ))}
+              </Marquee>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Certifications Section */}
-      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-transparent" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
       <section
         id="certifications"
-        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-transparent"
+        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-[hsl(20,15%,13%)]"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
               Certifications
             </p>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
               Professional Development
             </h2>
           </div>
@@ -431,16 +450,17 @@ export default async function Page() {
           </div>
         </div>
       </section>
-      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-transparent" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
 
       {/* Contact Section */}
       <section id="contact" className="py-24 md:py-32">
-        <div className="mx-auto w-full max-w-4xl px-6 text-center space-y-8">
-          <h2 className="text-5xl md:text-6xl font-heading font-bold tracking-tight">
-            Let's Connect
+        <div className="mx-auto w-full max-w-6xl px-6 text-center space-y-8">
+          <h2 className="text-5xl md:text-6xl font-heading font-semibold tracking-tight text-balance">
+            Let&apos;s Connect
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Want to chat? Just shoot me a{" "}
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
+            Open to consulting, technical collaborations, and speaking
+            opportunities. Want to chat? Shoot me a{" "}
             <Link
               href={DATA.contact.social.X.url}
               className="text-accent hover:underline"
@@ -449,7 +469,7 @@ export default async function Page() {
             >
               direct message on X
             </Link>{" "}
-            and I'll respond whenever I can.
+            and I&apos;ll respond whenever I can.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-8">
@@ -470,7 +490,7 @@ export default async function Page() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <social.icon className="h-4 w-4" />
+                  <social.icon className="size-4" />
                   {social.name}
                 </Link>
               ))}

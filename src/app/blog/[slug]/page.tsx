@@ -101,7 +101,7 @@ export default async function Blog({
   const readingTime = Math.ceil(words / 200);
 
   return (
-    <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
+    <div className="max-w-6xl mx-auto py-12 sm:py-24 px-6">
       <ScrollProgress className="top-0" />
 
       <section id="blog" className="relative">
@@ -138,16 +138,16 @@ export default async function Blog({
         {/* Article Header */}
         <header className="space-y-6 mb-12">
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
               {formatDate(post.metadata.publishedAt)}
             </p>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold tracking-tight leading-tight text-balance">
               {post.metadata.title}
             </h1>
 
             {post.metadata.summary && (
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl leading-relaxed">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl leading-relaxed text-pretty">
                 {post.metadata.summary}
               </p>
             )}
@@ -177,7 +177,7 @@ export default async function Blog({
         {/* Article Content */}
         <article
           className="prose prose-lg dark:prose-invert max-w-none
-          prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight
+          prose-headings:font-heading prose-headings:font-semibold prose-headings:tracking-tight
           prose-h1:text-4xl prose-h1:mt-12 prose-h1:mb-6
           prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4
           prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3
@@ -240,9 +240,9 @@ export default async function Blog({
               <h3 className="font-heading font-semibold text-lg">
                 Want to discuss this further?
               </h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-sm text-pretty">
                 I&apos;m always happy to chat about AI, ML, or interesting
-                engineering challenges.
+                engineering challenges. Open to consulting and collaboration.
               </p>
             </div>
             <div className="flex gap-3">
@@ -258,7 +258,7 @@ export default async function Blog({
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted/50 transition-colors gap-2"
               >
-                <Icons.x className="h-4 w-4" />
+                <Icons.x className="size-4" />
                 DM on X
               </Link>
             </div>

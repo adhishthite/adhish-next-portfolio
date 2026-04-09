@@ -52,7 +52,7 @@ export function WorkExperienceModal({
                 </Avatar>
               )}
               <div className="flex-1">
-                <DialogTitle className="text-2xl font-heading font-bold mb-2">
+                <DialogTitle className="text-2xl font-heading font-semibold mb-2">
                   {work.company}
                 </DialogTitle>
                 <DialogDescription className="text-base text-foreground/90">
@@ -103,7 +103,7 @@ export function WorkExperienceModal({
 
             {/* Description */}
             <div className="space-y-3">
-              <h3 className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
+              <h3 className="text-sm uppercase tracking-widest text-muted-foreground font-medium font-mono">
                 Responsibilities & Achievements
               </h3>
               <div className="prose prose-sm dark:prose-invert max-w-none">

@@ -130,7 +130,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased relative",
+          "min-h-dvh bg-background font-sans antialiased relative",
           fontSans.variable,
           fontHeading.variable,
         )}
