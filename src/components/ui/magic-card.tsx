@@ -21,11 +21,11 @@ export function MagicCard({
   children,
   className,
   gradientSize = 200,
-  gradientColor = "#262626",
-  gradientColorDark,
+  gradientColor = "oklch(var(--card-glow))",
+  gradientColorDark = "oklch(var(--card-glow-dark))",
   gradientOpacity = 0.8,
-  gradientFrom = "#9E7AFF",
-  gradientTo = "#FE8BBB",
+  gradientFrom = "oklch(var(--beam-from))",
+  gradientTo = "oklch(var(--beam-to))",
 }: MagicCardProps) {
   const { theme } = useTheme();
   const activeGradientColor =
@@ -90,7 +90,7 @@ export function MagicCard({
           radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
           ${gradientFrom},
           ${gradientTo},
-          var(--border) 100%
+          oklch(var(--border)) 100%
           )
           `,
         }}

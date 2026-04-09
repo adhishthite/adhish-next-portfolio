@@ -5,66 +5,94 @@
 @layer base {
   :root {
     /* Warm Minimal - Light Mode (Pale Wheat + Oil + American Berry) */
-    --background: 35 68% 87%;
-    --foreground: 20 25% 15%;
+    --background: 0.93 0.03 85;
+    --foreground: 0.28 0.02 45;
 
-    --card: 35 55% 91%;
-    --card-foreground: 20 25% 15%;
+    --card: 0.95 0.02 85;
+    --card-foreground: 0.28 0.02 45;
 
-    --popover: 35 60% 90%;
-    --popover-foreground: 20 25% 15%;
+    --popover: 0.96 0.02 85;
+    --popover-foreground: 0.28 0.02 45;
 
-    --primary: 20 25% 15%;
-    --primary-foreground: 35 68% 87%;
+    --primary: 0.28 0.02 45;
+    --primary-foreground: 0.93 0.03 85;
 
-    --secondary: 35 40% 82%;
-    --secondary-foreground: 20 25% 15%;
+    --secondary: 0.88 0.03 80;
+    --secondary-foreground: 0.28 0.02 45;
 
-    --muted: 35 35% 80%;
-    --muted-foreground: 20 15% 40%;
+    --muted: 0.84 0.02 80;
+    --muted-foreground: 0.5 0.02 55;
 
-    --accent: 338 67% 21%;
-    --accent-foreground: 35 70% 92%;
+    --accent: 0.4 0.14 5;
+    --accent-foreground: 0.95 0.02 85;
 
-    --destructive: 0 65% 45%;
-    --destructive-foreground: 35 70% 92%;
+    --destructive: 0.58 0.2 25;
+    --destructive-foreground: 0.95 0.02 85;
 
-    --border: 30 30% 75%;
-    --input: 30 30% 75%;
-    --ring: 338 67% 21%;
+    --border: 0.8 0.02 75;
+    --input: 0.8 0.02 75;
+    --ring: 0.4 0.14 5;
+
+    --surface-contrast: 0.86 0.035 80;
+    --card-glow: 0.4 0.14 5;
+    --card-glow-dark: 0.78 0.05 35;
+    --beam-from: 0.82 0.14 65;
+    --beam-to: 0.66 0.19 330;
+    --progress-from: 0.72 0.18 315;
+    --progress-via: 0.76 0.13 355;
+    --progress-to: 0.87 0.09 75;
+    --dock-outline: 0 0 0 / 0.03;
+    --dock-shadow-soft: 0 0 0 / 0.07;
+    --dock-shadow-strong: 0 0 0 / 0.08;
+    --dock-dark-border: 1 0 0 / 0.1;
+    --dock-dark-inset: 1 0 0 / 0.12;
 
     --radius: 0.5rem;
   }
 
   .dark {
     /* Warm Minimal - Dark Mode (Oil + Pale Wheat + American Berry) */
-    --background: 20 20% 9%;
-    --foreground: 35 55% 88%;
+    --background: 0.22 0.015 45;
+    --foreground: 0.9 0.025 85;
 
-    --card: 20 15% 12%;
-    --card-foreground: 35 55% 88%;
+    --card: 0.26 0.015 45;
+    --card-foreground: 0.9 0.025 85;
 
-    --popover: 20 15% 12%;
-    --popover-foreground: 35 55% 88%;
+    --popover: 0.26 0.015 45;
+    --popover-foreground: 0.9 0.025 85;
 
-    --primary: 35 55% 88%;
-    --primary-foreground: 20 20% 9%;
+    --primary: 0.9 0.025 85;
+    --primary-foreground: 0.22 0.015 45;
 
-    --secondary: 20 12% 16%;
-    --secondary-foreground: 35 55% 88%;
+    --secondary: 0.32 0.015 45;
+    --secondary-foreground: 0.9 0.025 85;
 
-    --muted: 20 12% 16%;
-    --muted-foreground: 30 20% 60%;
+    --muted: 0.32 0.015 45;
+    --muted-foreground: 0.68 0.02 65;
 
-    --accent: 338 55% 45%;
-    --accent-foreground: 35 60% 92%;
+    --accent: 0.62 0.16 5;
+    --accent-foreground: 0.94 0.02 85;
 
-    --destructive: 0 50% 35%;
-    --destructive-foreground: 35 60% 92%;
+    --destructive: 0.5 0.17 25;
+    --destructive-foreground: 0.94 0.02 85;
 
-    --border: 20 15% 20%;
-    --input: 20 15% 20%;
-    --ring: 338 55% 45%;
+    --border: 0.36 0.015 45;
+    --input: 0.36 0.015 45;
+    --ring: 0.62 0.16 5;
+
+    --surface-contrast: 0.26 0.015 45;
+    --card-glow: 0.62 0.16 5;
+    --card-glow-dark: 0.78 0.05 35;
+    --beam-from: 0.82 0.14 65;
+    --beam-to: 0.7 0.19 330;
+    --progress-from: 0.75 0.18 315;
+    --progress-via: 0.79 0.13 355;
+    --progress-to: 0.88 0.09 75;
+    --dock-outline: 0 0 0 / 0.2;
+    --dock-shadow-soft: 0 0 0 / 0.28;
+    --dock-shadow-strong: 0 0 0 / 0.36;
+    --dock-dark-border: 1 0 0 / 0.1;
+    --dock-dark-inset: 1 0 0 / 0.12;
   }
   .theme {
     --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite

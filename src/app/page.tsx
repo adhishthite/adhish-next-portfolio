@@ -12,6 +12,7 @@ import { GridPattern } from "@/components/ui/grid-pattern";
 import { WorkExperienceSection } from "@/components/work-experience-section";
 import { ResumeViewerTrigger } from "@/components/resume-viewer-trigger";
 import { getBlogPosts } from "@/data/blog";
+import { CertificationsGrid } from "@/components/certifications-grid";
 
 export default async function Page() {
   // Fetch latest blog post
@@ -247,8 +248,8 @@ export default async function Page() {
             <Link href={`/blog/${latestPost.slug}`} className="group block">
               <MagicCard
                 className="p-8 rounded-2xl border border-border/40 hover:border-foreground/20 transition-all"
-                gradientColor="#5B122D"
-                gradientColorDark="#d4a5a5"
+                gradientColor="oklch(var(--card-glow))"
+                gradientColorDark="oklch(var(--card-glow-dark))"
                 gradientOpacity={0.15}
               >
                 <div className="space-y-4">
@@ -280,10 +281,10 @@ export default async function Page() {
       )}
 
       {/* Work Experience Section - Bento Grid */}
-      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[oklch(var(--surface-contrast))]" />
       <section
         id="work"
-        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-[hsl(20,15%,13%)]"
+        className="py-12 md:py-20 bg-[oklch(var(--surface-contrast))]"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
@@ -298,7 +299,7 @@ export default async function Page() {
           <WorkExperienceSection work={DATA.work} />
         </div>
       </section>
-      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-[oklch(var(--surface-contrast))] to-transparent" />
 
       {/* Skills Section - Marquee */}
       <section id="skills" className="py-24 md:py-32 overflow-hidden">
@@ -394,10 +395,10 @@ export default async function Page() {
       </section>
 
       {/* Certifications Section */}
-      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[oklch(var(--surface-contrast))]" />
       <section
         id="certifications"
-        className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-[hsl(20,15%,13%)]"
+        className="py-12 md:py-20 bg-[oklch(var(--surface-contrast))]"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
           <div className="space-y-4">
@@ -409,48 +410,10 @@ export default async function Page() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {DATA.certificates.map((cert) => (
-              <MagicCard
-                key={cert.name + cert.date}
-                className="p-6 rounded-2xl border border-border/40 hover:border-accent/50 transition-all duration-300"
-                gradientColor="#5B122D"
-                gradientColorDark="#d4a5a5"
-                gradientOpacity={0.15}
-              >
-                <div className="space-y-4">
-                  {cert.iconUrl && (
-                    <Avatar className="size-10">
-                      <AvatarImage alt={cert.issuer} src={cert.iconUrl} />
-                      <AvatarFallback>{cert.issuer[0]}</AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div className="space-y-2">
-                    <h3 className="font-heading font-semibold text-base leading-tight">
-                      {cert.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {cert.issuer}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{cert.date}</p>
-                  </div>
-                  {cert.url && (
-                    <Link
-                      href={cert.url}
-                      className="inline-flex items-center text-xs text-accent hover:underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Certificate →
-                    </Link>
-                  )}
-                </div>
-              </MagicCard>
-            ))}
-          </div>
+          <CertificationsGrid certificates={DATA.certificates} />
         </div>
       </section>
-      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
+      <div className="h-32 md:h-48 bg-gradient-to-b from-[oklch(var(--surface-contrast))] to-transparent" />
 
       {/* Contact Section */}
       <section id="contact" className="py-24 md:py-32">

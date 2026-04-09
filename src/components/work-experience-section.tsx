@@ -44,8 +44,8 @@ export function WorkExperienceSection({ work }: WorkExperienceSectionProps) {
           >
             <MagicCard
               className="p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] h-full rounded-2xl border border-border/40 hover:border-accent/50"
-              gradientColor="#5B122D"
-              gradientColorDark="#d4a5a5"
+              gradientColor="oklch(var(--card-glow))"
+              gradientColorDark="oklch(var(--card-glow-dark))"
               gradientOpacity={0.15}
             >
               <div className="space-y-4">

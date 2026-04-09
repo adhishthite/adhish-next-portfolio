@@ -39,8 +39,8 @@ export default async function BlogPage() {
           className={`h-full transition-all duration-300 rounded-2xl border border-border/40 hover:border-accent/50 overflow-hidden ${
             options.featured ? "md:col-span-2" : ""
           } ${hasImage ? "" : `${contentPaddingClass} flex flex-col justify-center`}`}
-          gradientColor="#5B122D"
-          gradientColorDark="#d4a5a5"
+          gradientColor="oklch(var(--card-glow))"
+          gradientColorDark="oklch(var(--card-glow-dark))"
           gradientOpacity={0.15}
         >
           {/* Thumbnail image */}
