@@ -44,6 +44,8 @@ GEMINI.md
 .codex/
 .cursor/
 .plans/
+.agents/
+.mcp.json
 .vercel/
 .pnpm-store/
 out/

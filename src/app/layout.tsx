@@ -4,18 +4,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Space_Grotesk, Outfit } from "next/font/google";
+import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
-import { DotPattern } from "@/components/ui/dot-pattern";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 
-const fontHeading = Space_Grotesk({
+const fontHeading = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-heading",
 });
 
-const fontSans = Outfit({
+const fontSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -135,16 +134,6 @@ export default function RootLayout({
           fontHeading.variable,
         )}
       >
-        <div className="absolute inset-0 -z-10 h-full w-full">
-          <DotPattern
-            width={40}
-            height={40}
-            cx={1}
-            cy={1}
-            cr={1}
-            className="fill-neutral-300/70 dark:fill-neutral-700/70"
-          />
-        </div>
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
             {children}

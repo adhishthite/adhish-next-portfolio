@@ -12,33 +12,38 @@ import { GridPattern } from "@/components/ui/grid-pattern";
 import { WorkExperienceSection } from "@/components/work-experience-section";
 import { ResumeViewerTrigger } from "@/components/resume-viewer-trigger";
 import { getBlogPosts } from "@/data/blog";
+import { CertificationsSection } from "@/components/certifications-section";
+import { FadeIn } from "@/components/ui/fade-in";
+import { ChevronDown } from "lucide-react";
 
 export default async function Page() {
-  // Fetch latest blog post
   const posts = await getBlogPosts();
   const latestPost = posts.sort(
     (a, b) =>
       new Date(b.metadata.publishedAt).getTime() -
       new Date(a.metadata.publishedAt).getTime(),
   )[0];
-  // Curated skills by category for Marquee (12-15 items each)
+
+  const blogPostCount = posts.length;
+
+  // Two marquee rows: AI/ML core + Engineering stack
   const aiMlSkills = [
     "Generative AI",
     "Prompt Engineering",
     "Fine-Tuning",
-    "Retrieval-Augmented Generation (RAG)",
+    "RAG",
     "GenAI Agents",
     "Deep Learning",
     "PyTorch",
     "TensorFlow",
     "Machine Learning",
-    "Natural Language Processing",
+    "NLP",
     "Computer Vision",
     "LLM Fine-Tuning",
     "Hugging Face",
   ];
 
-  const languagesFrameworks = [
+  const engineeringStack = [
     "Python",
     "TypeScript",
     "Java",
@@ -47,38 +52,16 @@ export default async function Page() {
     "Node.js",
     "FastAPI",
     "Django",
-    "LangChain",
-    "LlamaIndex",
-    "Scikit-Learn",
-    "Pandas",
-    "NumPy",
-  ];
-
-  const cloudData = [
     "AWS",
     "GCP",
     "Azure",
     "Docker",
     "Kubernetes",
     "PostgreSQL",
-    "MongoDB",
     "Redis",
-    "ElasticSearch",
-    "MLFlow",
-    "AWS SageMaker",
     "MLOps",
-  ];
-
-  const tools = [
-    "Git",
-    "GitHub",
     "GitHub Actions",
-    "Jenkins",
     "DataDog",
-    "OpenCV",
-    "Microservice Architecture",
-    "RESTful and GraphQL Services",
-    "Edge AI",
   ];
 
   return (
@@ -94,7 +77,7 @@ export default async function Page() {
         />
       </div>
 
-      {/* Hero Section - Editorial Minimalist */}
+      {/* Hero Section */}
       <section
         id="hero"
         className="relative min-h-[90vh] flex items-center py-24 md:py-32"
@@ -103,26 +86,23 @@ export default async function Page() {
           <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-12 md:gap-16 items-center">
             {/* Left Column - Text */}
             <div className="space-y-8 text-center md:text-left">
-              {/* Small Tag - Static on desktop, rotating on mobile */}
-              <div className="text-sm uppercase tracking-widest text-muted-foreground font-medium font-mono">
-                {/* Desktop: show all */}
-                <TextAnimate
-                  animation="blurInUp"
-                  by="word"
-                  className="hidden md:block"
-                >
-                  End-to-End AI • 0→1 Products • Engineering Leadership
-                </TextAnimate>
-                {/* Mobile: rotate */}
-                <WordRotate
-                  words={[
-                    "End-to-End AI",
-                    "0→1 Products",
-                    "Engineering Leadership",
-                  ]}
-                  duration={2500}
-                  className="md:hidden"
-                />
+              {/* Currently at */}
+              <div className="flex items-center justify-center md:justify-start gap-3">
+                <Avatar className="size-6 border">
+                  <AvatarImage alt="Elastic" src="/elastic.svg" />
+                  <AvatarFallback>E</AvatarFallback>
+                </Avatar>
+                <span className="text-sm text-muted-foreground">
+                  Lead AI Engineer at{" "}
+                  <Link
+                    href="https://elastic.co"
+                    className="text-foreground hover:text-accent transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Elastic
+                  </Link>
+                </span>
               </div>
 
               {/* Name */}
@@ -141,6 +121,8 @@ export default async function Page() {
                     "Building AI Systems",
                     "Shipping ML Products",
                     "Leading Engineering Teams",
+                    "End-to-End AI",
+                    "0 to 1 Products",
                   ]}
                   duration={3000}
                   className="font-heading font-medium"
@@ -188,6 +170,11 @@ export default async function Page() {
             </div>
           </div>
         </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <ChevronDown className="size-6 text-muted-foreground/50" />
+        </div>
       </section>
 
       {/* About Section */}
@@ -206,26 +193,49 @@ export default async function Page() {
           </TextAnimate>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-8">
-            <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <NumberTicker
-                  value={YEARS_OF_EXPERIENCE}
-                  className="text-4xl font-heading font-semibold tabular-nums"
-                />
-                <span className="text-2xl font-heading font-semibold">+</span>
+          <FadeIn delay={0.1}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8">
+              <div className="space-y-2">
+                <div className="flex items-baseline gap-1">
+                  <NumberTicker
+                    value={YEARS_OF_EXPERIENCE}
+                    className="text-4xl font-heading font-semibold tabular-nums"
+                  />
+                  <span className="text-2xl font-heading font-semibold">+</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Years Experience
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground">Years Experience</p>
+              <div className="space-y-2">
+                <div className="flex items-baseline gap-1">
+                  <NumberTicker
+                    value={DATA.work.length}
+                    className="text-4xl font-heading font-semibold tabular-nums"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground">Companies</p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-baseline gap-1">
+                  <NumberTicker
+                    value={blogPostCount}
+                    className="text-4xl font-heading font-semibold tabular-nums"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground">Blog Posts</p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-baseline gap-1">
+                  <NumberTicker
+                    value={DATA.certificates.length}
+                    className="text-4xl font-heading font-semibold tabular-nums"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground">Certifications</p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Location</p>
-              <p className="text-base font-medium">{DATA.location}</p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Focus</p>
-              <p className="text-base font-medium">AI/ML Engineering</p>
-            </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -244,75 +254,138 @@ export default async function Page() {
                 View all posts →
               </Link>
             </div>
-            <Link href={`/blog/${latestPost.slug}`} className="group block">
-              <MagicCard
-                className="p-8 rounded-2xl border border-border/40 hover:border-foreground/20 transition-all"
-                gradientColor="#5B122D"
-                gradientColorDark="#d4a5a5"
-                gradientOpacity={0.15}
-              >
-                <div className="space-y-4">
-                  <time className="text-xs uppercase tracking-widest text-muted-foreground">
-                    {new Date(
-                      latestPost.metadata.publishedAt,
-                    ).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </time>
-                  <h3 className="text-2xl md:text-3xl font-heading font-semibold text-balance group-hover:text-foreground/80 transition-colors">
-                    {latestPost.metadata.title}
-                  </h3>
-                  {latestPost.metadata.summary && (
-                    <p className="text-muted-foreground leading-relaxed text-pretty">
-                      {latestPost.metadata.summary}
-                    </p>
-                  )}
-                  <span className="inline-flex items-center text-muted-foreground group-hover:text-foreground text-sm transition-colors">
-                    Read article →
-                  </span>
-                </div>
-              </MagicCard>
-            </Link>
+            <FadeIn>
+              <Link href={`/blog/${latestPost.slug}`} className="group block">
+                <MagicCard
+                  className="p-8 rounded-2xl border border-border/40 hover:border-foreground/20 transition-all"
+                  gradientColor="#5B122D"
+                  gradientColorDark="#d4a5a5"
+                  gradientOpacity={0.15}
+                >
+                  <div className="space-y-4">
+                    <time className="text-xs uppercase tracking-widest text-muted-foreground">
+                      {new Date(
+                        latestPost.metadata.publishedAt,
+                      ).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <h3 className="text-2xl md:text-3xl font-heading font-semibold text-balance group-hover:text-foreground/80 transition-colors">
+                      {latestPost.metadata.title}
+                    </h3>
+                    {latestPost.metadata.summary && (
+                      <p className="text-muted-foreground leading-relaxed text-pretty">
+                        {latestPost.metadata.summary}
+                      </p>
+                    )}
+                    <span className="inline-flex items-center text-muted-foreground group-hover:text-foreground text-sm transition-colors">
+                      Read article →
+                    </span>
+                  </div>
+                </MagicCard>
+              </Link>
+            </FadeIn>
           </div>
         </section>
       )}
 
-      {/* Work Experience Section - Bento Grid */}
-      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
+      {/* Work Experience Section */}
+      <div className="h-16 md:h-24 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
       <section
         id="work"
         className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-[hsl(20,15%,13%)]"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
-          <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
-              Work Experience
-            </p>
-            <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
-              Career Journey
-            </h2>
-          </div>
+          <FadeIn>
+            <div className="space-y-4">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
+                Work Experience
+              </p>
+              <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
+                Career Journey
+              </h2>
+            </div>
+          </FadeIn>
 
-          <WorkExperienceSection work={DATA.work} />
+          <FadeIn delay={0.15}>
+            <WorkExperienceSection work={DATA.work} />
+          </FadeIn>
         </div>
       </section>
-      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
+      <div className="h-16 md:h-24 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
 
-      {/* Skills Section - Marquee */}
-      <section id="skills" className="py-24 md:py-32 overflow-hidden">
+      {/* Education Section */}
+      <section id="education" className="py-24 md:py-32">
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
-          <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
-              Skills & Technologies
-            </p>
-            <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
-              Technical Expertise
-            </h2>
-          </div>
+          <FadeIn>
+            <div className="space-y-4">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
+                Education
+              </p>
+              <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
+                Academic Background
+              </h2>
+            </div>
+          </FadeIn>
 
-          <div className="space-y-8">
+          <FadeIn delay={0.15}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {DATA.education.map((edu) => (
+                <Link
+                  key={edu.school}
+                  href={edu.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group"
+                >
+                  <MagicCard
+                    className="p-6 rounded-2xl border border-border/40 hover:border-accent/50 transition-all duration-300 h-full"
+                    gradientColor="#5B122D"
+                    gradientColorDark="#d4a5a5"
+                    gradientOpacity={0.15}
+                  >
+                    <div className="flex items-start gap-4">
+                      <Avatar className="size-14 border shrink-0">
+                        <AvatarImage alt={edu.school} src={edu.logoUrl} />
+                        <AvatarFallback>{edu.school[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-1.5">
+                        <h3 className="font-heading font-semibold text-lg group-hover:text-accent transition-colors">
+                          {edu.school}
+                        </h3>
+                        <p className="text-sm text-foreground/80">
+                          {edu.degree}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {edu.start} - {edu.end}
+                        </p>
+                      </div>
+                    </div>
+                  </MagicCard>
+                </Link>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Skills Section - Two Marquee Rows */}
+      <section id="skills" className="py-16 md:py-24 overflow-hidden">
+        <div className="mx-auto w-full max-w-6xl px-6 space-y-10">
+          <FadeIn>
+            <div className="space-y-4">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
+                Skills & Technologies
+              </p>
+              <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
+                Technical Expertise
+              </h2>
+            </div>
+          </FadeIn>
+
+          <div className="space-y-6">
             {/* AI/ML Row */}
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
@@ -331,54 +404,13 @@ export default async function Page() {
               </Marquee>
             </div>
 
-            {/* Languages/Frameworks Row */}
+            {/* Engineering Stack Row */}
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
-                Languages & Frameworks
+                Engineering Stack
               </p>
               <Marquee className="py-2" reverse pauseOnHover fade>
-                {languagesFrameworks.map((skill) => (
-                  <Badge
-                    key={skill}
-                    variant="outline"
-                    className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
-                  >
-                    {skill}
-                  </Badge>
-                ))}
-              </Marquee>
-            </div>
-
-            {/* Cloud/Data Row */}
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
-                Cloud & Data
-              </p>
-              <Marquee className="py-2" pauseOnHover fade>
-                {cloudData.map((skill) => (
-                  <Badge
-                    key={skill}
-                    variant="outline"
-                    className="mx-2 px-4 py-2 text-sm border-border/40 rounded-full transition-all duration-200 hover:bg-accent/10 hover:border-accent/50 hover:scale-105 cursor-default"
-                  >
-                    {skill}
-                  </Badge>
-                ))}
-              </Marquee>
-            </div>
-
-            {/* Tools Row */}
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono px-1">
-                DevOps & Tools
-              </p>
-              <Marquee
-                className="py-2 [--duration:150s]"
-                reverse
-                pauseOnHover
-                fade
-              >
-                {tools.map((skill) => (
+                {engineeringStack.map((skill) => (
                   <Badge
                     key={skill}
                     variant="outline"
@@ -394,106 +426,77 @@ export default async function Page() {
       </section>
 
       {/* Certifications Section */}
-      <div className="h-32 md:h-48 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
+      <div className="h-16 md:h-24 bg-gradient-to-b from-transparent to-[hsl(32,50%,80%)] dark:to-[hsl(20,15%,13%)]" />
       <section
         id="certifications"
         className="py-12 md:py-20 bg-[hsl(32,50%,80%)] dark:bg-[hsl(20,15%,13%)]"
       >
         <div className="mx-auto w-full max-w-6xl px-6 space-y-12">
-          <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
-              Certifications
-            </p>
-            <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
-              Professional Development
-            </h2>
-          </div>
+          <FadeIn>
+            <div className="space-y-4">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium font-mono">
+                Certifications
+              </p>
+              <h2 className="text-4xl md:text-5xl font-heading font-semibold tracking-tight text-balance">
+                Professional Development
+              </h2>
+            </div>
+          </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {DATA.certificates.map((cert) => (
-              <MagicCard
-                key={cert.name + cert.date}
-                className="p-6 rounded-2xl border border-border/40 hover:border-accent/50 transition-all duration-300"
-                gradientColor="#5B122D"
-                gradientColorDark="#d4a5a5"
-                gradientOpacity={0.15}
-              >
-                <div className="space-y-4">
-                  {cert.iconUrl && (
-                    <Avatar className="size-10">
-                      <AvatarImage alt={cert.issuer} src={cert.iconUrl} />
-                      <AvatarFallback>{cert.issuer[0]}</AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div className="space-y-2">
-                    <h3 className="font-heading font-semibold text-base leading-tight">
-                      {cert.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {cert.issuer}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{cert.date}</p>
-                  </div>
-                  {cert.url && (
-                    <Link
-                      href={cert.url}
-                      className="inline-flex items-center text-xs text-accent hover:underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Certificate →
-                    </Link>
-                  )}
-                </div>
-              </MagicCard>
-            ))}
-          </div>
+          <CertificationsSection certificates={DATA.certificates} />
         </div>
       </section>
-      <div className="h-32 md:h-48 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
+      <div className="h-16 md:h-24 bg-gradient-to-b from-[hsl(32,50%,80%)] to-transparent dark:from-[hsl(20,15%,13%)]" />
 
       {/* Contact Section */}
       <section id="contact" className="py-24 md:py-32">
         <div className="mx-auto w-full max-w-6xl px-6 text-center space-y-8">
-          <h2 className="text-5xl md:text-6xl font-heading font-semibold tracking-tight text-balance">
-            Let&apos;s Connect
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Open to consulting, technical collaborations, and speaking
-            opportunities. Want to chat? Shoot me a{" "}
+          <FadeIn>
+            <h2 className="text-5xl md:text-6xl font-heading font-semibold tracking-tight text-balance">
+              Let&apos;s Work Together
+            </h2>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
+              Currently interested in AI consulting, technical leadership roles,
+              and speaking at conferences. Drop me a line.
+            </p>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 max-w-2xl mx-auto">
             <Link
-              href={DATA.contact.social.X.url}
-              className="text-accent hover:underline"
+              href={`mailto:${DATA.contact.email}`}
+              className="inline-flex items-center justify-center px-6 py-4 bg-foreground text-background rounded-xl text-sm font-medium hover:bg-foreground/90 transition-colors flex-col gap-1"
+            >
+              <span className="text-xs text-background/60">Consulting</span>
+              <span>Email Me</span>
+            </Link>
+            <Link
+              href={DATA.contact.social.LinkedIn.url}
+              className="inline-flex items-center justify-center px-6 py-4 border border-border rounded-xl text-sm font-medium hover:bg-muted/50 transition-colors flex-col gap-1"
               target="_blank"
               rel="noopener noreferrer"
             >
-              direct message on X
-            </Link>{" "}
-            and I&apos;ll respond whenever I can.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4 pt-8">
-            <Link
-              href={`mailto:${DATA.contact.email}`}
-              className="inline-flex items-center justify-center px-8 py-3 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
-            >
-              Email Me
+              <span className="text-xs text-muted-foreground">
+                Collaboration
+              </span>
+              <span className="flex items-center gap-2">
+                <DATA.contact.social.LinkedIn.icon className="size-4" />
+                LinkedIn
+              </span>
             </Link>
-            {Object.values(DATA.contact.social)
-              .filter((social) => social.navbar)
-              .slice(0, 3)
-              .map((social) => (
-                <Link
-                  key={social.name}
-                  href={social.url}
-                  className="inline-flex items-center justify-center px-8 py-3 border border-border rounded-lg text-sm font-medium hover:bg-muted/50 transition-colors gap-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <social.icon className="size-4" />
-                  {social.name}
-                </Link>
-              ))}
+            <Link
+              href={DATA.contact.social.X.url}
+              className="inline-flex items-center justify-center px-6 py-4 border border-border rounded-xl text-sm font-medium hover:bg-muted/50 transition-colors flex-col gap-1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="text-xs text-muted-foreground">Say Hi</span>
+              <span className="flex items-center gap-2">
+                <DATA.contact.social.X.icon className="size-4" />
+                DM on X
+              </span>
+            </Link>
           </div>
         </div>
       </section>
