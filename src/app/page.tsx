@@ -178,7 +178,7 @@ export default async function Page() {
 
             {/* Right Column - Avatar */}
             <div className="flex justify-center md:justify-end">
-              <div className="relative">
+              <div className="relative hover:scale-[1.02] transition-transform hover:shadow-2xl rounded-full">
                 <Avatar className="size-64 md:size-72 border-2">
                   <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
                   <AvatarFallback>{DATA.initials}</AvatarFallback>
@@ -312,7 +312,7 @@ export default async function Page() {
             </h2>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 relative flex w-full flex-col overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
             {/* AI/ML Row - Left to Right */}
             <Marquee className="py-4" pauseOnHover fade magnify>
               {aiMlSkills.map((skill) => (
