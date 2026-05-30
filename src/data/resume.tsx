@@ -133,6 +133,34 @@ export const DATA = {
 
   work: [
     {
+      company: "Google",
+      href: "https://google.com",
+      badges: [],
+      location: "Mumbai, India",
+      title: "Sr. Solutions Architect, AI",
+      logoUrl: "/google.svg",
+      start: "Jun 2026",
+      end: "Present",
+      summary:
+        "Helping enterprises adopt Google's AI platform, bringing Gemini and the wider Google AI stack into production.",
+      description:
+        "• Working with enterprise teams to architect and deliver AI solutions on Google Cloud, centered on Gemini and Google's latest models.\n• Translating Google's AI research and platform capabilities into production systems that fit real business needs.",
+    },
+    {
+      company: "OpenAI",
+      href: "https://developers.openai.com/community/codex-ambassadors",
+      badges: ["Ambassador"],
+      location: "Remote",
+      title: "Codex Ambassador",
+      logoUrl: "/openai.svg",
+      start: "Apr 2026",
+      end: "Present",
+      summary:
+        "Selected to OpenAI's Codex Ambassador program — testing early model releases and feeding hands-on feedback back to the Codex team.",
+      description:
+        "• Selected as an OpenAI Codex Ambassador, joining a small group of power users and community builders who support Codex adoption.\n• Test early and pre-release model and Codex changes, then share direct feedback with OpenAI's internal teams.\n• Evaluate new Codex releases against real engineering work and write about how I actually use them.",
+    },
+    {
       company: "Elastic Co.",
       href: "https://elastic.co",
       badges: [],
@@ -140,7 +168,7 @@ export const DATA = {
       title: "Lead AI Engineer",
       logoUrl: "/elastic.svg",
       start: "Feb 2024",
-      end: "Present",
+      end: "May 2026",
       summary:
         "Leading the design and deployment of innovative AI solutions that drive generative AI initiatives.",
       description:
