@@ -21,7 +21,11 @@ So I built <a href="https://menustat.adhishthite.vercel.app/" target="_blank" re
 
 It's a small Apple Silicon menu-bar monitor: CPU, memory, GPU, pressure, fans, and top apps. You click `MS`, see what the machine is doing, and click away. There's no Dock icon, no account, no cloud sync, and no "optimize your Mac" button.
 
-The first pass got much further than I expected. Codex scaffolded the core shape quickly — a menu-bar app, a SwiftUI panel, real telemetry, packaging scripts, and later a CLI. The harder part came after that: making it feel like something I'd actually want to leave running all day. That meant cutting background work, fixing numbers that were technically right but confusing in practice, and getting the app quiet enough that it earned its place in the menu bar.
+The first pass got much further than I expected. Codex scaffolded the core shape quickly — a menu-bar app, a SwiftUI panel, real telemetry, packaging scripts, and later a CLI.
+
+But this was not a one-shot "AI built my app" story. I kept asking Codex to make changes, test them, find the next rough edge, and push the fixes. The useful part was not that it produced a perfect first draft. It was that the loop stayed cheap enough for me to keep going: make the panel denser, reduce idle work, fix the launch path, add the CLI, package the release, update the website, verify production, repeat.
+
+The harder part was making it feel like something I'd actually want to leave running all day. That meant cutting background work, fixing numbers that were technically right but confusing in practice, and getting the app quiet enough that it earned its place in the menu bar.
 
 ## What Guided the Build
 
@@ -55,7 +59,7 @@ menustat
 
 The SwiftUI panel and the CLI never talk to IOKit or Mach directly. They both consume immutable `SystemSnapshot` values from the shared core, which made the whole system much easier to reason about — there's a single sampler, and everything else is just a way of rendering its output.
 
-That split also made the work with Codex easier. When I added the CLI later, it just had to reuse the existing sampler and render the same snapshot as text instead of as a panel.
+That split also made the work with Codex easier. When I asked for the CLI later, it did not have to invent a second product. It could reuse the existing sampler and render the same snapshot as text instead of as a panel.
 
 ## Reading the Mac
 
@@ -113,7 +117,7 @@ That gives the UI a genuinely useful top-app list while keeping the cost where i
 
 ## The Part After The First Pass
 
-The first pass got the basic product shape right. Everything after that was about turning it into something I'd actually keep running, and most of that work fell into three buckets:
+The first pass got the basic product shape right. Everything after that was Codex-assisted iteration: small changes, tests, fixes, release work, and a lot of "this feels off, make it better." Most of that work fell into three buckets:
 
 1. Make the numbers honest.
 2. Keep the app quiet.
@@ -277,6 +281,6 @@ MenuStat is deliberately small, but building it meant touching a surprising numb
 - DMG packaging
 - Vercel distribution
 
-I like that the whole thing is tiny to look at and surprisingly deep underneath. Codex got the first version standing quickly. The passes after that are what made it something I'd actually ship.
+I like that the whole thing is tiny to look at and surprisingly deep underneath. Codex got the first version standing quickly, but the shipped version came from all the follow-up changes I kept asking it to make and push.
 
 These days my menu bar just quietly tells me what my Mac is doing, and most of the time a single click on `MS` is all I need.
