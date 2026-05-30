@@ -85,3 +85,26 @@ pinnedOrder: 1                # Optional: Priority (1-3, lower = higher)
 
 - Store blog images in `public/blog/<slug>/` directory
 - For OG images, prefer 1200×630px (1.91:1 ratio) for best social media display
+
+## Writing Voice
+
+Blog posts must read like a human wrote them, not a model. Drafts (often from Codex/Claude) carry recognizable AI-writing tells; strip them before publishing. The signature tell is **rhythm and shape**, not vocabulary.
+
+**Cut these patterns:**
+
+- **The "X. Not Y." cadence** — assert-then-correct / balanced antithesis: "I wanted a glance, not a relationship.", "Not the files. The architecture.", "Technically working. Practically useless.", "It's not X. It's Y." This is the #1 tell. Rewrite as plain prose; keep at most one or two of the best per post.
+- **Section-ending "bows"** — a tidy aphorism that "lands a point" at the close of nearly every section ("That's the whole point.", "earned its keep"). Let sections end on substance, or just stop.
+- **Clichés / meta-signposting** — "earned its keep", "paid off", "the best part is", "turns out", "the magic is", "here's the thing", "that's exactly the kind of X I love", "there's something poetic about".
+- **Forced keyword motifs** repeated to feel thematic (e.g. leaning on "boring" or "just works").
+- **Staccato fragment stacks** used for drama ("Three tables. That's the whole backend.", "Done.").
+- **Marketing fluff** (mainly older tutorial/launch posts) — "powerful capabilities", "seamlessly", "unleash", reader-flattery ("Whether you're a seasoned dev or a curious newcomer"), exclamatory cheer ("Happy syncing!").
+
+**Keep / prefer:**
+
+- **Descriptive "no X, no Y, no Z" lists** are fine — listing what something *lacks* reads human. It's the rhetorical *reversal* ("…, not Y") that's the tell, not negation itself.
+- **Varied** sentence and paragraph length — real writing isn't a metronome.
+- **Real lived specifics** — exact hardware, timings, actual error messages, dead-ends, parenthetical asides, an honest "what I'd still change." This is what actually makes copy feel human.
+
+**Hard rule:** never invent facts, numbers, names, or quotes to sound more human — use real detail or leave it out. When editing existing copy, preserve all code, frontmatter, links, and facts unchanged.
+
+See `.agents/skills/humanize-blog-copy/` for the editing + verification workflow, and `.agents/skills/new-blog-post/` for scaffolding new posts.
