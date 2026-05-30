@@ -13,7 +13,7 @@ So I finally did it. I learned Rust.
 
 Well, "learned" might be generous. I built something in Rust that actually works, ships to real package managers, and doesn't segfault. Close enough, right?
 
-Meet <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>ocloc</a> (pronounced "oh-clock"). It's a lines-of-code counter that's stupidly fast. We're talking 2.3 million lines per second on my M2 MacBook. The entire Elasticsearch codebase (31,000 files, 5.5 million lines) analyzed in 2.35 seconds.
+Meet <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>ocloc</a> (pronounced "oh-clock"). It's a lines-of-code counter that runs at about 2.3 million lines per second on my M2 MacBook. The entire Elasticsearch codebase (31,000 files, 5.5 million lines) analyzed in 2.35 seconds.
 
 For comparison, cloc takes 56 seconds on the same repo. That's a **23x speedup**.
 
@@ -21,20 +21,20 @@ For comparison, cloc takes 56 seconds on the same repo. That's a **23x speedup**
 
 Look, cloc is a fantastic tool. I've used it for years. But every time I ran it on a large monorepo, I'd go make coffee while waiting for it to finish.
 
-I wanted something that would just... finish. Instantly. Before I could even think about getting up.
+I wanted something that finished before I could even think about getting up.
 
 Also, I really wanted to learn Rust. And what better way to learn a systems language than to build something that actually needs to be fast?
 
 ## The stack that makes it fast
 
-Here's what's under the hood:
+A few crates do the heavy lifting:
 
 - **Rayon** for dead-simple parallelism. Rust's fearless concurrency is real. I just slap `.par_iter()` on things and it spreads work across all CPU cores. No race conditions, no mutex nightmares.
 - **memmap2** for memory-mapped file I/O on large files. Instead of reading files byte-by-byte, the kernel just maps them into memory. Massive syscall savings.
 - **memchr** for finding newlines. This uses SIMD instructions under the hood, so we get vectorized searching that processes multiple bytes in a single CPU instruction.
 - **ignore** crate (from the ripgrep authors) for respecting `.gitignore`. Because nobody wants their `node_modules` counted.
 
-The analyzer itself is pretty straightforward: detect language by extension/filename/shebang, then count lines while tracking whether we're inside a block comment. The magic is in not doing stupid things. Like reading files synchronously one at a time.
+The analyzer itself is pretty straightforward: detect language by extension/filename/shebang, then count lines while tracking whether we're inside a block comment. Most of the speed comes from avoiding the obvious mistakes, like reading files synchronously one at a time.
 
 ## The AI assist
 
@@ -44,7 +44,7 @@ I used **Claude Code** and **Claude Sonnet 4** heavily for the implementation. W
 
 I also used **OpenAI's o3** for some of the trickier algorithmic bits, especially around the block comment parsing logic. Different models have different strengths, and I found that mixing them worked well for a project like this.
 
-The result is code that's clean, idiomatic Rust. Not the C-with-classes mess I would've written on my own.
+The result is clean, idiomatic Rust rather than the C-with-classes mess I would've written on my own.
 
 ## Getting it into Homebrew and Cargo
 
@@ -55,7 +55,7 @@ cargo login
 cargo publish
 ```
 
-That's it. Two commands. Your crate is live on <a href="https://crates.io/crates/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>crates.io</a> and anyone can install it with `cargo install ocloc`.
+Two commands, and your crate is live on <a href="https://crates.io/crates/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>crates.io</a> and anyone can install it with `cargo install ocloc`.
 
 Homebrew was more involved. I had to:
 
@@ -116,17 +116,17 @@ I ran this on real repos, not synthetic tests:
 
 The speedup gets more dramatic as repos get larger. That's the parallelism paying off. More files means more work to distribute across cores.
 
-At 2.3 million lines per second, you could analyze the Linux kernel (~30M lines) in about 13 seconds. A typical microservice finishes in 20 milliseconds. Basically instant.
+At 2.3 million lines per second, you could analyze the Linux kernel (~30M lines) in about 13 seconds, and a typical microservice finishes in 20 milliseconds.
 
 ## What I learned about Rust
 
-The borrow checker is annoying until it isn't. After a while, you start thinking in terms of ownership, and the errors make sense. It's like learning to type. Painful at first, then you can't imagine doing it any other way.
+The borrow checker fought me hard for the first week or so. Then something clicked: once you start thinking in terms of ownership, most of the errors stop being mysterious and start pointing at real problems in your code.
 
-The ecosystem is incredible. Need parallelism? Rayon. Fast I/O? memmap2 + memchr. Git operations? git2. Everything just works, and the quality bar is high.
+The ecosystem is genuinely strong. There was a well-maintained crate for everything I reached for, with Rayon handling parallelism, memmap2 and memchr handling I/O, and git2 covering Git operations, all at a high quality bar.
 
-The compile times are... not great. But the runtime performance makes up for it.
+The compile times are the one rough edge, though the runtime performance more than makes up for it.
 
-And the tooling! `cargo clippy` catches so many bugs before they become bugs. `cargo fmt` means no more style arguments. `cargo test` just works. It's the best developer experience I've had with any compiled language.
+The tooling is where Rust really won me over. `cargo clippy` caught plenty of bugs before they shipped, `cargo fmt` ended any debate about style, and `cargo test` was painless to set up. It's the best developer experience I've had with any compiled language.
 
 ## Try it
 
@@ -143,15 +143,15 @@ brew tap adhishthite/ocloc
 brew install ocloc
 ```
 
-Then run it on your codebase and watch it finish before you can blink.
+Then run it on your codebase.
 
 The code is all on <a href="https://github.com/adhishthite/ocloc" target="\_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>GitHub</a>. Issues and PRs welcome, especially if you want to add support for more languages.
 
 ---
 
-This was a fun project. There's something deeply satisfying about writing fast code in a language designed for fast code. Rust's reputation is well-earned, and I'm definitely building more stuff with it.
+This was a fun project. There's something satisfying about writing fast code in a language designed for fast code, and Rust's reputation is well-earned. I'm definitely building more stuff with it.
 
-If you've been putting off learning Rust because it seems intimidating, just pick a small project and start. The compiler yells at you a lot, but it's always right. And when your code finally compiles, you know it works.
+If you've been putting off learning Rust because it seems intimidating, a small, performance-sensitive project like this is a good way in. You spend a lot of time arguing with the compiler, but by the time your code compiles, you've usually fixed the bugs that would have bitten you later anyway.
 
 <a
   href="https://github.com/adhishthite/ocloc"

@@ -7,9 +7,9 @@ image: "/blog/proof-sdk-iap-auth/og.png"
 
 # Securing Agent Access to Proof SDK Behind Cloud Run + IAP
 
-AI agents are getting good at writing. The problem is they're terrible at collaborating.
+AI agents are getting good at writing, but they're still terrible at collaborating.
 
-They'll generate a document, dump it into a Slack thread, and disappear. No revision history. No way to see what the human changed versus what the model produced. No provenance. When your compliance team asks "who wrote this paragraph?", nobody has an answer.
+A typical agent will generate a document, dump it into a Slack thread, and disappear. You get no revision history, no way to see what the human changed versus what the model produced, and no provenance. When your compliance team asks "who wrote this paragraph?", nobody has an answer.
 
 ## Proof SDK: The Missing Layer
 
@@ -24,23 +24,23 @@ The <a href="https://github.com/EveryInc/proof-sdk" target="_blank" rel="noopene
 
 Think Google Docs, but built from the ground up for a world where half your collaborators are LLMs. It's MIT-licensed, self-hostable, and the SDK is structured as clean packages: `doc-core`, `doc-editor`, `doc-server`, `agent-bridge`.
 
-The key insight is that agents need to be *participants* in documents, not just generators. They need presence, identity, and accountability. Proof gives them that.
+The design treats agents as *participants* in a document rather than one-shot generators that hand off a blob of text. They get presence, identity, and accountability inside the editor alongside the humans.
 
 ## The Enterprise Problem: IAP Stands in the Way
 
-Here's where it gets interesting for production deployments.
+Production deployments run into a wall here.
 
-If you're running Proof SDK on Google Cloud Run behind Identity-Aware Proxy (IAP), your agents can't authenticate. IAP is a zero-trust access control layer that sits in front of your application. Every request has to prove identity before it reaches your service. No VPN required, no network perimeter to trust. Just "who are you, and are you allowed to be here?"
+If you're running Proof SDK on Google Cloud Run behind Identity-Aware Proxy (IAP), your agents can't authenticate. IAP is a zero-trust access control layer that sits in front of your application, and every request has to prove identity before it reaches your service. There's no VPN and no network perimeter to trust; instead the proxy answers a single question on each request: who are you, and are you allowed to be here?
 
 For browser-based humans, this is seamless. Google handles the OAuth flow, IAP validates the identity, and the request goes through with an `x-goog-authenticated-user-email` header injected by the proxy.
 
-For headless agents? There's no browser. No OAuth popup. The agent needs to call your Proof SDK API, but IAP is blocking the door because the only auth paths Proof supported were OAuth (needs a browser) or API keys (no identity tracking). Neither works well for agents in a zero-trust setup.
+A headless agent has no browser to drive and no OAuth popup to click through. It needs to call your Proof SDK API directly, but IAP blocks the door, because the only auth paths Proof supported were OAuth (which needs a browser) or API keys (which carry no identity tracking). Neither one fits an agent in a zero-trust setup.
 
-This matters because enterprises don't expose internal services to the raw internet. They put IAP or equivalent proxies in front of everything. If your agent can't authenticate through that layer, it can't participate in your document workflows. Period.
+This matters because enterprises don't expose internal services to the raw internet. They put IAP or an equivalent proxy in front of everything, so an agent that can't authenticate through that layer simply can't participate in your document workflows.
 
 ## The Fix: Trusted Proxy Email Auth
 
-I contributed a feature to Proof SDK that closes this gap. The idea is simple: if IAP has already validated the caller's identity and injected a trusted email header, Proof SDK should be able to trust that header instead of requiring a separate OAuth session.
+I contributed a feature to Proof SDK that closes this gap. If IAP has already validated the caller's identity and injected a trusted email header, Proof SDK can trust that header instead of requiring a separate OAuth session.
 
 Here's the flow:
 
@@ -115,9 +115,9 @@ The `ownerId` is automatically set to the authenticated email. If someone tries 
 
 ## Security: What We Hardened
 
-This isn't "trust a header and hope for the best." The implementation went through two rounds of security review, and every finding was addressed before merge. Here's what's protected:
+Trusting a proxy header is only safe if the trust is bounded carefully. The implementation went through two rounds of security review, and every finding was addressed before merge. Here is what each round locked down:
 
-**Discovery endpoint redacted.** The `/.well-known/agent.json` endpoint used to expose which headers the server trusts, which email domains are allowed, and which specific emails are privileged. That's a roadmap for an attacker. Now it only advertises that trusted proxy auth exists, with zero internal config details.
+**Discovery endpoint redacted.** The `/.well-known/agent.json` endpoint used to expose which headers the server trusts, which email domains are allowed, and which specific emails are privileged, which together amount to a roadmap for an attacker. It now only advertises that trusted proxy auth exists, with zero internal config details.
 
 **Default headers narrowed.** The original implementation defaulted to trusting both `x-goog-authenticated-user-email` and `x-forwarded-email`. The second one is a generic header that any upstream proxy (or attacker) can set. The default now only trusts the IAP-specific header. You can add others explicitly if your setup requires it, but you have to opt in.
 
@@ -127,7 +127,7 @@ This isn't "trust a header and hope for the best." The implementation went throu
 
 ## The Operator's Responsibility
 
-One thing to be explicit about: this feature assumes your proxy is the only way to reach the service. If your Cloud Run instance is directly accessible without going through IAP, header spoofing is trivial. An attacker just sends the trusted header with any email and they're in.
+This feature assumes your proxy is the only way to reach the service. If your Cloud Run instance is directly accessible without going through IAP, header spoofing becomes trivial: an attacker just sends the trusted header with any email and they're in.
 
 You must:
 
@@ -139,7 +139,7 @@ This is standard zero-trust hygiene, but it's worth stating plainly because the 
 
 ## Why This Matters
 
-The pattern here is bigger than Proof SDK. As AI agents move from toys to production tools, they need to participate in the same identity and access management systems that humans use. They need to authenticate through the same zero-trust layers, carry verifiable identities, and produce auditable provenance trails.
+The pattern here is bigger than Proof SDK. As AI agents move from experiments to production tools, they have to participate in the same identity and access management systems that humans use: authenticating through the same zero-trust layers, carrying verifiable identities, and producing auditable provenance trails.
 
 Proof SDK is one of the first open-source projects to treat agents as first-class document collaborators with real identity. Adding IAP support means those agents can now operate in enterprise environments where zero-trust access control isn't optional.
 

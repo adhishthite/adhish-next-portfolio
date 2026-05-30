@@ -6,29 +6,29 @@ summary: "What started as a simple web app turned into a 20-minute interview abo
 
 # I Asked for a Tip Calculator. Claude Asked Me 27 Questions First.
 
-I just wanted to build a simple tip calculator. Enter bill amount, pick tip percentage, done. Maybe add bill splitting if I felt ambitious. Fifteen minutes of work, tops.
+I just wanted a basic tip calculator. Enter bill amount, pick tip percentage, done. Maybe add bill splitting if I felt ambitious. Fifteen minutes of work, tops.
 
 30 minutes later (total time from empty directory to deployed on Vercel), I had a production-ready app.
 
 **[Try Tippr live →](https://tippr-cc.vercel.app/)**
 
-Not because I'm some coding genius. Because I let Claude interrogate me for 20 minutes about penny reconciliation, paste chaos, and what happens when someone tries to calculate a tip on a $470,000 wedding bill.
+I'm no coding genius. What got me there was letting Claude interrogate me for 20 minutes about penny reconciliation, paste chaos, and what happens when someone tries to calculate a tip on a $470,000 wedding bill.
 
-This is what happens when you stop rushing to code and start answering uncomfortable questions about your "simple" idea.
+This is what you get when you stop rushing to code and start answering uncomfortable questions about your supposedly simple idea.
 
-## The Setup: A Blank Terminal and Two Magic Words
+## The Setup: A Blank Terminal and Two Keystrokes
 
 I created a directory called `tip-calculator`, opened my terminal, typed `claude code`, and then typed two characters: `/o`
 
 Autocomplete suggested `/onboard-project`. I hit enter.
 
-What I didn't know: I'd just started a 20-minute interview that would make me think about things I'd never considered.
+What I didn't realize was that I'd just kicked off a 20-minute interview that would make me think about things I'd never considered.
 
-Quick context. Claude Code has this feature called **slash commands**. They're reusable workflows stored as Markdown files. You can make them yourself (stick them in `~/.claude/commands/` for personal use, or `.claude/commands/` for project-specific ones).
+Some quick context. Claude Code has a feature called **slash commands**: reusable workflows stored as Markdown files. You can write your own and drop them in `~/.claude/commands/` for personal use, or `.claude/commands/` for project-specific ones.
 
-Unlike Skills (in Claude Code) that activate automatically based on semantic matching, slash commands are explicit. You type `/onboard-project` and Claude runs the project scaffolding interview. You type `/break-it` and Claude becomes a QA specialist hunting for edge cases.
+Skills in Claude Code activate on their own through semantic matching, but slash commands are explicit. You type `/onboard-project` and Claude runs the project scaffolding interview; you type `/break-it` and Claude becomes a QA specialist hunting for edge cases.
 
-I'd built these two commands over months of being frustrated with my scattered dev process. Now I was testing them on something "simple."
+I'd built these two commands over months of frustration with my scattered dev process, and now I was pointing them at something I assumed was trivial.
 
 ## Act I: The Friendly Interrogation
 
@@ -38,7 +38,7 @@ Claude's message popped up:
 
 > "Welcome! I'm excited to help you build something great. Think of me as your project architect. I'll handle the technical details while making sure we build exactly what you need. Let's start by getting to know each other a bit."
 
-Friendly. Disarming. I wasn't suspicious yet.
+It read as friendly and disarming, and I wasn't suspicious yet.
 
 ![Claude Code onboarding interview starting](/blog/claude-code-slash-commands/cc-onboarding-1.png)
 
@@ -71,15 +71,13 @@ Claude didn't just ask for a project name. It *brainstormed*:
 
 I picked Tippr. It felt right.
 
-Then Claude wrote everything to a spec file in `.plans/tippr-spec.md`. Every decision, every preference, every architectural choice documented.
+Then Claude wrote everything to a spec file in `.plans/tippr-spec.md`, with every decision, preference, and architectural choice documented.
 
 The spec included `CLAUDE.md` (my communication style), `TECHNICAL.md` (architecture decisions), and the full project structure.
 
 ![Spec file saved after onboarding](/blog/claude-code-slash-commands/cc-onboarding-done.png)
 
-At this point I thought, okay this was thorough, but now we build, right?
-
-Wrong.
+At this point I figured we were done with the thorough part and could finally start building. We weren't.
 
 ## Act II: "Let's Break It"
 
@@ -116,11 +114,11 @@ Every single question caught something that would've been a production bug.
 
 ### Why This Didn't Take Hours
 
-Here's what made this bearable: I wasn't typing essays. Every question had clickable options.
+What made it bearable was that I wasn't typing essays. Every question came with clickable options.
 
-When Claude asked about the credit card paste scenario, I didn't type a paragraph. I clicked: **"Detect invalid money, show error."**
+When Claude asked about the credit card paste scenario, I just clicked **"Detect invalid money, show error."** rather than writing out a paragraph.
 
-The interviews took ~20 minutes because I was *thinking* about each scenario, not writing responses. Clicking was fast. Thinking was slow. As it should be.
+The interviews took around 20 minutes, and almost all of that was me *thinking* about each scenario rather than composing a response. The clicking was instant; the thinking was where the time went, which is exactly where you want it.
 
 ### The Document That Changed Everything
 
@@ -128,7 +126,7 @@ When the interrogation finally ended, Claude generated an edge cases document.
 
 ![Edge case exploration complete](/blog/claude-code-slash-commands/cc-breakit-done.png)
 
-Every scenario. Every decision. Organized by category.
+It captured every scenario and every decision, organized by category.
 
 **Money precision issues:**
 - Situation: Bill $0.01, tip 20% = $0.002
@@ -145,9 +143,7 @@ Every scenario. Every decision. Organized by category.
 - Handling: Two people pay $38.33, one pays $38.34
 - User message: "Amounts adjusted by 1¢ to match total"
 
-The document had 40+ edge cases. For a tip calculator.
-
-And every single one was legitimate.
+The document ran to 40+ edge cases for what was supposed to be a tip calculator, and every one of them was legitimate.
 
 ## Act III: One Command to Build It All
 
@@ -155,9 +151,9 @@ I had two files:
 - `.plans/tippr-spec.md` - My vision, preferences, architecture
 - `docs/edge-cases/tippr-edge-cases.md` - 40+ scenarios that would break the app
 
-20 minutes in. I hadn't written a single line of code. Hadn't even opened VS Code.
+Twenty minutes in, I still hadn't written a single line of code, and I hadn't even opened VS Code.
 
-This is where traditional development would start. Set up React, install dependencies, create components, wire up state, handle edge cases, debug, repeat.
+In a normal project this is where the real work would begin: set up React, install dependencies, create components, wire up state, handle edge cases, debug, repeat.
 
 Instead, I typed one sentence:
 
@@ -167,9 +163,7 @@ Instead, I typed one sentence:
 
 Then I hit enter.
 
-Claude built the entire app.
-
-Not a prototype. Not a proof of concept. A **production-ready application**:
+Claude built the entire app. This wasn't a prototype or a proof of concept; it was a **production-ready application**:
 
 - React + Vite setup with TypeScript
 - Complete component architecture
@@ -196,7 +190,7 @@ Every edge case. Every scenario from the interview. Handled.
 
 **[See it live: tippr-cc.vercel.app](https://tippr-cc.vercel.app/)**
 
-Here's what the finished app looks like:
+The finished app looks like this:
 
 ![Tippr initial empty state](/blog/claude-code-slash-commands/tippr-screen-1.png)
 
@@ -210,13 +204,11 @@ Here's what the finished app looks like:
 
 I never opened my IDE during any of this.
 
-The entire process - idea to working app - happened in my terminal through conversation with Claude Code.
+The entire process, from idea to working app, happened in my terminal through conversation with Claude Code.
 
-No context-switching between editor and terminal. No "let me just open this file real quick." No fighting with import paths or missing dependencies.
+There was no context-switching between editor and terminal, no "let me just open this file real quick," no fighting with import paths or missing dependencies. I answered questions, and then I watched it build.
 
-Just answer questions, then watch it build.
-
-**Full disclosure:** The first build had some bugs. I used Sonnet to generate it and there were a few minor issues. Asked Opus to fix them, now it's production-ready. But here's the key: every bug was an implementation detail, not a missed edge case. The penny reconciliation? Worked. The large amount warning? Worked. The input validation? Worked. The interview prevented the bugs that actually matter.
+**Full disclosure:** the first build had some bugs. I used Sonnet to generate it and there were a few minor issues, so I asked Opus to fix them, and now it's production-ready. What matters is that every one of those bugs was an implementation detail rather than a missed edge case. The penny reconciliation worked. The large amount warning worked. The input validation worked. The interview had already taken care of the bugs that actually hurt.
 
 ## What I Actually Learned
 
@@ -228,34 +220,28 @@ The traditional flow: idea → code → bugs → fixes → more bugs → ship �
 
 These slash commands gave me something different: idea → systematic edge case analysis → code with awareness → ship with confidence.
 
-The magic isn't that Claude Code writes perfect code. The magic is that it forces you to think before you code.
+Claude Code doesn't write perfect code. What it does is force you to think before you write any code at all, and that's the part that pays off.
 
 ### The Uncomfortable Truth
 
-Most developers (me included) hate thinking about edge cases upfront. Feels like premature optimization. Feels like overthinking a "simple" problem.
+Most developers, me included, hate thinking about edge cases upfront. It feels like premature optimization, like overthinking a problem that should be trivial. But a tip calculator stops being trivial the moment real users start touching it.
 
-But a tip calculator isn't simple. Nothing is simple once real users touch it.
+The 10-minute interrogation from `/break-it` felt excessive right up until I saw the app work on the first try.
 
-The ~10-minute interrogation from `/break-it` felt excessive. Until I saw the app work on the first try.
-
-No debugging session for negative numbers breaking everything. No panic-fix when someone pasted a credit card number in the bill field. No "oh crap, I forgot to debounce" moment three months later.
-
-All those problems were already solved. I'd been forced to think about them in 10 minutes instead of discovering them over 3 months.
+There was no debugging session for negative numbers breaking everything, no panic-fix when someone pasted a credit card number in the bill field, no "oh crap, I forgot to debounce" moment three months later. Those problems were already solved, because I'd been forced to think through them in 10 minutes instead of stumbling onto them over the following 3 months.
 
 ### The Knowledge Transfer Principle
 
-Here's what building these commands taught me about AI-assisted development:
+Building these commands taught me something about AI-assisted development that goes beyond generating code: the real value is in transferring knowledge.
 
-**The power isn't in code generation. It's in knowledge transfer.**
-
-Claude doesn't know my project's context until I tell it. But once I've taught it - via slash commands, via `CLAUDE.md`, via the interview process - it can apply that knowledge consistently.
+Claude doesn't know my project's context until I tell it. Once I've taught it, though, through slash commands, through `CLAUDE.md`, through the interview process, it applies that knowledge consistently.
 
 Slash commands are reusable teaching:
 - I taught Claude once how I like projects scaffolded → Every new project starts right
 - I taught Claude once how to think about edge cases → I get systematic QA on demand
 - I taught Claude my communication style → It adapts appropriately
 
-It's not "AI writes code for me." It's "AI applies my expertise when I'm too tired to remember all of it myself."
+I don't think of this as "AI writes code for me." It's closer to AI applying my own expertise back to me when I'm too tired to remember all of it myself.
 
 ## Want These Commands?
 
@@ -293,24 +279,22 @@ When you invoke a slash command, its full instructions load into Claude's contex
 
 ## The Invitation
 
-These commands are opinionated. They work for how I think about products. Yours might look completely different. That's the point.
+These commands are opinionated. They fit how I think about products, and yours could end up looking completely different, which is exactly how it should be.
 
 If you've been sleeping on Claude Code slash commands, start small:
 - A command that enforces your commit message format
 - One that explains code in your preferred teaching style
 - A workflow for your specific code review process
 
-The goal isn't to copy mine. The goal is to codify your own expertise so you can apply it consistently, even when you're tired, rushing, or working on your 10th project of the month.
+Don't copy mine. Codify your own expertise so you can apply it consistently, even when you're tired, rushing, or working on your 10th project of the month.
 
 ---
 
 ## Epilogue: 30 Minutes to Production
 
-I set out to build a simple tip calculator. Fifteen minutes of work, I thought.
+I set out to build a quick tip calculator, fifteen minutes of work in my head.
 
-Instead, I answered 27 questions about penny reconciliation, paste chaos, and wedding bills.
-
-Then I typed one sentence and watched Claude build it. Pushed to GitHub. Deployed to Vercel.
+Instead, I answered 27 questions about penny reconciliation, paste chaos, and wedding bills. Then I typed one sentence and watched Claude build it, push to GitHub, and deploy to Vercel.
 
 **→ [Try it yourself: tippr-cc.vercel.app](https://tippr-cc.vercel.app/)**
 

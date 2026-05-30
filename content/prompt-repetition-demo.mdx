@@ -18,15 +18,15 @@ There's a paper from Google Research that I keep coming back to. It's called ["P
 <QUERY>
 ```
 
-That's it. Copy-paste your prompt twice. The paper tested this across 70 model-benchmark combinations and found 47 improvements, 0 regressions. Not a single case where it made things worse.
+All you do is copy-paste your prompt twice. The paper tested this across 70 model-benchmark combinations and found 47 improvements and 0 regressions, with no case where doubling the prompt actually hurt accuracy.
 
-My first reaction was skepticism. My second reaction was to build a demo.
+I didn't believe it at first, so I built a demo to check.
 
 ---
 
 ## Why This Actually Makes Sense
 
-The mechanism isn't magic, it's a property of how causal language models work.
+The mechanism falls straight out of how causal language models work.
 
 Causal attention is unidirectional: each token can only attend to tokens that came before it. This creates an ordering problem. If you write `<OPTIONS><QUESTION>`, the model processes the options without having seen the question yet. Those option tokens have no idea what they're supposed to be answering. By the time the question token appears, the attention is already locked in from one direction.
 
@@ -91,7 +91,7 @@ Looking at the numbers:
 | NameIndex | GPT-4o | 93.2% | 99.2% |
 | MATH | Gemini 2.0 Flash | 67.6% | 76.5% |
 
-MiddleMatch at 2.8% baseline for Gemini Flash is essentially random. At 60.0% after repetition, it's working. The underlying capability was there, the model just needed to see the full context in both directions.
+MiddleMatch at 2.8% baseline for Gemini Flash is essentially random. At 60.0% after repetition, it's working. The underlying capability was already there; what the model lacked was a view of the full context in both directions.
 
 One important caveat from the paper: this doesn't help when reasoning is enabled. With chain-of-thought or reasoning tokens active, results are neutral to slightly positive. The repetition matters when the model isn't already doing internal context processing during generation.
 
@@ -171,9 +171,9 @@ On the frontend, a `useCompletion` hook manages the streaming state for each pan
 
 ## Why I Found This Worth Building
 
-I work in LLM systems at Elastic, and a pattern I see constantly is people reaching for complex solutions to context problems: RAG, fine-tuning, chain-of-thought prompting. Some of those are the right tool. But a lot of the time, the model already has the capability, it just can't see the full context because of how attention works.
+I work in LLM systems at Elastic, and a pattern I see constantly is people reaching for complex solutions to context problems: RAG, fine-tuning, chain-of-thought prompting. Some of those are the right tool. But a lot of the time the model already has the capability and simply can't see the full context, because of how attention works.
 
-This paper is a clean example of that. The technique costs you approximately nothing. The prompt gets longer (doubling it increases input tokens), but output length and measured latency are unchanged because the repetition happens in the parallelizable prefill stage. For longer prompts it's less viable, but for the typical task prompt that's under a few hundred tokens, it's a free improvement.
+This paper is a clean example of that, and the technique barely costs you anything. The prompt gets longer (doubling it increases input tokens), but output length and measured latency are unchanged because the repetition happens in the parallelizable prefill stage. For longer prompts it's less viable. For the typical task prompt that's under a few hundred tokens, it's a free improvement.
 
 The fact that 0 out of 70 combinations got worse is the part that matters most to me. If you're not using reasoning mode, this is a genuinely safe default to try. The paper's own conclusion puts it plainly: "it might be a good default for many models and tasks."
 

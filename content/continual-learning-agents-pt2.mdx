@@ -9,13 +9,13 @@ pinnedOrder: 1
 
 # My Agent Remembers Better Than I Do (Part 2)
 
-Two weeks ago, I wrote about <a href="/blog/continual-learning-agents" style={{color: "rgb(245, 135, 61)"}}>teaching my OpenClaw agent to never repeat a mistake</a>. Error logs, QMD search, heartbeat maintenance. It worked.
+Two weeks ago, I wrote about <a href="/blog/continual-learning-agents" style={{color: "rgb(245, 135, 61)"}}>teaching my OpenClaw agent to never repeat a mistake</a> using error logs, QMD search, and heartbeat maintenance. It worked.
 
 Then I migrated to a fresh machine and watched everything fall apart.
 
-Not the data. The files were backed up. What broke was subtler: the agent woke up on the new instance with all its memories intact but no idea how to use them well. Retrieval was noisy. Daily logs were bloated with duplicates. There was no safety net before context compaction. And the workspace had already started growing into an unstructured mess after just 18 days.
+The data survived; the files were backed up. What broke was subtler. The agent woke up on the new instance with all its memories intact but no idea how to use them well. Retrieval was noisy, the daily logs were bloated with duplicates, there was no safety net before context compaction, and after just 18 days the workspace had already grown into an unstructured mess.
 
-So I rebuilt the memory system from scratch. Not the files. The architecture around them.
+So I rebuilt the memory system from scratch. The files were fine; what I changed was the architecture around them.
 
 This is what I learned.
 
@@ -23,7 +23,7 @@ This is what I learned.
 
 ## Architecture Overview
 
-Here's the full picture of what the memory system looks like now:
+This is the full picture of what the memory system looks like now:
 
 ```mermaid
 graph TB
@@ -59,17 +59,17 @@ graph TB
 
 ## The Problem With "Just Write It Down"
 
-Part 1 was built on a simple principle: **files are your persistence layer.** Write everything down. Search it later.
+Part 1 was built on a simple principle: **files are your persistence layer.** Write everything down, search it later.
 
-That principle is correct. But it doesn't scale without structure. Here's what happened after two weeks of aggressive memory writes:
+That principle is correct, but it doesn't scale without structure. After two weeks of aggressive memory writes, a few things had gone wrong.
 
-**Daily logs hit 400+ lines.** My checkpoint cron fired every 15 minutes and appended whatever seemed important. Except it couldn't see what the previous checkpoint had already written, so the same information appeared 5-6 times per day. Feb 17's log had the same health data repeated six times with identical numbers.
+**Daily logs hit 400+ lines.** My checkpoint cron fired every 15 minutes and appended whatever seemed important. The catch was that it couldn't see what the previous checkpoint had already written, so the same information appeared 5-6 times per day. Feb 17's log had the same health data repeated six times with identical numbers.
 
-**Search returned noise.** When everything is saved, everything matches. A query for "API deployment" returned 12 results across 8 files, half of them stale daily log entries saying the same thing. Relevance wasn't the problem. Redundancy was.
+**Search returned noise.** When everything is saved, everything matches. A query for "API deployment" returned 12 results across 8 files, half of them stale daily log entries saying the same thing. The results were relevant enough; the problem was that they all repeated each other.
 
-**Context compaction killed memory.** OpenClaw compresses old context when the window fills up. That's fine for conversation flow. But any unsaved context, the stuff the agent "knew" but hadn't written to disk yet, vanished. One compaction at the wrong time and the agent forgot what it was doing mid-task.
+**Context compaction killed memory.** OpenClaw compresses old context when the window fills up, which is fine for conversation flow. But any unsaved context, the stuff the agent "knew" but hadn't written to disk yet, vanished. One compaction at the wrong time and the agent forgot what it was doing mid-task.
 
-The foundation from Part 1 was right. But I needed three more things: **smarter retrieval**, **compaction safety**, and **workspace governance**.
+The foundation from Part 1 was right. I just needed three more things on top of it: smarter retrieval, compaction safety, and workspace governance.
 
 ---
 
@@ -79,7 +79,7 @@ OpenClaw's native `memory_search` supports more than basic vector search. After 
 
 ### Hybrid Search (BM25 + Vector)
 
-Pure vector search finds conceptually similar content. Pure keyword search (BM25) finds exact matches. Neither is sufficient alone. Hybrid combines both.
+Pure vector search finds conceptually similar content, and pure keyword search (BM25) finds exact matches. Neither is sufficient on its own, so hybrid search combines the two.
 
 ```json title="openclaw.json"
 {
@@ -99,9 +99,9 @@ Pure vector search finds conceptually similar content. Pure keyword search (BM25
 
 ### MMR (Maximal Marginal Relevance)
 
-This was the real win. Standard search returns the most relevant results. But "most relevant" often means "most similar to each other." You get five results that all say the same thing from different daily logs.
+This was the real win. Standard search returns the most relevant results, but "most relevant" often means "most similar to each other" — you get five results that all say the same thing from different daily logs.
 
-MMR re-ranks results to balance **relevance** and **diversity**. Each subsequent result is penalized if it's too similar to results already selected.
+MMR re-ranks results to balance relevance against diversity. Each subsequent result is penalized if it's too similar to results already selected.
 
 ```json title="openclaw.json"
 {
@@ -117,7 +117,7 @@ MMR re-ranks results to balance **relevance** and **diversity**. Each subsequent
 }
 ```
 
-Lambda 0.7 means 70% relevance, 30% diversity. The `candidateMultiplier` fetches 4x more candidates than needed, then MMR selects the final set. The result: instead of five near-identical daily log entries, I get one daily log entry, one thematic file, one project doc, and one error log entry. Same query, much broader coverage.
+Lambda 0.7 means 70% relevance, 30% diversity. The `candidateMultiplier` fetches 4x more candidates than needed, then MMR selects the final set. The result is that for the same query, instead of five near-identical daily log entries, I get one daily log entry, one thematic file, one project doc, and one error log entry — much broader coverage.
 
 ### Temporal Decay
 
@@ -137,7 +137,7 @@ Recent memories should rank higher than old ones. A lesson learned yesterday is 
 }
 ```
 
-A 30-day half-life means a document from 30 days ago gets its score halved. 60 days, quartered. This naturally surfaces fresh context without me having to manually prune old results. Combined with MMR, the agent gets recent, relevant, and diverse results.
+A 30-day half-life means a document from 30 days ago gets its score halved, and one from 60 days ago gets quartered. This surfaces fresh context without me having to manually prune old results, and combined with MMR it gives the agent results that are recent, relevant, and varied.
 
 **The combined config:**
 
@@ -168,7 +168,7 @@ A 30-day half-life means a document from 30 days ago gets its score halved. 60 d
 }
 ```
 
-All local. The embedding model (`embeddinggemma-300m`, 313MB GGUF) runs on Apple Silicon's Metal GPU. Zero API cost. Searches complete in under 2 seconds.
+It's all local. The embedding model (`embeddinggemma-300m`, 313MB GGUF) runs on Apple Silicon's Metal GPU, so there's no API cost, and searches complete in under 2 seconds.
 
 ---
 
@@ -176,9 +176,9 @@ All local. The embedding model (`embeddinggemma-300m`, 313MB GGUF) runs on Apple
 
 This is the feature I wish I'd had from day one.
 
-OpenClaw compacts context when the conversation gets long. That's necessary. But anything the agent "knows" from the conversation that it hasn't written to disk yet gets lost. You can be mid-discussion about a complex architecture decision, compaction fires, and suddenly the agent has no idea what you were talking about.
+OpenClaw compacts context when the conversation gets long, which is necessary, but anything the agent "knows" from the conversation that it hasn't written to disk yet gets lost in the process. You can be mid-discussion about a complex architecture decision, compaction fires, and suddenly the agent has no idea what you were talking about.
 
-The fix: **memory flush**. A silent agent turn that fires *before* compaction, giving the agent a chance to write unsaved context to disk.
+The fix is a memory flush: a silent agent turn that fires *before* compaction, giving the agent a chance to write unsaved context to disk.
 
 ```json title="openclaw.json"
 {
@@ -209,17 +209,15 @@ sequenceDiagram
     Note over OC: No data lost. Files have everything.
 ```
 
-When the context hits 10,000 tokens remaining before the compaction threshold, the agent gets a silent turn: "Write anything important to memory files now." It flushes decisions, facts, corrections, whatever it's been holding in context. Then compaction happens safely.
+When the context hits 10,000 tokens remaining before the compaction threshold, the agent gets a silent turn: "Write anything important to memory files now." It flushes decisions, facts, corrections, whatever it's been holding in context, and then compaction happens safely.
 
-10K tokens is conservative. You could set it higher for models with larger output windows. But I'd rather flush too early than lose context.
-
-This turns compaction from a data loss event into a checkpoint event.
+10K tokens is conservative, and you could set it higher for models with larger output windows. I'd rather flush too early than lose context. The net effect is that compaction stops being a data loss event and becomes a checkpoint instead.
 
 ---
 
 ## The 5-Layer Persistence Stack
 
-After rebuilding, I realized that memory persistence isn't one thing. It's a stack, and each layer catches what the layer above misses.
+After rebuilding, I realized that memory persistence isn't one thing but a stack, where each layer catches what the layer above misses.
 
 ```
 Layer 1: Immediate Writes (behavioral)
@@ -263,23 +261,23 @@ graph LR
     style L5B fill:#ef4444,color:#fff
 ```
 
-**Layer 1** is behavioral. The agent's instructions say: write to files immediately when something meaningful happens. Don't wait. Don't "mental note" anything. This is the first line of defense and it catches 80% of what matters.
+**Layer 1** is behavioral. The agent's instructions tell it to write to files immediately when something meaningful happens, rather than waiting or keeping a "mental note." This is the first line of defense, and it catches 80% of what matters.
 
 **Layer 2** is the safety net. Every 15 minutes, a system event fires in the main session: "If you've had meaningful exchanges since last write, capture them NOW." This catches the stuff the agent forgot to write immediately. It runs in the main session because it needs to see the conversation context.
 
-**Layer 3** is background work. Every 30 minutes, an isolated session checks email, calendar, and health data. It writes findings to memory files. "Isolated" means it doesn't block the main conversation. If something urgent comes up (important email, upcoming meeting), it announces.
+**Layer 3** is background work. Every 30 minutes, an isolated session checks email, calendar, and health data, and writes its findings to memory files. Isolated here means it doesn't block the main conversation, though it does announce anything urgent like an important email or an upcoming meeting.
 
-**Layer 4** keeps search fresh. Every hour, QMD re-indexes all collections. New daily log entries, updated project docs, fresh memory files. All searchable within the hour.
+**Layer 4** keeps search fresh. Every hour, QMD re-indexes all collections, so new daily log entries, updated project docs, and fresh memory files all become searchable within the hour.
 
 **Layer 5** is garbage collection. At 2 AM, a cron distills the last 3 days of daily logs into thematic memory files, deduplicates entries, archives old content, and enforces size limits. At 3 AM, a self-review checks for stale tasks, stuck subagents, and growing error logs.
 
-The key design constraint: **only Layer 2 touches the main session.** Everything else runs in isolated sessions. The agent stays responsive to you while maintenance happens in the background.
+The key design constraint is that only Layer 2 touches the main session. Everything else runs in isolated sessions, so the agent stays responsive to you while maintenance happens in the background.
 
 ---
 
 ## Workspace Governance
 
-This is the part most memory guides skip entirely. They tell you to write everything down but never address: **where do the files go?**
+This is the part most memory guides skip entirely. They tell you to write everything down but never address where the files actually go.
 
 After 18 days, my workspace looked like this:
 
@@ -294,9 +292,9 @@ memory/
 ├── ... 10 more thematic files
 ```
 
-References aren't memory. Cooking experiments aren't memory. They were in `memory/` because that's where the agent defaulted to putting things. Without explicit rules, everything ends up in one directory.
+Saved articles and cooking experiments aren't memory, but they were sitting in `memory/` because that's where the agent defaulted to putting things. Without explicit rules, everything ends up in one directory.
 
-So I wrote `WORKSPACE.md`: a single file that every agent, cron, and subagent reads before writing anything.
+So I wrote `WORKSPACE.md`, a single file that every agent, cron, and subagent reads before writing anything.
 
 ```
 workspace/
@@ -323,23 +321,23 @@ The rules are simple:
 
 The daily maintenance cron at 2 AM enforces all of this automatically. It deduplicates daily logs, archives old files, regenerates indexes, and flags anything over the size limits.
 
-Governance isn't glamorous. But it's the difference between a system that works for 2 weeks and one that works for 2 years.
+None of this is glamorous, but it's the difference between a system that works for 2 weeks and one that's still usable after 2 years.
 
 ---
 
 ## What I Learned
 
-**1. Context is not memory.** A 1M token context window feels infinite. It's not. It vanishes on crashes, restarts, and compaction. Files persist. Context doesn't. Write first, think second.
+**1. Context is not memory.** A 1M token context window feels infinite, but it isn't, and it vanishes on crashes, restarts, and compaction. The files are what persist, so the habit that matters is writing things down before you reason about them.
 
-**2. Retrieval quality matters more than retrieval quantity.** Saving everything is easy. Finding the right thing later is hard. Hybrid search + MMR + temporal decay turned noisy results into useful ones.
+**2. Retrieval quality matters more than retrieval quantity.** Saving everything is easy; finding the right thing later is the hard part. Hybrid search, MMR, and temporal decay are what turned noisy results into useful ones.
 
-**3. Memory systems need maintenance schedules.** Just like databases need vacuum and compaction, agent memory needs deduplication, archival, and distillation. Automate it or it won't happen.
+**3. Memory systems need maintenance schedules.** Databases need vacuum and compaction, and agent memory is no different — it needs deduplication, archival, and distillation. If you don't automate that, it won't happen.
 
-**4. Workspace structure is a feature.** Without explicit governance, agents default to dumping everything in one place. Write the rules. Enforce them with crons. Your future self will thank you.
+**4. Workspace structure is a feature.** Without explicit governance, agents default to dumping everything in one place. Writing the rules down and enforcing them with crons is what keeps the workspace from drifting into entropy over months of use.
 
-**5. Compaction is the enemy.** Or rather, unprotected compaction is the enemy. Memory flush before compaction turns a data loss event into a checkpoint.
+**5. Compaction is the enemy** — or more precisely, unprotected compaction is. A memory flush before compaction turns what would be a data loss event into a checkpoint.
 
-**6. Layer your defenses.** No single mechanism catches everything. Immediate writes catch 80%. Checkpoints catch 15%. Daily maintenance catches the rest. Stack them.
+**6. Layer your defenses.** No single mechanism catches everything. Immediate writes catch roughly 80%, checkpoints catch another 15%, and daily maintenance picks up the rest. The point is to stack them so nothing falls through.
 
 ---
 
@@ -391,7 +389,7 @@ Patch your OpenClaw config:
 
 **3. Create WORKSPACE.md** (10 minutes)
 
-Define your directory structure, naming conventions, archival rules, and size limits. Make every agent and cron read it before writing files. The exact structure depends on your use case, but the principle is universal: **explicit rules prevent entropy.**
+Define your directory structure, naming conventions, archival rules, and size limits, and make every agent and cron read it before writing files. The exact structure depends on your use case, but the principle holds either way: without explicit rules, the workspace drifts into entropy.
 
 **4. Set up the daily maintenance cron** (5 minutes)
 
@@ -401,15 +399,13 @@ An isolated cron at 2 AM that deduplicates daily logs, archives old files, disti
 
 ## What's Next
 
-The system is stable now. But there are things I want to explore:
+The system is stable now, but there are a few things I still want to explore:
 
 - **Cross-session memory sharing.** Right now, isolated cron sessions can't see the main session's context. Memory flush helps, but there's still a gap.
 - **Memory scoring.** Not all memories are equal. A user correction should rank higher than a routine observation. Weighted memory types could improve retrieval further.
 - **Automatic memory graph.** Connections between memories (this error led to this lesson, which changed this project decision) would make the agent's reasoning more transparent.
 
-For now, the stack handles everything I throw at it. 19 days in, the agent knows my projects, my preferences, my health data, my team, and my coding style better than any tool I've used. Not because it's smarter. Because it remembers.
-
-And remembering, it turns out, is most of the job.
+For now, the stack handles everything I throw at it. 19 days in, the agent knows my projects, my preferences, my health data, my team, and my coding style better than any tool I've used — not because it's any smarter than the rest, but because it actually holds on to what it learns. That, more than anything else, is what makes it useful.
 
 ---
 

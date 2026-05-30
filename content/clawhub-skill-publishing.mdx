@@ -23,11 +23,11 @@ Every skill on ClawHub gets two scans: VirusTotal for code analysis, and OpenCla
 
 ![First scan - Suspicious](/blog/clawhub-skill-publishing/scan-v1-suspicious.jpg)
 
-The code itself was fine. The problem was the registry showing "Required env vars: none" even though my `SKILL.md` clearly declared `JINA_API_KEY` as required. Something in the metadata parsing was broken, and I assumed fixing that one thing would get me to green. I was wrong about the timeline.
+Nothing was wrong with the code. What tripped the evaluator was the registry showing "Required env vars: none" even though my `SKILL.md` clearly declared `JINA_API_KEY` as required. Something in the metadata parsing was broken, and I assumed fixing that one thing would get me to green. I was wrong about the timeline.
 
 ## Checking the Competition
 
-Before going down a rabbit hole, I checked the only other Jina skill on ClawHub. Their scan was actually worse than mine: **"Misleading." "No declared credentials."** Flagged harder across the board. Not exactly reassuring, but at least the problem wasn't unique to my package.
+Before going down a rabbit hole, I checked the only other Jina skill on ClawHub. Their scan was actually worse than mine: **"Misleading." "No declared credentials."** Flagged harder than mine on almost every line. Not exactly reassuring, but at least the problem wasn't unique to my package.
 
 ![The other Jina skill's scan](/blog/clawhub-skill-publishing/scan-competitor.jpg)
 
@@ -55,9 +55,9 @@ curl -s "https://s.jina.ai/${USER_QUERY}"
 
 If someone passed `$(id)` as a search query, it would execute as a shell command on the host machine.
 
-![VirusTotal code insights - shell injection flagged](/blog/clawhub-skill-publishing/virustotal-shell-injection.jpg) Real RCE, with your agent's permissions. I didn't catch it in my own code review. The scanner did.
+![VirusTotal code insights - shell injection flagged](/blog/clawhub-skill-publishing/virustotal-shell-injection.jpg) Real RCE, with your agent's permissions, and it sailed straight past my own code review until the scanner caught it.
 
-The fix was routing all user input through `python3 urllib.parse.quote()` before it gets anywhere near the shell. No more raw interpolation, no injection surface. The Python script and the DeepSearch script were already safe because they used JSON payloads, but the two bash scripts that built URLs with string concatenation were both vulnerable.
+The fix was routing all user input through `python3 urllib.parse.quote()` before it gets anywhere near the shell, so nothing reaches `curl` as raw, executable text anymore. The Python script and the DeepSearch script were already safe because they used JSON payloads, but the two bash scripts that built URLs with string concatenation were both vulnerable.
 
 ## Clean
 
@@ -76,9 +76,9 @@ After this whole experience I wrote a <a href="https://gist.github.com/adhishthi
 
 ## The Bigger Picture
 
-The AI agent supply chain is roughly where npm was in 2014. Early, small, and dealing with packages that run with real permissions on real machines. But there's one big difference: the security tooling showed up early this time. VirusTotal scanning agent skills for shell injection on day one. Trust evaluators checking whether declared credentials actually match code behavior. Per-version confidence scoring.
+The AI agent supply chain is roughly where npm was in 2014. Early, small, and dealing with packages that run with real permissions on real machines. The difference is that the security tooling showed up early this time. VirusTotal is scanning agent skills for shell injection on day one, trust evaluators are checking whether declared credentials actually match code behavior, and confidence gets scored per version.
 
-npm didn't get serious about supply chain security until years of `left-pad` incidents and dependency hijacking forced the issue. ClawHub ships with all of this baked in from the start. Six versions to go from Suspicious to Benign sounds like a lot, but every single flag pointed at something real. Every fix made the skill genuinely safer. That's what a working security process looks like.
+npm didn't get serious about supply chain security until years of `left-pad` incidents and dependency hijacking forced the issue. ClawHub ships with all of this baked in from the start. Six versions to go from Suspicious to Benign sounds like a lot, but each flag was pointing at a problem the skill actually had, and patching them left me with something I'd trust on my own machine.
 
 ---
 

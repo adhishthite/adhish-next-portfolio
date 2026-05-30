@@ -24,7 +24,7 @@ So I built <a href="https://glucowise.app" target="_blank" rel="noopener norefer
 
 ## The Full Stack Experience
 
-This isn't a weekend hack. GlucoWise is probably the most complete application I've ever built—end to end:
+GlucoWise is probably the most complete application I've ever built end to end, well past anything I'd throw together over a weekend:
 
 - **Authentication** with Clerk (because rolling your own auth is a trap)
 - **Real-time database** with Convex (more on this in a bit)
@@ -34,9 +34,9 @@ This isn't a weekend hack. GlucoWise is probably the most complete application I
 
 About 6,000 lines of production code. Not bad for a personal project born out of health anxiety.
 
-## Why Convex? Because It's Just Better.
+## Why Convex?
 
-I've used Firebase. I've used Supabase. I've wired up REST APIs and GraphQL endpoints. And honestly? Convex makes all of that feel unnecessarily complicated.
+I've used Firebase and Supabase, and I've wired up my share of REST APIs and GraphQL endpoints. Convex makes most of that feel more complicated than it needs to be.
 
 With Convex, your database queries are just TypeScript functions. You write a query, and your frontend automatically subscribes to real-time updates. No WebSocket setup, no cache invalidation headaches, no "why isn't my data updating" debugging sessions.
 
@@ -47,7 +47,7 @@ Here's what my schema looks like:
 // All tables with userId isolation enforced at the database level
 ```
 
-Every query and mutation uses `getAuthUserId` to ensure users only see their own data. Simple, secure, and it just works.
+Every query and mutation runs through `getAuthUserId`, so users only ever see their own records. It's not much code, and I haven't had to think about it since.
 
 ## What Can It Track?
 
@@ -77,7 +77,7 @@ Every query and mutation uses `getAuthUserId` to ensure users only see their own
 
 This is where it all comes together. The "Your Day" view shows everything in chronological order—glucose readings, meals, workouts, weight entries—all on a single timeline.
 
-Each entry type has its own color. Glucose readings are red. Meals are orange. Workouts are blue. Weight entries are purple. You can navigate to any day and see your complete health story at a glance.
+Each entry type gets its own color—red for glucose readings, orange for meals, blue for workouts, purple for weight—so you can jump to any day and read your complete health story at a glance.
 
 There's even a "Copy as Markdown" button if you want to share your day with a doctor or nutritionist. Small feature, surprisingly useful.
 
@@ -90,15 +90,15 @@ There's even a "Copy as Markdown" button if you want to share your day with a do
   height={450}
 />
 
-Everyone's glucose targets are different. Mine are different from yours. So GlucoWise lets you set custom target ranges for:
+Everyone's glucose targets are different, so GlucoWise lets you set your own custom ranges for:
 
 - Fasting glucose (mine is 80-110 mg/dL)
 - Before-meal glucose
 - Post-meal glucose
 
-The app uses these targets to tell you when a reading is in range or when something's off. No generic "normal is 70-100" nonsense. Your targets, your context.
+The app uses those targets to tell you when a reading is in range or when something's off, rather than holding everyone to some one-size-fits-all "normal is 70-100" band that may not apply to you.
 
-You can also choose between metric and imperial units, pick your preferred glucose unit (mg/dL or mmol/L), and toggle dark mode. Because it's 2025.
+You can also switch between metric and imperial units, pick your preferred glucose unit (mg/dL or mmol/L), and turn on dark mode if that's how you like to read at night.
 
 ## The Data Nerd Section
 
@@ -119,7 +119,7 @@ The readings page shows:
 - All-time range (mine spans 81-276 mg/dL—that 276 was a wake-up call)
 - Searchable, filterable history table
 
-You can export everything as CSV for spreadsheet analysis or back up your entire dataset as JSON. Your data, your control.
+You can export everything as CSV for spreadsheet analysis, or back up your entire dataset as JSON whenever you want a copy of your own.
 
 ## What I've Learned (Besides How to Build Apps)
 
@@ -146,21 +146,19 @@ Building GlucoWise taught me a lot about my own patterns:
 - **Biome** for linting/formatting (bye, ESLint)
 - **Vercel** for hosting
 
-The design uses glassmorphism effects with backdrop blur, generous rounded corners, and subtle glow effects on hover. I wanted something that feels calm and premium—not clinical or sterile.
+The design leans on glassmorphism with backdrop blur, generous rounded corners, and a subtle glow on hover. The goal was for it to feel warm and a little premium, the opposite of the clinical health dashboards I'd been avoiding.
 
 ## What's Next?
 
 I'm planning to add AI-powered trend analysis. Imagine the app noticing patterns like "your glucose tends to spike on Sundays" or "your fasting readings improve when you work out the day before." The data is already there; I just need to make it smarter.
 
-For now, though, it does exactly what I need. Track the numbers, see the patterns, make better choices.
+For now, though, it does exactly what I need: I log the numbers, the patterns show up over time, and I make better choices off the back of them.
 
 ## Go Check It Out
 
 <a href="https://glucowise.app" target="_blank" rel="noopener noreferrer" style={{color: "rgb(245, 135, 61)"}}>glucowise.app</a>
 
-If you're dealing with glucose concerns—or just want to understand how your body responds to food, sleep, and exercise—give it a spin. It's free, it's private, and it might just scare you into making healthier choices.
-
-Like it did for me.
+If you're dealing with glucose concerns—or just want to understand how your body responds to food, sleep, and exercise—give it a spin. It's free and private, and it scared me into making healthier choices, which is more than most apps managed.
 
 <a
   href="https://glucowise.app"

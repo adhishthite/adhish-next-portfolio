@@ -1,7 +1,7 @@
 ---
 title: "Local-First AI Control: Claude Code now controls my Dyson"
 publishedAt: "2025-12-30"
-summary: "Built an MCP server that lets me tell Claude 'make the air quieter' and it just works. Turns out teaching LLMs to speak MQTT is way more interesting than I expected."
+summary: "Built an MCP server so I can tell Claude 'make the air quieter' and have it actually happen. Teaching an LLM to speak MQTT was far more interesting than I expected."
 image: "/blog/dyson-mcp-server/og-pic.jpeg"
 ---
 
@@ -21,21 +21,17 @@ Thirty minutes later:
 
 "Hey Claude, turn off the purifier."
 
-Done. No app. No menus. No waiting for Dyson's servers to wake up.
+It turned off. No app, no menus, no waiting for Dyson's servers to wake up.
 
 **[Check out the project on GitHub →](https://github.com/adhishthite/dyson-control)**
 
-Getting here was a journey though. Three different approaches, a temperature bug that claimed my room was -243°C, and learning way more about MQTT edge cases than I planned to.
+Getting there took a while, though: three different approaches, a temperature bug that claimed my room was -243°C, and a lot more MQTT edge cases than I'd planned to learn about.
 
 ## The Itch
 
-The Dyson app requires internet for a device that communicates over local MQTT on port 1883. It doesn't *need* the cloud—Dyson just decided you should use it anyway.
+The Dyson app requires internet for a device that communicates over local MQTT on port 1883. It doesn't *need* the cloud—Dyson just decided you should use it anyway. There's no local API exposed to me, no way to wire up automations, nothing like "turn on if PM2.5 exceeds threshold."
 
-No local API. No complex automations. No "turn on if PM2.5 exceeds threshold."
-
-I wanted what @pingthebird had—natural language control through an LLM that could handle compound requests, maintain context, and integrate with my existing Claude workflow.
-
-MCP was the obvious choice. But I had to prove local control worked first.
+I wanted what @pingthebird had—natural language control through an LLM that could handle compound requests, maintain context, and integrate with my existing Claude workflow. MCP was the obvious choice, but I had to prove local control worked first.
 
 ## Phase Zero: Local Device Control
 
@@ -51,7 +47,7 @@ sudo nmap -p- 192.168.1.4
 
 MQTT on 1883, no TLS. Authentication requires one-time cloud auth to get device credentials, then you're fully local.
 
-The original `libdyson` library didn't support my device's product type (`438K`, Indian variant). Found `libdyson-neon`—an actively maintained fork with regional support. Sometimes the solution is just finding the right fork.
+The original `libdyson` library didn't support my device's product type (`438K`, the Indian variant). I found `libdyson-neon` instead—an actively maintained fork with regional support.
 
 ### The Temperature Bug
 
@@ -67,19 +63,19 @@ temp = (device.temperature / 10) - 273.15  # → -243°C
 temp = device.temperature - 273.15         # → 22°C
 ```
 
-Fixed it upstream. Room temperature makes sense now.
+I fixed it upstream, and the room temperature reads correctly now.
 
 ## Why MCP Over Alternatives
 
 I considered three approaches:
 
-**Direct LLM parsing:** Feed user input to an LLM, extract intent and parameters. ~70% reliability. Hallucinated non-existent settings. Too much prompt engineering to patch edge cases.
+**Direct LLM parsing:** Feed user input to an LLM, extract intent and parameters. This landed around 70% reliability, hallucinated settings that didn't exist, and demanded too much prompt engineering to patch every edge case.
 
-**Regex patterns:** Define patterns for every command. Works until someone says "make it a bit quieter" instead of "set speed to 3." Natural language is messy; regex isn't. Unmaintainable at 30+ patterns.
+**Regex patterns:** Define patterns for every command. This works fine until someone says "make it a bit quieter" instead of "set speed to 3," and the rigidity that makes regex precise is exactly what fails against the way people actually phrase things. By 30+ patterns it was already unmaintainable.
 
-**MCP with tool definitions:** Let the LLM decide which tools to call through a standardized protocol. Clean separation—LLM handles ambiguity, tools handle precision.
+**MCP with tool definitions:** Let the LLM decide which tools to call through a standardized protocol. This gave me a clean separation, with the LLM resolving ambiguity in the request and the tools enforcing precision in the execution.
 
-MCP won. The architecture:
+I went with MCP. The architecture:
 
 ```
 User: "Make it quieter and check air quality"
@@ -95,7 +91,7 @@ libdyson-neon (MQTT)
 Dyson Device (port 1883)
 ```
 
-The agent reasons about intent, selects appropriate tools, executes them, and synthesizes results into natural language. Reliable and extensible.
+The agent reasons about intent, selects the appropriate tools, executes them, and synthesizes the results back into natural language, which keeps the whole thing both reliable and easy to extend.
 
 ![Natural language chat interface for controlling Dyson air purifier](/blog/dyson-mcp-server/chat-interface.png)
 
@@ -199,7 +195,7 @@ Full think-act-observe-respond loop. Tool results get synthesized into natural l
 
 **MCP as interface:** Works with Claude Desktop, Cline, custom chat UIs—any MCP-compatible client. No custom integration per platform.
 
-**Comprehensive:** 23 tools covering presets, conditionals, scheduling, and monitoring. Not a proof of concept.
+**Comprehensive:** 23 tools covering presets, conditionals, scheduling, and monitoring—enough to use day to day rather than just demo once.
 
 **Documented architecture:** JOURNEY.md covers every decision, bug, and failed approach. Useful reference for building IoT MCP servers.
 
@@ -226,17 +222,15 @@ Full think-act-observe-respond loop. Tool results get synthesized into natural l
 
 **Security requires explicit design.** Safe expression evaluation took extra work but prevented a real vulnerability.
 
-**Local control is faster.** No cloud latency. Everything instant.
+**Local control is faster.** With no cloud round-trip in the path, commands take effect about as quickly as I can issue them.
 
 ## The Pattern
 
-This isn't really about air purifiers. It's about:
+The air purifier is incidental. What I actually built generalizes:
 
 **LLM + MCP + Local Protocol = Natural Language IoT**
 
-Replace Dyson MQTT with Philips Hue (local API), HomeKit (HAP), Zigbee (MQTT bridge), custom hardware. Same pattern works.
-
-Define tools. Wrap the protocol. Let the LLM handle natural language.
+Swap Dyson MQTT for Philips Hue (local API), HomeKit (HAP), a Zigbee bridge over MQTT, or your own custom hardware, and the same pattern holds. You define the tools, wrap the protocol, and let the LLM handle the natural language on top.
 
 ## Try It
 
@@ -248,6 +242,4 @@ Clone it, extend it, break it. Add support for other models. Build automations. 
 
 "Hey Claude, turn off the purifier."
 
-Done.
-
-That's the dream.
+And it does, every time, without the cloud ever entering the picture.

@@ -17,7 +17,7 @@ That's a solid foundation. But after running my agent for a week straight — ac
 2. **Search was limited to workspace files.** I have project docs, skill references, and multi-agent workspaces that the built-in memory search couldn't reach.
 3. **Memory maintenance was manual.** Daily logs piled up, but nobody was distilling them into lasting knowledge.
 
-So I built three things on top of OpenClaw's memory system: an auto-capture error log, local-first search with QMD, and heartbeat-driven memory maintenance. Together, they turn a forgetful assistant into something that genuinely compounds over time.
+So I built three things on top of OpenClaw's memory system: an auto-capture error log, local-first search with QMD, and heartbeat-driven memory maintenance. Together they turn a forgetful assistant into one that genuinely gets better the longer you use it.
 
 ---
 
@@ -38,23 +38,23 @@ workspace/
     └── 2026-02-07.md
 ```
 
-The agent reads `SOUL.md` and `MEMORY.md` every session. It reads today's and yesterday's daily log. And `memory_search` can semantically search across these files.
+The agent reads `SOUL.md` and `MEMORY.md` every session, plus today's and yesterday's daily log, and `memory_search` can semantically search across all of these files.
 
-This works well for the first few days. But here's what happens in practice:
+For the first few days this works well. Then practice catches up with you:
 
 - **Day 3:** You discover that the cron tool has a bug — CLI-created jobs work, tool-created ones don't. You tell the agent. It notes it in the daily log.
 - **Day 5:** The agent tries to create a cron job with the tool again. The daily log from Day 3 isn't loaded anymore (only today + yesterday). Same mistake.
 - **Day 7:** You're working across 5 project directories, 3 agent workspaces, and a dozen skill files. `memory_search` only covers `MEMORY.md` + `memory/*.md`. The context you need is in a project README.
 
-The foundation is right. The coverage and capture mechanisms needed work.
+The foundation is solid; what it lacked was coverage and a way to capture failures as they happened.
 
 ---
 
 ## Layer 1: The Error Log (Auto-Capture)
 
-This is the single most impactful thing I added.
+Of everything I added, this one made the biggest difference.
 
-`memory/error-log.md` is an append-only file where the agent logs every failure, correction, and gotcha — **immediately, in real-time, mid-conversation.**
+`memory/error-log.md` is an append-only file where the agent logs every failure, correction, and gotcha the moment it happens, mid-conversation.
 
 ```markdown
 # Error Log — Auto-Captured Learnings
@@ -90,11 +90,11 @@ When ANY of these happen, immediately append to memory/error-log.md:
 Format: - 🏷️ **Short title** — What happened. What to do instead.
 ```
 
-That's it. No pipeline. No database. Append a line to a markdown file.
+There's no pipeline behind this and no database. The agent appends a line to a markdown file.
 
-**Why this matters:** By session 5, the agent reads its error log at startup and avoids mistakes *before being told*. It checks the cron CLI instead of the tool. It uses cursor pagination without asking. It strips generic type params before regex matching. Every correction compounds.
+By session 5, the payoff shows up. The agent reads its error log at startup and avoids mistakes *before being told*. It checks the cron CLI instead of the tool, uses cursor pagination without asking, and strips generic type params before regex matching. Every correction it logged earlier is now working for it.
 
-This is the file that turns an agent from "helpful but forgetful" to "actually learns from experience."
+This is the file that takes an agent from helpful but forgetful to one that actually learns from experience.
 
 ---
 
@@ -128,9 +128,9 @@ Three search modes, all local:
 | `qmd vsearch "concept"` | ~2s | Vector similarity (local embeddings) |
 | `qmd query "question"` | ~5s | Hybrid: query expansion + BM25 + vector + reranking |
 
-The agent can now search *across everything* before acting. "Have I seen this API before? Did I hit issues last time? Is there a skill that handles this?" BM25 alone covers 90% of lookups — and it's 240 milliseconds.
+The agent can now search across everything before it acts. Have I seen this API before? Did I hit issues last time? Is there a skill that handles this? BM25 alone covers about 90% of those lookups, and at 240 milliseconds it's effectively instant.
 
-I run `qmd update && qmd embed` on an hourly cron job. It only processes new or changed files. As the workspace grows — more daily logs, more projects, more learnings — the index grows with it. No manual maintenance.
+An hourly cron job runs `qmd update && qmd embed`, processing only new or changed files. As the workspace grows with more daily logs, more projects, and more learnings, the index keeps pace on its own.
 
 ---
 
@@ -162,7 +162,7 @@ The heartbeat config is just a markdown file:
 4. Remove outdated info from MEMORY.md
 ```
 
-Without this, daily logs pile up as noise. With it, the agent's long-term memory stays relevant and lean.
+Skip this step and the daily logs just pile up as noise. Run it on a cadence and the agent's long-term memory stays relevant and lean.
 
 ---
 
@@ -176,9 +176,9 @@ Here's what the timeline looks like in practice:
 
 **Day 7:** Heartbeat maintenance distills a week of daily logs into `MEMORY.md`. Error log has 20+ entries. Agent has a working understanding of your tools, preferences, and project quirks.
 
-**Day 14:** The agent knows your codebase conventions, your communication style, which APIs have gotchas, and which tools to avoid. Not because someone wrote a 50-page prompt — because it accumulated context through *working and failing and writing things down*.
+**Day 14:** The agent knows your codebase conventions, your communication style, which APIs have gotchas, and which tools to avoid. Nobody wrote it a 50-page prompt to get there. It accumulated that context the slow way, by working and failing and writing things down.
 
-**Day 30:** It's a different tool. Not better autocomplete. Something that remembers where it failed and comes back sharper.
+**Day 30:** It feels like a different tool. This isn't fancier autocomplete; it's something that remembers where it failed and comes back sharper.
 
 The math: if the agent avoids one 15-minute re-explanation per session, and you run 3 sessions a day, that's **22+ hours saved per month**. The real savings are bigger — the avoided mistakes are usually the expensive ones.
 
@@ -222,23 +222,21 @@ Add to `HEARTBEAT.md`:
 - Remove stale entries from MEMORY.md
 ```
 
-That's it. Give it a week. The compounding is hard to describe until you feel it.
+Then give it a week. The compounding is hard to describe until you've felt it.
 
 ---
 
 ## Why This Matters Beyond One Agent
 
-This isn't just about making one assistant better. It's a pattern that applies to any AI agent:
+This isn't really about one assistant. The same pattern applies to any AI agent:
 
 - **Coding agents** that remember which build flags break on CI
 - **Research agents** that know which sources were unreliable last time
 - **Support agents** that log edge cases and handle them next time without escalation
 
-The architecture is the same everywhere: layered memory + auto-capture failures + periodic distillation + local search. Markdown files, version controlled, human-readable.
+The architecture is the same everywhere: layered memory, auto-captured failures, periodic distillation, and local search, all in markdown files that are version controlled and human-readable.
 
-We keep waiting for AGI like it's going to be a press conference. Some lab coat walks out and says "we did it." It's not going to be that. It's going to be this — tools that remember where they failed and come back sharper. Over and over.
-
-The ground is already moving. You just have to look down.
+A lot of us are waiting for AGI to arrive as some kind of announcement, a lab coat walking out to say "we did it." I think it shows up more quietly than that, as tools that remember where they failed and come back a little sharper each time. That part is already happening, if you bother to notice it.
 
 ---
 
