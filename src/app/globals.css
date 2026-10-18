@@ -145,10 +145,29 @@
     animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
+  /*
+   * Same motion without the fade, for the largest above-the-fold elements
+   * (hero name, portrait). They paint on the first frame, so the browser can
+   * count them as the Largest Contentful Paint.
+   */
+  .animate-rise-soft {
+    animation: rise-soft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .animate-rise {
+    .animate-rise,
+    .animate-rise-soft {
       animation: none;
     }
+  }
+}
+
+@keyframes rise-soft {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: none;
   }
 }
 

@@ -16,7 +16,7 @@ export default function NotFound() {
           404
         </p>
         <h1
-          className="animate-rise mt-6 font-serif text-5xl leading-[1.02] tracking-tight sm:text-7xl"
+          className="animate-rise-soft mt-6 font-serif text-5xl leading-[1.02] tracking-tight sm:text-7xl"
           style={{ animationDelay: "80ms" }}
         >
           There&rsquo;s no page <em className="italic">here.</em>

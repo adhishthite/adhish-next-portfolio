@@ -210,20 +210,32 @@ function createParagraph(imageComponent: unknown) {
 
 /* -------------------------------------------------------------- headings */
 
+/**
+ * Mouse-only permalink. The TOC gives keyboard and screen-reader users the
+ * same jump, so this stays out of the a11y tree and the tab order (otherwise
+ * every heading is announced twice).
+ */
+function HeadingAnchor({ id }: { id: string }) {
+  // biome-ignore-start lint/a11y/useAnchorContent: intentionally hidden duplicate of the heading
+  return (
+    <a
+      href={`#${id}`}
+      className="heading-anchor"
+      aria-hidden="true"
+      tabIndex={-1}
+    >
+      #
+    </a>
+  );
+  // biome-ignore-end lint/a11y/useAnchorContent: see above
+}
+
 function createHeading(Tag: "h2" | "h3") {
   function Heading({ id, children, ...props }: ComponentPropsWithoutRef<"h2">) {
     return (
       <Tag id={id} {...props}>
         {children}
-        {id && (
-          <a
-            href={`#${id}`}
-            className="heading-anchor"
-            aria-label={`Link to section: ${extractTextContent(children)}`}
-          >
-            #
-          </a>
-        )}
+        {id && <HeadingAnchor id={id} />}
       </Tag>
     );
   }

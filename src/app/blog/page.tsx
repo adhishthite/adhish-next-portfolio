@@ -5,7 +5,7 @@ import { siteOgImage } from "@/lib/og";
 
 const title = "Writing";
 const description =
-  "Posts by Adhish Thite on AI agents, LLMs, and the tools he builds, including what breaks when you run agents for real.";
+  "Adhish Thite's notes from building with LLMs and agents, write-ups of his side projects, and a few setup guides.";
 
 export const metadata: Metadata = {
   title,
@@ -31,7 +31,7 @@ export default async function BlogIndexPage() {
   const firstYear = posts.at(-1)?.metadata.publishedAt.slice(0, 4);
 
   return (
-    <main className="container-page pb-24 pt-16 sm:pb-32 sm:pt-24">
+    <main className="container-page pb-12 pt-16 sm:pb-16 sm:pt-24">
       <header className="max-w-2xl animate-rise">
         <p className="eyebrow">
           {posts.length} posts{firstYear ? ` · since ${firstYear}` : ""}
@@ -40,8 +40,8 @@ export default async function BlogIndexPage() {
           Writing
         </h1>
         <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
-          Notes on agents, LLMs, and the tools I build, and on what breaks when
-          you run agents for real.
+          Notes from building with LLMs and agents, write-ups of my side
+          projects, and a few setup guides.
         </p>
       </header>
 
@@ -54,7 +54,7 @@ export default async function BlogIndexPage() {
           <h2 id="pinned-heading" className="eyebrow mb-5">
             Pinned
           </h2>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-3 md:gap-5">
             {pinned.map((post, index) => (
               <PinnedPostCard
                 key={post.slug}

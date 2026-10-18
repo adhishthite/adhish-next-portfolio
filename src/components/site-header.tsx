@@ -8,7 +8,7 @@ export function SiteHeader() {
       <div className="container-page flex h-16 items-center justify-between gap-6">
         <Link
           href="/"
-          className="group flex items-center gap-2.5"
+          className="group flex h-10 items-center gap-2.5"
           aria-label={`${DATA.name}, home`}
         >
           <span
@@ -25,8 +25,10 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-full px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground ${
-                item.href.startsWith("/#") ? "hidden sm:inline-flex" : ""
+              className={`h-10 items-center rounded-full px-3 text-muted-foreground transition-colors hover:text-foreground ${
+                item.href.startsWith("/#")
+                  ? "hidden sm:inline-flex"
+                  : "inline-flex"
               }`}
             >
               {item.label}
@@ -36,7 +38,7 @@ export function SiteHeader() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex h-10 items-center rounded-full px-3 text-muted-foreground transition-colors hover:text-foreground"
           >
             Résumé
           </a>

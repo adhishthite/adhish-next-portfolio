@@ -11,9 +11,9 @@ const links = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border/60">
+    <footer className="mt-16 border-t border-border/60">
       <div className="container-page flex flex-col gap-10 py-12 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-3">
+        <div className="flex flex-col items-start gap-3">
           <p className="font-serif text-2xl tracking-tight">{DATA.name}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
             {CURRENT_ROLE.title} at {CURRENT_ROLE.company}. Based in{" "}
@@ -21,14 +21,14 @@ export function SiteFooter() {
           </p>
           <a
             href={`mailto:${DATA.contact.email}`}
-            className="link-underline inline-block text-sm"
+            className="link-underline -my-2.5 inline-flex min-h-10 items-center text-sm"
           >
             {DATA.contact.email}
           </a>
         </div>
 
         <div className="flex flex-col gap-6 sm:items-end">
-          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          <ul className="-my-2.5 flex flex-wrap gap-x-5 text-sm">
             {links.map((link) => {
               const external = link.href.startsWith("http");
               return (
@@ -38,7 +38,7 @@ export function SiteFooter() {
                     {...(external
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
-                    className="group inline-flex items-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground"
+                    className="group inline-flex min-h-10 items-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {link.label}
                     <ArrowUpRight
@@ -51,7 +51,7 @@ export function SiteFooter() {
             })}
           </ul>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-            © {new Date().getFullYear()} · Built with Next.js
+            © {new Date().getFullYear()} {DATA.name}
           </p>
         </div>
       </div>

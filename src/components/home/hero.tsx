@@ -36,12 +36,12 @@ export function Hero() {
   return (
     <section
       aria-label="Introduction"
-      className="container-page pb-20 pt-10 sm:pb-28 sm:pt-20 lg:pt-24"
+      className="container-page pb-10 pt-10 sm:pt-20 lg:pt-24"
     >
       <div className="grid items-start gap-8 md:grid-cols-12 md:gap-12 lg:gap-16">
         <div className="md:col-span-7 lg:col-span-8">
           <h1
-            className="animate-rise font-serif text-[3.75rem] leading-[0.95] tracking-display sm:text-7xl lg:text-[6.5rem]"
+            className="animate-rise-soft font-serif text-[3.75rem] leading-[0.95] tracking-display sm:text-7xl lg:text-[6.5rem]"
             style={rise(80)}
           >
             {DATA.name}
@@ -70,7 +70,7 @@ export function Hero() {
           </p>
 
           <p
-            className="animate-rise mt-6 max-w-[60ch] text-base leading-relaxed text-muted-foreground sm:text-[17px]"
+            className="animate-rise-soft mt-6 max-w-[60ch] text-base leading-relaxed text-muted-foreground sm:text-[17px]"
             style={rise(200)}
           >
             {DATA.summary}
@@ -100,25 +100,28 @@ export function Hero() {
                 aria-hidden
               />
             </a>
-            <span
-              aria-hidden
-              className="mx-1 hidden h-5 w-px bg-border sm:block"
-            />
-            <ul className="-ml-2.5 flex items-center gap-0.5 sm:ml-0">
-              {socials.map(({ label, href, Icon }) => (
-                <li key={label}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="inline-flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                  >
-                    <Icon className="size-[17px]" aria-hidden />
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {/* Divider + icons wrap as one group; the divider only shows once they share a row with the buttons */}
+            <div className="flex items-center gap-3">
+              <span
+                aria-hidden
+                className="mx-1 hidden h-5 w-px bg-border lg:block"
+              />
+              <ul className="-ml-2.5 flex items-center gap-0.5 lg:ml-0">
+                {socials.map(({ label, href, Icon }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="inline-flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                    >
+                      <Icon className="size-[17px]" aria-hidden />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <dl
@@ -139,7 +142,7 @@ export function Hero() {
 
         {/* Portrait: a small thumbnail above the name on mobile, a full column on desktop */}
         <figure
-          className="animate-rise order-first w-[84px] md:order-none md:col-span-5 md:w-auto lg:col-span-4"
+          className="animate-rise-soft order-first w-[84px] md:order-none md:col-span-5 md:w-auto lg:col-span-4"
           style={rise(0)}
         >
           <div className="relative aspect-[3/4] overflow-hidden rounded-lg border md:rounded-xl border-border/70 bg-muted shadow-[0_1px_2px_rgb(0_0_0/0.04)]">

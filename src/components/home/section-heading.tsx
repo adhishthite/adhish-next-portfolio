@@ -6,6 +6,30 @@ import { cn } from "@/lib/utils";
 export const sectionClass =
   "container-page relative py-20 sm:py-28 before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-border/60 sm:before:inset-x-8";
 
+/** "01 — Selected work" label shown above every section title */
+export function SectionEyebrow({
+  index,
+  label,
+}: {
+  index: string;
+  label: string;
+}) {
+  return (
+    <p className="eyebrow flex items-center gap-2">
+      <span className="text-foreground/70">{index}</span>
+      <span aria-hidden className="h-px w-5 bg-border" />
+      <span>{label}</span>
+    </p>
+  );
+}
+
+/**
+ * Hash-link target for a section. It sits on the heading block rather than the
+ * section, so a jump lands with the eyebrow just under the sticky header
+ * instead of below the section's top padding.
+ */
+export const anchorClass = "scroll-mt-3";
+
 interface SectionHeadingProps {
   /** Two-digit index shown in the eyebrow, e.g. "01" */
   index: string;
@@ -15,6 +39,8 @@ interface SectionHeadingProps {
   title: React.ReactNode;
   /** id for the h2, so the section can reference it with aria-labelledby */
   id: string;
+  /** Hash-link id for the section (e.g. "projects" for /#projects) */
+  anchor?: string;
   intro?: React.ReactNode;
   action?: { href: string; label: string };
   className?: string;
@@ -25,23 +51,22 @@ export function SectionHeading({
   label,
   title,
   id,
+  anchor,
   intro,
   action,
   className,
 }: SectionHeadingProps) {
   return (
     <div
+      id={anchor}
       className={cn(
         "mb-10 flex flex-col gap-6 sm:mb-14 md:flex-row md:items-end md:justify-between",
+        anchor && anchorClass,
         className,
       )}
     >
       <div className="max-w-2xl">
-        <p className="eyebrow flex items-center gap-2">
-          <span className="text-foreground/70">{index}</span>
-          <span aria-hidden className="h-px w-5 bg-border" />
-          <span>{label}</span>
-        </p>
+        <SectionEyebrow index={index} label={label} />
         <h2
           id={id}
           className="mt-4 font-serif text-4xl leading-[1.05] tracking-tight sm:text-5xl"
@@ -57,7 +82,7 @@ export function SectionHeading({
       {action ? (
         <Link
           href={action.href}
-          className="group inline-flex shrink-0 items-center gap-1.5 self-start text-sm text-muted-foreground transition-colors hover:text-foreground md:self-auto md:pb-1.5"
+          className="group -my-2.5 inline-flex min-h-10 shrink-0 items-center gap-1.5 self-start text-sm text-muted-foreground transition-colors hover:text-foreground md:self-auto md:-mb-1"
         >
           {action.label}
           <ArrowRight

@@ -73,8 +73,8 @@ export const DATA = {
     },
   ],
   navbar: [
-    { href: "/#work", label: "Work" },
     { href: "/#projects", label: "Projects" },
+    { href: "/#work", label: "Experience" },
     { href: "/blog/", label: "Writing" },
   ],
   contact: {
@@ -442,7 +442,7 @@ export const DATA = {
       description:
         "A lines-of-code counter and my first Rust project. It runs about 23x faster than cloc and ships on Homebrew and crates.io.",
       tags: ["Rust", "CLI"],
-      image: "/blog/ocloc/github-preview.png",
+      image: "",
       post: "/blog/ocloc/",
       links: [
         { label: "GitHub", href: "https://github.com/adhishthite/ocloc" },

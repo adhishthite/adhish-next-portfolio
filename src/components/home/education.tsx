@@ -20,6 +20,41 @@ const rest = DATA.certificates.filter((cert) => !FEATURED.includes(cert.name));
 
 const year = (date: string) => date.match(/\d{4}/)?.[0] ?? "";
 
+type School = (typeof DATA.education)[number];
+
+/**
+ * Detailed raster crests turn into a blank tile at 32px, so these schools get
+ * a serif monogram instead (the same fallback the experience list uses).
+ */
+const MONOGRAM_LOGOS = new Set<string>(["/unipune.jpg"]);
+
+function SchoolMark({ school }: { school: School }) {
+  const frame =
+    "relative mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border/70";
+
+  if (MONOGRAM_LOGOS.has(school.logoUrl)) {
+    return (
+      <span aria-hidden className={`${frame} bg-secondary`}>
+        <span className="font-serif text-base leading-none text-muted-foreground">
+          {school.school.replace(/^University of /, "").charAt(0)}
+        </span>
+      </span>
+    );
+  }
+
+  return (
+    <span aria-hidden className={`${frame} bg-white`}>
+      <Image
+        src={school.logoUrl}
+        alt=""
+        width={32}
+        height={32}
+        className="size-full object-contain p-[10%]"
+      />
+    </span>
+  );
+}
+
 function CertificateRow({ cert }: { cert: Certificate }) {
   const content = (
     <>
@@ -76,25 +111,14 @@ export function Education() {
                 key={school.school}
                 className="flex items-start gap-4 border-b border-border/60 py-5"
               >
-                <span
-                  aria-hidden
-                  className="relative mt-0.5 flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border/70 bg-white"
-                >
-                  <Image
-                    src={school.logoUrl}
-                    alt=""
-                    width={32}
-                    height={32}
-                    className="size-full object-contain p-[10%]"
-                  />
-                </span>
+                <SchoolMark school={school} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-4">
                     <a
                       href={school.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[15px] font-medium tracking-tight decoration-accent/50 underline-offset-[5px] hover:underline"
+                      className="-my-2.5 py-2.5 text-[15px] font-medium tracking-tight decoration-accent/50 underline-offset-[5px] hover:underline"
                     >
                       {school.school}
                     </a>
@@ -122,7 +146,7 @@ export function Education() {
           </ul>
           {rest.length > 0 ? (
             <details className="group/more border-t border-border/60">
-              <summary className="flex cursor-pointer list-none items-center gap-2 rounded-md py-4 text-sm text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+              <summary className="-mx-2 flex cursor-pointer list-none items-center gap-2 rounded-md px-2 py-4 text-sm focus-visible:outline-offset-0 text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
                 <Plus
                   aria-hidden
                   className="size-4 transition-transform duration-200 group-open/more:rotate-45"

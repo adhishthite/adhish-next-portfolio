@@ -42,24 +42,9 @@ function Logo({
     compact ? "size-6 rounded-[6px]" : "size-8 rounded-md",
   );
 
-  if (!entry.logoUrl) {
-    return (
-      <span aria-hidden className={cn(frame, "bg-secondary")}>
-        <span
-          className={cn(
-            "font-serif leading-none text-muted-foreground",
-            compact ? "text-[13px]" : "text-base",
-          )}
-        >
-          {entry.company.charAt(0)}
-        </span>
-      </span>
-    );
-  }
-
-  const isPhoto = /\.jpe?g$/i.test(entry.logoUrl);
-  return (
-    <span aria-hidden className={cn(frame, "bg-white")}>
+  const isPhoto = entry.logoUrl ? /\.jpe?g$/i.test(entry.logoUrl) : false;
+  const mark = entry.logoUrl ? (
+    <span className={cn(frame, "bg-white")}>
       <Image
         src={entry.logoUrl}
         alt=""
@@ -70,6 +55,27 @@ function Logo({
           isPhoto ? "object-cover" : "object-contain p-[18%]",
         )}
       />
+    </span>
+  ) : (
+    <span className={cn(frame, "bg-secondary")}>
+      <span
+        className={cn(
+          "font-serif leading-none text-muted-foreground",
+          compact ? "text-[13px]" : "text-base",
+        )}
+      >
+        {entry.company.charAt(0)}
+      </span>
+    </span>
+  );
+
+  // Every row keeps a 32px logo column, so compact titles line up with the main ones
+  return (
+    <span
+      aria-hidden
+      className="flex size-8 shrink-0 items-center justify-center"
+    >
+      {mark}
     </span>
   );
 }
@@ -84,6 +90,8 @@ export function ExperienceItem({
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  // Compact rows sit under the "Internships & research" h3, so they step down a level
+  const Title = compact ? "h4" : "h3";
   const panelId = useId();
   const dates = `${shortMonth(entry.start)} – ${shortMonth(entry.end)}`;
   // Compact rows sit under an "Internships & research" label already, and a
@@ -114,7 +122,7 @@ export function ExperienceItem({
         <div className="flex min-w-0 items-center gap-3.5">
           <Logo entry={entry} compact={compact} />
           <div className="min-w-0">
-            <h3
+            <Title
               className={cn(
                 "flex flex-wrap items-center gap-x-2.5 gap-y-1 tracking-tight",
                 compact
@@ -127,7 +135,7 @@ export function ExperienceItem({
                 aria-expanded={open}
                 aria-controls={panelId}
                 onClick={() => setOpen((value) => !value)}
-                className="text-left after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-lg focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-ring"
+                className="text-left after:absolute after:-inset-x-3 after:inset-y-1 after:rounded-lg after:content-[''] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-ring"
               >
                 {entry.title}
               </button>
@@ -139,7 +147,7 @@ export function ExperienceItem({
                   {badge}
                 </span>
               ))}
-            </h3>
+            </Title>
             <p
               className={cn(
                 "mt-0.5 truncate text-muted-foreground",
@@ -192,13 +200,11 @@ export function ExperienceItem({
         <div className="overflow-hidden">
           <div
             className={cn(
-              "pb-6 sm:pl-[calc(9.5rem+1.5rem)]",
-              compact ? "pl-[2.375rem] sm:pb-5" : "pl-[2.875rem]",
+              "pb-6 pl-[2.875rem] sm:pl-[calc(9.5rem+1.5rem)]",
+              compact && "sm:pb-5",
             )}
           >
-            <div
-              className={cn(compact ? "sm:pl-[2.375rem]" : "sm:pl-[2.875rem]")}
-            >
+            <div className="sm:pl-[2.875rem]">
               <p className="mb-3 text-[13px] text-muted-foreground md:hidden">
                 {entry.location}
               </p>

@@ -1,19 +1,15 @@
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
-import { sectionClass } from "./section-heading";
+import { anchorClass, SectionEyebrow, sectionClass } from "./section-heading";
 
 export function Contact() {
   return (
     <section
-      id="contact"
       aria-labelledby="contact-title"
       className={cn(sectionClass, "pb-8 sm:pb-8")}
     >
-      <div className="max-w-3xl">
-        <p className="eyebrow flex items-center gap-2">
-          <span aria-hidden className="size-1.5 rounded-full bg-accent" />
-          Contact
-        </p>
+      <div id="contact" className={cn("max-w-3xl", anchorClass)}>
+        <SectionEyebrow index="06" label="Contact" />
         <h2
           id="contact-title"
           className="mt-5 text-balance font-serif text-5xl leading-[1.02] tracking-display sm:text-6xl lg:text-7xl"

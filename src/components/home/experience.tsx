@@ -12,9 +12,10 @@ const earlyRoles: ExperienceEntry[] = DATA.work.filter(isEarlyRole);
 
 export function Experience() {
   return (
-    <section id="work" aria-labelledby="work-title" className={sectionClass}>
+    <section aria-labelledby="work-title" className={sectionClass}>
       <SectionHeading
         id="work-title"
+        anchor="work"
         index="02"
         label="Experience"
         title="Where I've worked"

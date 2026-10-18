@@ -8,32 +8,28 @@ import { SectionHeading, sectionClass } from "./section-heading";
 type Project = (typeof DATA.projects)[number];
 
 /**
- * Per-image fit for screenshots that don't suit a top-centre crop. The ocloc
- * card is a 2:1 GitHub preview on white, so it's shown whole on a white mat.
+ * Per-image fit for screenshots that don't suit a plain top-centre crop. The
+ * GlucoWise landing page is a tall full-page capture; a 3% zoom from the top
+ * ends the crop in the gap above "Product pillars" instead of mid-heading.
  */
 const IMAGE_FIT: Record<string, string> = {
-  "/blog/ocloc/github-preview.png": "object-contain bg-white",
+  "/blog/glucowise/landing-page.png":
+    "object-cover object-top origin-top scale-[1.03] group-hover:scale-[1.045]",
 };
 
-function ProjectMedia({ project }: { project: Project }) {
-  if (project.image) {
-    return (
-      <Image
-        src={project.image}
-        alt={`${project.title} screenshot`}
-        fill
-        sizes="(min-width: 1152px) 548px, (min-width: 768px) 46vw, 100vw"
-        className={cn(
-          "transition-transform duration-700 ease-out group-hover:scale-[1.02]",
-          IMAGE_FIT[project.image] ?? "object-cover object-top",
-        )}
-      />
-    );
-  }
+/** Typographic covers for projects without a screenshot, varied per project */
+type CoverStyle = "grid" | "ruled";
+const COVER_STYLE: Record<string, CoverStyle> = {
+  // A lines-of-code counter, so its cover is a page of numbered lines
+  ocloc: "ruled",
+};
 
-  // No screenshot: a typographic cover in the same frame
+const coverFrame =
+  "absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.02]";
+
+function GridCover({ project }: { project: Project }) {
   return (
-    <div className="absolute inset-0 flex flex-col justify-between p-6 transition-transform duration-700 ease-out group-hover:scale-[1.02] sm:p-8">
+    <div className={cn(coverFrame, "flex flex-col justify-between p-6 sm:p-8")}>
       <div
         aria-hidden
         className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.6)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.6)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
@@ -46,6 +42,79 @@ function ProjectMedia({ project }: { project: Project }) {
         <span className="text-accent">.</span>
       </span>
     </div>
+  );
+}
+
+const RULED_LINES = Array.from({ length: 16 }, (_, i) => i + 1);
+
+/** Install commands quoted from the project write-ups */
+const INSTALL: Record<string, string> = {
+  ocloc: "cargo install ocloc",
+};
+
+function RuledCover({ project }: { project: Project }) {
+  const install = INSTALL[project.title];
+  return (
+    <div className={cn(coverFrame, "overflow-hidden")}>
+      {/* Ruled lines with a line-number gutter, fading out to the right */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_27px,hsl(var(--border)/0.7)_27px)] bg-[size:100%_28px] [mask-image:linear-gradient(to_right,black_35%,transparent_95%)]"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-y-0 left-11 w-px bg-accent/30 sm:left-14"
+      />
+      <ol
+        aria-hidden
+        className="absolute left-0 top-0 w-11 font-mono text-[10px] leading-[28px] tabular-nums text-muted-foreground/50 sm:w-14"
+      >
+        {RULED_LINES.map((n) => (
+          <li key={n} className="pr-3 text-right">
+            {n}
+          </li>
+        ))}
+      </ol>
+      {/* Everything sits on the 28px rows: tags on row 2, title on rows 3-4, command on row 6 */}
+      <div className="absolute inset-y-0 left-11 right-0 pl-5 pr-6 pt-7 sm:left-14 sm:pl-6 sm:pr-8">
+        <span className="block font-mono text-[11px] uppercase leading-7 tracking-[0.16em] text-muted-foreground">
+          {project.tags.join(" / ")}
+        </span>
+        <span className="block font-serif text-5xl leading-[56px] tracking-tight sm:text-6xl sm:leading-[56px]">
+          {project.title}
+          <span className="text-accent">.</span>
+        </span>
+        {install ? (
+          <span className="mt-7 block font-mono text-xs leading-7 text-muted-foreground">
+            <span className="text-accent">$</span> {install}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function ProjectMedia({ project }: { project: Project }) {
+  if (project.image) {
+    return (
+      <Image
+        src={project.image}
+        alt={`${project.title} screenshot`}
+        fill
+        sizes="(min-width: 1152px) 548px, (min-width: 768px) 46vw, 100vw"
+        className={cn(
+          "object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]",
+          IMAGE_FIT[project.image],
+        )}
+      />
+    );
+  }
+
+  // No screenshot: a typographic cover in the same frame
+  return COVER_STYLE[project.title] === "ruled" ? (
+    <RuledCover project={project} />
+  ) : (
+    <GridCover project={project} />
   );
 }
 
@@ -90,10 +159,11 @@ function ProjectCard({ project }: { project: Project }) {
         ))}
       </ul>
 
-      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+      {/* 40px-tall links; the negative bottom margin keeps the row visually tight */}
+      <div className="-mb-2.5 mt-2.5 flex flex-wrap items-center gap-x-5 text-sm">
         <Link
           href={project.post}
-          className="group/link inline-flex items-center gap-1 font-medium text-foreground"
+          className="group/link inline-flex min-h-10 items-center gap-1 font-medium text-foreground"
           aria-label={`Read the write-up on ${project.title}`}
         >
           Read the write-up
@@ -108,7 +178,7 @@ function ProjectCard({ project }: { project: Project }) {
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group/link inline-flex items-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground"
+            className="group/link inline-flex min-h-10 items-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground"
           >
             {link.label}
             <ArrowUpRight
@@ -124,13 +194,10 @@ function ProjectCard({ project }: { project: Project }) {
 
 export function Projects() {
   return (
-    <section
-      id="projects"
-      aria-labelledby="projects-title"
-      className={sectionClass}
-    >
+    <section aria-labelledby="projects-title" className={sectionClass}>
       <SectionHeading
         id="projects-title"
+        anchor="projects"
         index="01"
         label="Selected work"
         title="Things I've built"
@@ -141,10 +208,10 @@ export function Projects() {
           <ProjectCard key={project.title} project={project} />
         ))}
       </div>
-      <div className="mt-14">
+      <div className="mt-11">
         <Link
           href="/blog/"
-          className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="group inline-flex min-h-10 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           More on the blog
           <ArrowRight

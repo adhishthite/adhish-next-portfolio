@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type RefObject, useEffect, useRef, useState } from "react";
 import type { BlogHeading } from "@/data/blog";
 import { cn } from "@/lib/utils";
 
@@ -66,15 +66,73 @@ function useActiveHeading(ids: string[]) {
   return active;
 }
 
+/**
+ * Wide diagrams widen symmetrically over the rail. While one overlaps the
+ * sticky TOC, fade the TOC out instead of drawing the diagram on top of it.
+ */
+function useHiddenByBreakout(ref: RefObject<HTMLElement | null>) {
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const nav = ref.current;
+      if (!nav) return;
+      const rail = nav.getBoundingClientRect();
+      const gap = 24;
+      const overlaps = [
+        ...document.querySelectorAll(".mermaid-frame[data-breakout]"),
+      ].some((el) => {
+        const box = el.getBoundingClientRect();
+        return (
+          box.right > rail.left &&
+          box.left < rail.right &&
+          box.bottom > rail.top - gap &&
+          box.top < rail.bottom + gap
+        );
+      });
+      setHidden(overlaps);
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(check);
+    };
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    // Diagrams render after hydration and can change size with the theme
+    const observer = new MutationObserver(schedule);
+    const body = document.getElementById("post-body");
+    if (body) {
+      observer.observe(body, {
+        subtree: true,
+        childList: true,
+        attributeFilter: ["data-breakout"],
+      });
+    }
+    schedule();
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      observer.disconnect();
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [ref]);
+
+  return hidden;
+}
+
 function TocList({
   headings,
   active,
+  roomy = false,
 }: {
   headings: BlogHeading[];
   active?: string | null;
+  /** Taller rows for touch (the mobile disclosure). */
+  roomy?: boolean;
 }) {
   return (
-    <ol className="space-y-0.5 text-[13px] leading-snug">
+    <ol className={cn("text-[13px] leading-snug", roomy && "text-sm")}>
       {headings.map((heading) => {
         const isActive = heading.id === active;
         return (
@@ -83,7 +141,8 @@ function TocList({
               href={`#${heading.id}`}
               aria-current={isActive ? "location" : undefined}
               className={cn(
-                "relative block rounded-sm py-1.5 text-muted-foreground transition-colors hover:text-foreground",
+                "relative block rounded-sm text-muted-foreground transition-colors hover:text-foreground",
+                roomy ? "py-2.5" : "py-2",
                 heading.depth === 3 ? "pl-7" : "pl-4",
                 isActive && "text-foreground",
               )}
@@ -108,9 +167,18 @@ function TocList({
 export function TableOfContents({ headings }: { headings: BlogHeading[] }) {
   const [ids] = useState(() => headings.map((h) => h.id));
   const active = useActiveHeading(ids);
+  const navRef = useRef<HTMLElement>(null);
+  const hidden = useHiddenByBreakout(navRef);
 
   return (
-    <nav aria-label="On this page">
+    <nav
+      ref={navRef}
+      aria-label="On this page"
+      className={cn(
+        "transition-[opacity,visibility] duration-200 motion-reduce:transition-none",
+        hidden && "invisible opacity-0",
+      )}
+    >
       <p className="eyebrow mb-3 pl-4">On this page</p>
       <div className="border-l border-border/70">
         <TocList headings={headings} active={active} />
@@ -141,7 +209,7 @@ export function TableOfContentsDisclosure({
         </span>
       </summary>
       <div className="border-t border-border/70 px-1 py-2">
-        <TocList headings={headings} />
+        <TocList headings={headings} roomy />
       </div>
     </details>
   );

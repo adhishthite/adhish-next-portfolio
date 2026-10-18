@@ -6,19 +6,42 @@ import type { BlogPost } from "@/data/blog";
 import { CURRENT_ROLE, DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 
+/**
+ * Small round avatar. me.jpg is a 3:4 portrait where the head is under half
+ * the frame, so at 32-56px it's zoomed in around the face.
+ */
+export function Avatar({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "relative block overflow-hidden rounded-full bg-secondary",
+        className,
+      )}
+    >
+      <Image
+        src={DATA.avatarUrl}
+        alt=""
+        fill
+        sizes="112px"
+        className="object-cover"
+        style={{
+          objectPosition: "50% 0%",
+          // Centres the face (head is turned left, so left of the hair)
+          transform: "scale(1.7)",
+          transformOrigin: "35% 57%",
+        }}
+      />
+    </span>
+  );
+}
+
 export function AuthorCard() {
   return (
     <section
       aria-label="About the author"
       className="flex gap-4 rounded-xl border border-border/70 bg-card p-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] sm:gap-5 sm:p-6"
     >
-      <Image
-        src={DATA.avatarUrl}
-        alt=""
-        width={112}
-        height={112}
-        className="size-12 shrink-0 rounded-full object-cover object-top sm:size-14"
-      />
+      <Avatar className="size-12 shrink-0 sm:size-14" />
       <div className="min-w-0 flex-1">
         <p className="font-medium">{DATA.name}</p>
         <p className="mt-1 text-pretty text-sm leading-relaxed text-muted-foreground">

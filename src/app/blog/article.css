@@ -104,7 +104,6 @@
   font-weight: 600;
   letter-spacing: -0.02em;
   text-wrap: balance;
-  scroll-margin-top: 6rem;
 }
 
 .article h2 {
@@ -143,8 +142,7 @@
     color 0.15s ease;
 }
 
-.article :is(h2, h3):hover .heading-anchor,
-.article .heading-anchor:focus-visible {
+.article :is(h2, h3):hover .heading-anchor {
   opacity: 1;
 }
 
@@ -305,7 +303,7 @@
 
 .article .code-block figcaption[data-rehype-pretty-code-title] {
   margin: 0;
-  padding: 0.7rem 3.5rem 0.7rem 1.25rem;
+  padding: 0.75rem 3.5rem 0.75rem 1.25rem;
   border-bottom: 1px solid hsl(var(--border) / 0.9);
   color: hsl(var(--muted-foreground));
   font-family: var(--font-mono);
@@ -381,15 +379,15 @@
 
 .article .code-copy {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0.4375rem;
+  right: 0.4375rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 1px solid hsl(var(--border));
-  border-radius: 8px;
+  border-radius: 10px;
   background: hsl(var(--code-bg));
   color: hsl(var(--muted-foreground));
   opacity: 0;
@@ -399,8 +397,12 @@
     border-color 0.15s ease;
 }
 
+/* Inside the title bar: same 40px target, drawn as a plain icon button */
 .article .code-block[data-has-title] .code-copy {
-  top: 0.3rem;
+  top: 1px;
+  right: 0.25rem;
+  border-color: transparent;
+  background: transparent;
 }
 
 .article .code-block:hover .code-copy,
@@ -473,44 +475,157 @@
 /* ---------------------------------------------------------- mermaid */
 
 .article .mermaid-frame {
-  display: flex;
-  justify-content: center;
+  position: relative;
   margin: 2em 0;
-  padding: 1.5rem 1.25rem;
-  overflow-x: auto;
+  padding: 1.25rem 1rem;
   border: 1px solid hsl(var(--border) / 0.7);
   border-radius: 16px;
   background: hsl(var(--card));
 }
 
-.article .mermaid-frame svg {
+@media (min-width: 640px) {
+  .article .mermaid-frame {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+/*
+ * The SVG always scales to fit (mermaid emits width="100%" plus an inline
+ * max-width of its natural size), centred. Wide diagrams get a wider,
+ * symmetric frame from mermaid.tsx via an inline negative margin.
+ */
+.article .mermaid-svg {
+  display: flex;
+  justify-content: center;
+}
+
+.article .mermaid-svg svg {
+  display: block;
+  width: 100%;
   max-width: 100%;
   height: auto;
 }
 
-/* Wide diagrams borrow the empty gutter on large screens */
-@media (min-width: 1024px) {
-  .article .mermaid-frame[data-breakout] {
-    margin-inline: -8rem;
+.article .mermaid-frame[data-zoomable] {
+  padding-bottom: 3.75rem;
+}
+
+.article .mermaid-frame[data-zoomable] .mermaid-svg {
+  cursor: zoom-in;
+}
+
+.article .mermaid-expand {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 2.5rem;
+  padding: 0 0.85rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 9999px;
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.article .mermaid-expand:hover {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--foreground) / 0.25);
+}
+
+/* Full-size view: near-full-viewport native <dialog> */
+.mermaid-dialog {
+  width: calc(100vw - 1.5rem);
+  max-width: none;
+  height: calc(100dvh - 1.5rem);
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  box-shadow: 0 24px 64px -24px rgb(0 0 0 / 0.35);
+}
+
+.mermaid-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .mermaid-dialog {
+    width: calc(100vw - 3rem);
+    height: calc(100dvh - 3rem);
   }
 }
 
-@media (min-width: 1280px) {
-  .article .mermaid-frame[data-breakout] {
-    margin-left: -14rem;
-    margin-right: 0;
-  }
+.mermaid-dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
 }
 
-/* Diagrams too wide to shrink legibly scroll sideways instead */
-.article .mermaid-frame[data-wide] {
-  justify-content: flex-start;
+.mermaid-dialog-bar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.375rem 0.375rem 0.375rem 1.25rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.8);
 }
 
-.article .mermaid-frame[data-wide] svg {
+.mermaid-dialog-bar .eyebrow {
+  margin: 0;
+}
+
+.mermaid-dialog-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  color: hsl(var(--muted-foreground));
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.mermaid-dialog-close:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--secondary));
+}
+
+.mermaid-dialog-scroll {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem;
+}
+
+/* margin:auto centres when it fits and never clips when it overflows */
+.mermaid-dialog-svg {
+  flex-shrink: 0;
+  margin: auto;
+}
+
+.mermaid-dialog-svg svg {
+  display: block;
+  width: 100%;
   /* biome-ignore lint/complexity/noImportantStyles: mermaid sets max-width inline */
   max-width: none !important;
-  flex-shrink: 0;
+  height: auto;
 }
 
 .article .mermaid-skeleton {

@@ -1,6 +1,14 @@
 "use client";
 
-import { type RefObject, useEffect, useId, useRef, useState } from "react";
+import { Maximize2, X } from "lucide-react";
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 interface MermaidProps {
   chart: string;
@@ -125,58 +133,144 @@ function useThemeClass() {
 }
 
 /**
- * Below `min` labels get too small and the diagram scrolls sideways at
- * `wide` instead. Phones accept a smaller scale so tall diagrams don't
- * turn into a very long two-way scroll.
+ * Below this fitted scale (14px labels render at ~9px) the diagram is still
+ * shown whole, but gets a "View full size" button that opens it unscaled.
  */
-const SCALES = {
-  desktop: { min: 0.6, wide: 0.8 },
-  phone: { min: 0.5, wide: 0.62 },
-};
+const LEGIBLE_SCALE = 0.65;
+
+/** Widen the frame only when fitting the column would shrink below ~0.87. */
+const BREAKOUT_AT = 1.15;
+
+/** Horizontal padding + border of `.mermaid-frame`, kept in sync with article.css. */
+function frameChrome(frame: HTMLElement) {
+  const style = getComputedStyle(frame);
+  return (
+    Number.parseFloat(style.paddingLeft) +
+    Number.parseFloat(style.paddingRight) +
+    Number.parseFloat(style.borderLeftWidth) +
+    Number.parseFloat(style.borderRightWidth)
+  );
+}
 
 /**
- * Mermaid sizes the SVG to fit its container, which makes wide diagrams
- * unreadably small in a 600px column. Wide diagrams get a wider frame on
- * large screens, and if that still shrinks them too far they scroll
- * sideways at a legible scale.
+ * The SVG always scales down to fit its frame (viewBox scaling, never
+ * clipped). A diagram wider than the text column widens its frame evenly on
+ * both sides, up to the page container. Returns true when the fitted scale
+ * is too small to read comfortably.
  */
-function useLegibleWidth(ref: RefObject<HTMLDivElement | null>, svg: string) {
+function useFittedDiagram(
+  ref: RefObject<HTMLDivElement | null>,
+  svg: string,
+): boolean {
+  const [tooSmall, setTooSmall] = useState(false);
+
   useEffect(() => {
     const frame = ref.current;
     const el = frame?.querySelector("svg");
-    if (!frame || !el) return;
+    const column = frame?.closest<HTMLElement>(".article");
+    if (!frame || !el || !column) return;
     const natural = el.viewBox.baseVal?.width;
     if (!natural) return;
 
     const fit = () => {
-      // Wider than the text column: let CSS widen the frame on large screens
-      frame.toggleAttribute("data-breakout", false);
-      const padded = frame.clientWidth - 40;
-      frame.toggleAttribute("data-breakout", natural > padded);
-      const style = getComputedStyle(frame);
-      const available =
-        frame.clientWidth -
-        Number.parseFloat(style.paddingLeft) -
-        Number.parseFloat(style.paddingRight);
-      const scale = window.innerWidth < 640 ? SCALES.phone : SCALES.desktop;
-      const wide = available / natural < scale.min;
-      frame.toggleAttribute("data-wide", wide);
-      el.style.width = wide ? `${Math.round(natural * scale.wide)}px` : "";
+      const columnWidth = column.clientWidth;
+      const page = column.closest<HTMLElement>(".container-page");
+      let pageWidth = columnWidth;
+      if (page) {
+        const style = getComputedStyle(page);
+        pageWidth =
+          page.clientWidth -
+          Number.parseFloat(style.paddingLeft) -
+          Number.parseFloat(style.paddingRight);
+      }
+      const chrome = frameChrome(frame);
+      // Slightly-too-wide diagrams just shrink a little; ragged frames that
+      // stick out by a few pixels look like a mistake
+      const needsRoom = natural > (columnWidth - chrome) * BREAKOUT_AT;
+      const wanted = needsRoom ? Math.min(pageWidth, natural + chrome) : 0;
+      const extra = Math.max(0, Math.floor((wanted - columnWidth) / 2));
+
+      frame.toggleAttribute("data-breakout", extra > 0);
+      frame.style.marginInline = extra > 0 ? `${-extra}px` : "";
+
+      const inner = columnWidth + extra * 2 - chrome;
+      setTooSmall(inner / natural < LEGIBLE_SCALE);
     };
+
     fit();
     const observer = new ResizeObserver(fit);
-    observer.observe(frame);
+    observer.observe(column);
     return () => observer.disconnect();
   }, [ref, svg]);
+
+  return tooSmall;
+}
+
+/**
+ * Full-viewport view of a diagram at its natural size with two-axis
+ * scrolling. Native <dialog>: focus trap, Esc and top-layer for free.
+ */
+function DiagramDialog({
+  svg,
+  width,
+  dialogRef,
+  onClose,
+}: {
+  svg: string | null;
+  width: number | null;
+  dialogRef: RefObject<HTMLDialogElement | null>;
+  onClose: () => void;
+}) {
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-label="Diagram, full size"
+      className="mermaid-dialog"
+      onClose={onClose}
+      onClick={(event) => {
+        // Clicks on the ::backdrop are dispatched to the dialog itself
+        if (event.target === event.currentTarget) event.currentTarget.close();
+      }}
+    >
+      <div className="mermaid-dialog-bar">
+        <p className="eyebrow">Diagram · full size</p>
+        <button
+          type="button"
+          onClick={() => dialogRef.current?.close()}
+          aria-label="Close full-size diagram"
+          className="mermaid-dialog-close"
+        >
+          <X aria-hidden strokeWidth={1.75} className="size-5" />
+        </button>
+      </div>
+      {svg && (
+        <div className="mermaid-dialog-scroll">
+          <div
+            className="mermaid-dialog-svg"
+            style={width ? { width } : undefined}
+            dangerouslySetInnerHTML={{ __html: svg }}
+          />
+        </div>
+      )}
+    </dialog>
+  );
 }
 
 export function Mermaid({ chart }: MermaidProps) {
   const id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const themeClass = useThemeClass();
-  const [svg, setSvg] = useState("");
+  const [rendered, setRendered] = useState<{ id: string; svg: string }>({
+    id: "",
+    svg: "",
+  });
   const [failed, setFailed] = useState(false);
+  // Natural SVG width while the full-size dialog is open, else null
+  const [fullWidth, setFullWidth] = useState<number | null>(null);
   const frameRef = useRef<HTMLDivElement>(null);
-  useLegibleWidth(frameRef, svg);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const svg = rendered.svg;
+  const tooSmall = useFittedDiagram(frameRef, svg);
 
   useEffect(() => {
     if (!themeClass) return;
@@ -193,12 +287,10 @@ export function Mermaid({ chart }: MermaidProps) {
           flowchart: { curve: "basis", padding: 14 },
           sequence: { mirrorActors: false },
         });
-        const result = await mermaid.render(
-          `mermaid-${id}-${themeClass}`,
-          chart,
-        );
+        const renderId = `mermaid-${id}-${themeClass}`;
+        const result = await mermaid.render(renderId, chart);
         if (!cancelled) {
-          setSvg(result.svg);
+          setRendered({ id: renderId, svg: result.svg });
           setFailed(false);
         }
       } catch (error) {
@@ -211,6 +303,30 @@ export function Mermaid({ chart }: MermaidProps) {
       cancelled = true;
     };
   }, [chart, id, themeClass]);
+
+  const openFullSize = useCallback(() => {
+    const dialog = dialogRef.current;
+    const natural =
+      frameRef.current?.querySelector("svg")?.viewBox.baseVal?.width;
+    if (!dialog || dialog.open || !natural) return;
+    setFullWidth(natural);
+    document.documentElement.style.overflow = "hidden";
+    dialog.showModal();
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setFullWidth(null);
+    document.documentElement.style.overflow = "";
+    triggerRef.current?.focus();
+  }, []);
+
+  // Never leave the page scroll-locked if the post unmounts mid-view
+  useEffect(
+    () => () => {
+      document.documentElement.style.overflow = "";
+    },
+    [],
+  );
 
   if (failed) {
     return (
@@ -233,7 +349,40 @@ export function Mermaid({ chart }: MermaidProps) {
     <div
       ref={frameRef}
       className="mermaid-frame"
-      dangerouslySetInnerHTML={{ __html: svg }}
-    />
+      data-zoomable={tooSmall || undefined}
+    >
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: mouse shortcut; keyboard users get the "View full size" button */}
+      <div
+        className="mermaid-svg"
+        onClick={tooSmall ? openFullSize : undefined}
+        dangerouslySetInnerHTML={{ __html: svg }}
+      />
+      {tooSmall && (
+        <>
+          <button
+            ref={triggerRef}
+            type="button"
+            onClick={openFullSize}
+            aria-haspopup="dialog"
+            className="mermaid-expand"
+          >
+            <Maximize2 aria-hidden strokeWidth={1.75} className="size-3.5" />
+            View full size
+          </button>
+          <DiagramDialog
+            dialogRef={dialogRef}
+            onClose={handleClose}
+            // Unique ids so the copy's <style> and arrow markers don't
+            // collide with the inline diagram's
+            width={fullWidth}
+            svg={
+              fullWidth
+                ? svg.replaceAll(rendered.id, `${rendered.id}-full`)
+                : null
+            }
+          />
+        </>
+      )}
+    </div>
   );
 }

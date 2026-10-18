@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { BlogPost } from "@/data/blog";
@@ -18,20 +18,20 @@ export function PinnedPostCard({
   return (
     <Link
       href={postHref(post.slug)}
-      className="group flex overflow-hidden rounded-xl sm:flex-col border border-border/70 bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-[border-color,box-shadow] duration-300 hover:border-foreground/20 hover:shadow-[0_6px_24px_-12px_rgb(0_0_0/0.18)]"
+      className="group flex overflow-hidden rounded-xl md:flex-col border border-border/70 bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-[border-color,box-shadow] duration-300 hover:border-foreground/20 hover:shadow-[0_6px_24px_-12px_rgb(0_0_0/0.18)]"
     >
-      <div className="relative w-28 shrink-0 overflow-hidden border-r border-border/60 bg-secondary sm:aspect-[16/9] sm:w-auto sm:border-b sm:border-r-0">
+      <div className="relative w-28 shrink-0 overflow-hidden border-r border-border/60 bg-secondary sm:w-40 md:aspect-[16/9] md:w-auto md:border-b md:border-r-0">
         {image ? (
           <Image
             src={image}
             alt=""
             fill
             priority={priority}
-            sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 112px"
+            sizes="(min-width: 1152px) 352px, (min-width: 768px) 31vw, (min-width: 640px) 160px, 112px"
             className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         ) : (
-          <p className="absolute inset-0 hidden items-end p-5 font-serif sm:flex text-[22px] italic leading-snug text-muted-foreground">
+          <p className="absolute inset-0 hidden items-end p-5 font-serif md:flex text-[22px] italic leading-snug text-muted-foreground">
             <span className="line-clamp-3">{summary}</span>
           </p>
         )}
@@ -44,12 +44,13 @@ export function PinnedPostCard({
           <span>
             <time dateTime={publishedAt}>{formatDate(publishedAt)}</time>
             <span aria-hidden> · </span>
-            {post.readingTime} min
+            <span className="sr-only">, </span>
+            {post.readingTime} min<span className="sr-only"> read</span>
           </span>
-          <ArrowUpRight
+          <ArrowRight
             aria-hidden
             strokeWidth={1.75}
-            className="size-4 transition-[transform,color] duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+            className="size-4 transition-[transform,color] duration-300 group-hover:translate-x-0.5 group-hover:text-accent"
           />
         </p>
       </div>
@@ -84,8 +85,9 @@ export function PostArchive({ posts }: { posts: BlogPost[] }) {
               className="flex items-baseline gap-3 font-serif text-4xl leading-none tracking-tight text-muted-foreground/80 md:block"
             >
               {year}
-              <span className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground md:mt-3 md:block">
-                {yearPosts.length} {yearPosts.length === 1 ? "POST" : "POSTS"}
+              <span className="sr-only">, </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground md:mt-3 md:block">
+                {yearPosts.length} {yearPosts.length === 1 ? "post" : "posts"}
               </span>
             </h3>
           </div>
@@ -109,15 +111,20 @@ export function PostArchive({ posts }: { posts: BlogPost[] }) {
                       day: "numeric",
                     })}
                   </time>
+                  <span className="sr-only">: </span>
                   <span className="text-pretty text-[15.5px] font-medium leading-snug text-foreground/90 transition-colors group-hover:text-foreground">
                     {post.metadata.title}
                   </span>
                   <span className="hidden items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground sm:flex">
-                    {post.readingTime} min
-                    <ArrowUpRight
+                    <span>
+                      <span className="sr-only">, </span>
+                      {post.readingTime} min
+                      <span className="sr-only"> read</span>
+                    </span>
+                    <ArrowRight
                       aria-hidden
                       strokeWidth={1.75}
-                      className="size-4 opacity-40 transition-[transform,opacity,color] duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
+                      className="size-4 opacity-40 transition-[transform,opacity,color] duration-300 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
                     />
                   </span>
                 </Link>

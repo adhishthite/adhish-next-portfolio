@@ -10,7 +10,11 @@ import rehypePrettyCode, {
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
-import { AuthorCard, PostNavigation } from "@/components/blog/post-footer";
+import {
+  AuthorCard,
+  Avatar,
+  PostNavigation,
+} from "@/components/blog/post-footer";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import {
   TableOfContents,
@@ -174,7 +178,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   };
 
   return (
-    <main className="container-page pb-24 pt-10 sm:pb-32 sm:pt-14">
+    <main className="container-page pb-12 pt-10 sm:pb-16 sm:pt-14">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -214,13 +218,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           )}
 
           <div className="mt-8 flex items-center gap-3 border-t border-border/60 pt-6">
-            <Image
-              src={DATA.avatarUrl}
-              alt=""
-              width={64}
-              height={64}
-              className="size-8 rounded-full object-cover object-top"
-            />
+            <Avatar className="size-8" />
             <p className="text-sm leading-tight">
               <span className="font-medium">{DATA.name}</span>
               <span className="block text-[13px] text-muted-foreground">

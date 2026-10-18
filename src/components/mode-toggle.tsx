@@ -13,7 +13,7 @@ export function ModeToggle({ className }: { className?: string }) {
       aria-label="Toggle color theme"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className={cn(
-        "inline-flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
+        "inline-flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
         className,
       )}
     >
