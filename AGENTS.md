@@ -5,7 +5,6 @@
 - `src/app`: Next.js App Router (routes, `layout.tsx`, `page.tsx`, global CSS).
 - `src/components`: Shared components (site header/footer, MDX renderers, mermaid, theme toggle).
 - `src/components/home`: Homepage sections. `src/components/blog`: blog index/post pieces (TOC, reading progress, prev/next).
-- `src/components/ui`: Reusable Shadcn/UI primitives.
 - `src/lib`: Utilities (`utils.ts`, `og.ts`, remark/rehype plugins).
 - `src/data`: Typed content feeds (e.g., `blog.ts`, `resume.tsx`).
 - `content`: MDX posts/articles.
@@ -63,7 +62,7 @@ Alternative: Use pnpm directly (see `packageManager`):
 
 - Routing: Next.js App Router in `src/app` with server components by default; client components opt-in via `"use client"`.
 - Content pipeline: MDX in `content/` rendered via `next-mdx-remote`, `remark-gfm`, `rehype-slug` (heading ids for the table of contents), a local image-size rehype plugin (markdown images go through `next/image`), and `rehype-pretty-code` with Shiki dual themes. Supports Mermaid diagrams via `src/components/mermaid.tsx` (theme-aware).
-- UI & Theming: TailwindCSS + shadcn/ui primitives. Design tokens (paper/ink neutrals + one vermilion accent) live in `src/app/globals.css`; fonts are Instrument Serif (display), Geist (body) and Geist Mono (meta) via `next/font`. Dark mode via `next-themes` (class-based, follows system by default). Motion is CSS-only and respects `prefers-reduced-motion`; avoid adding animation libraries or effects that render content with `opacity: 0` on the server.
+- UI & Theming: TailwindCSS (shadcn `components.json` is kept so `shadcn add` still works). Design tokens (paper/ink neutrals + one vermilion accent) live in `src/app/globals.css`; fonts are Instrument Serif (display), Geist (body) and Geist Mono (meta) via `next/font`. Dark mode via `next-themes` (class-based, follows system by default). Motion is CSS-only and respects `prefers-reduced-motion`; avoid adding animation libraries or effects that render content with `opacity: 0` on the server.
 - Data model: Structured data in `src/data/*` feeds components/pages; shared helpers in `src/lib`. `src/data/blog.ts` returns posts with `content`, `readingTime` and `headings`; `BlogMetadata` supports pinned posts (`pinned`, `pinnedOrder`) and OG images (`image` for social sharing).
 - SEO: `src/app/sitemap.ts`, `robots.ts`, `rss.xml/route.ts`, and generated Open Graph cards under `src/app/og/` (site card + one per post, used when a post has no `image`).
 - Deployment: Built output served by Vercel.

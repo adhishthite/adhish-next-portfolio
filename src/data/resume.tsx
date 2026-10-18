@@ -11,7 +11,7 @@ export const DATA = {
   location: "Pune, India",
   locationLink: "https://www.google.com/maps/place/pune",
   description: `Sr. Solutions Architect, AI at Google. ${YEARS_OF_EXPERIENCE}+ years building production ML and GenAI systems, and writing about agents, LLMs, and the tools I build.`,
-  summary: `I'm a Sr. Solutions Architect for AI at Google, helping enterprises put Gemini into production. Before that I led AI engineering at Elastic and spent four years on fraud and risk ML at Synapse. Outside work I build small tools and write about what breaks when you run agents for real.`,
+  summary: `I help enterprises put Gemini and the rest of Google's AI stack into production. Before that I led AI engineering at Elastic and spent four years on fraud and risk ML at Synapse. Outside work I build small tools and write about what breaks when you run agents for real.`,
   avatarUrl: "/me.jpg",
   skillGroups: [
     {
@@ -491,7 +491,7 @@ export const DATA = {
       title: "Dyson MCP Server",
       year: "2025",
       description:
-        "An MCP server that lets Claude control my Dyson air purifier over local MQTT, so \"make the air quieter\" actually does something.",
+        'An MCP server that lets Claude control my Dyson air purifier over local MQTT, so "make the air quieter" actually does something.',
       tags: ["Python", "MCP", "MQTT"],
       image: "/blog/dyson-mcp-server/og-pic.jpeg",
       post: "/blog/dyson-mcp-server/",

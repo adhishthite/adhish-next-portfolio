@@ -48,5 +48,3 @@ GEMINI.md
 .vercel/
 .pnpm-store/
 out/
-# parallel dev build dirs
-/.next-*/

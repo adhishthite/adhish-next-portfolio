@@ -95,7 +95,10 @@ function slugExists(slug: string): boolean {
 export const getPost = cache(async (slug: string): Promise<BlogPost | null> => {
   if (!slugExists(slug)) return null;
 
-  const source = fs.readFileSync(path.join(CONTENT_DIR, `${slug}.mdx`), "utf-8");
+  const source = fs.readFileSync(
+    path.join(CONTENT_DIR, `${slug}.mdx`),
+    "utf-8",
+  );
   const { content: body, data } = matter(source);
   const content = stripLeadingTitle(body);
 

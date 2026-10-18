@@ -1,25 +1,45 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-export function CodeCopyButton({ code }: { code: string }) {
+/**
+ * Copy button for a rehype-pretty-code figure. Reads the code from the
+ * sibling <pre> at click time, so the source isn't serialised twice.
+ */
+export function CodeCopyButton() {
+  const ref = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const pre = ref.current?.closest("figure")?.querySelector("pre");
+    const code = pre?.textContent?.replace(/\n$/, "") ?? "";
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
   };
 
   return (
     <button
-      onClick={handleCopy}
-      className="absolute right-3 top-3 z-10 flex items-center justify-center rounded-md border border-border/40 bg-background/80 p-1.5 text-muted-foreground opacity-0 backdrop-blur-sm transition-all hover:bg-muted hover:text-foreground group-hover:opacity-100"
-      aria-label="Copy code"
+      ref={ref}
       type="button"
+      onClick={handleCopy}
+      aria-label={copied ? "Copied" : "Copy code"}
+      className="code-copy"
+      data-copied={copied || undefined}
     >
-      {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+      {copied ? (
+        <Check className="size-3.5" strokeWidth={2} aria-hidden />
+      ) : (
+        <Copy className="size-3.5" strokeWidth={1.75} aria-hidden />
+      )}
+      <span className="sr-only" aria-live="polite">
+        {copied ? "Copied to clipboard" : ""}
+      </span>
     </button>
   );
 }
