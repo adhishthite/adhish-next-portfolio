@@ -16,7 +16,7 @@ description: >-
 
 - Posts are MDX files at `content/<slug>.mdx`. The **slug is the filename** (no `.mdx`), and it's also the URL path.
 - Images live in `public/blog/<slug>/` and are referenced as `/blog/<slug>/<file>`.
-- **OG image:** 1200×630px (1.91:1). Set it in frontmatter `image`; it falls back to the avatar if omitted.
+- **OG image:** 1200×630px (1.91:1). Set it in frontmatter `image`; if omitted, a branded card with the post title is generated automatically (`/og/blog/<slug>.png`).
 
 ## Frontmatter
 
@@ -38,6 +38,8 @@ The `summary` shows on listing cards and in social previews, so it has to read h
 - GitHub-Flavored Markdown (`remark-gfm`): tables, task lists, strikethrough.
 - Fenced code blocks with a language get Shiki highlighting (```` ```swift ````, ```` ```bash ````, etc.).
 - Mermaid diagrams render via the theme-aware `mermaid` component — use a ```` ```mermaid ```` block.
+- Don't start the body with `# Title` — the page renders the title (a leading H1 is stripped anyway). Use `##`/`###` for sections; they feed the table of contents.
+- Markdown images (`![alt](/blog/<slug>/x.png)`) are sized at build time and served through `next/image`, so large screenshots are fine — but always write real alt text.
 - Inline JSX and `<a>` links are fine; keep attributes valid so the MDX compiles.
 
 ## Write it human from the start

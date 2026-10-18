@@ -1,9 +1,8 @@
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
+import GithubSlugger from "github-slugger";
 import matter from "gray-matter";
-import path from "path";
-import remarkParse from "remark-parse";
-import remarkHtml from "remark-html";
-import { unified } from "unified";
+import { cache } from "react";
 
 export interface BlogMetadata {
   title: string;
@@ -14,95 +13,141 @@ export interface BlogMetadata {
   pinnedOrder?: number; // 1, 2, or 3 - lower number = higher priority
 }
 
+export interface BlogHeading {
+  depth: 2 | 3;
+  text: string;
+  /** Matches the id rehype-slug assigns to the rendered heading */
+  id: string;
+}
+
 export interface BlogPost {
   metadata: BlogMetadata;
   slug: string;
-  source: string;
-  rawContent: string;
+  /** MDX body, with a leading `# Title` removed (the page renders the title) */
+  content: string;
+  readingTime: number;
+  headings: BlogHeading[];
 }
 
-function getMDXFiles(dir: string) {
-  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
+const CONTENT_DIR = path.join(process.cwd(), "content");
+const MAX_PINNED_POSTS = 3;
+const WORDS_PER_MINUTE = 230;
+
+/** Drop the first non-empty line if it is an H1; most posts repeat the title there. */
+function stripLeadingTitle(content: string): string {
+  return content.replace(/^\s*#\s+[^\n]*\n/, "");
 }
 
-// For plain HTML rendering
-export async function markdownToHTML(markdown: string) {
-  const p = await unified()
-    .use(remarkParse)
-    .use(remarkHtml, { sanitize: false })
-    .process(markdown);
-
-  return p.toString();
+/** Split markdown into prose lines and fenced-code lines. */
+function proseLines(content: string): string[] {
+  const lines: string[] = [];
+  let inFence = false;
+  for (const line of content.split("\n")) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (!inFence) lines.push(line);
+  }
+  return lines;
 }
 
-export async function getPost(slug: string): Promise<BlogPost> {
-  const filePath = path.join("content", `${slug}.mdx`);
-  const source = fs.readFileSync(filePath, "utf-8");
-  const { content: rawContent, data } = matter(source);
+function plainText(markdown: string): string {
+  return markdown
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/<[^>]+>/g, "")
+    .replace(/[`*_~]/g, "")
+    .trim();
+}
 
-  // Only convert to HTML for backward compatibility
-  const htmlContent = await markdownToHTML(rawContent);
+/**
+ * Collect h2/h3 headings for the table of contents. Every heading level is fed
+ * through the slugger in document order so duplicate-suffixes line up with
+ * rehype-slug.
+ */
+function extractHeadings(content: string): BlogHeading[] {
+  const slugger = new GithubSlugger();
+  const headings: BlogHeading[] = [];
+  for (const line of proseLines(content)) {
+    const match = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line);
+    if (!match) continue;
+    const depth = match[1].length;
+    const text = plainText(match[2]);
+    const id = slugger.slug(text);
+    if (depth === 2 || depth === 3) headings.push({ depth, text, id });
+  }
+  return headings;
+}
+
+function readingTime(content: string): number {
+  const words = proseLines(content).join(" ").split(/\s+/).filter(Boolean);
+  return Math.max(1, Math.round(words.length / WORDS_PER_MINUTE));
+}
+
+function slugExists(slug: string): boolean {
+  return (
+    /^[a-z0-9-]+$/i.test(slug) &&
+    fs.existsSync(path.join(CONTENT_DIR, `${slug}.mdx`))
+  );
+}
+
+export const getPost = cache(async (slug: string): Promise<BlogPost | null> => {
+  if (!slugExists(slug)) return null;
+
+  const source = fs.readFileSync(path.join(CONTENT_DIR, `${slug}.mdx`), "utf-8");
+  const { content: body, data } = matter(source);
+  const content = stripLeadingTitle(body);
 
   return {
-    source: htmlContent,
-    rawContent, // Raw MDX content for direct rendering with MDXRemote
     metadata: data as BlogMetadata,
     slug,
+    content,
+    readingTime: readingTime(content),
+    headings: extractHeadings(content),
   };
-}
+});
 
-async function getAllPosts(dir: string): Promise<BlogPost[]> {
-  const mdxFiles = getMDXFiles(dir);
-  return Promise.all(
-    mdxFiles.map(async (file) => {
-      const slug = path.basename(file, path.extname(file));
-      return getPost(slug);
-    }),
-  );
-}
+const byNewest = (a: BlogPost, b: BlogPost) =>
+  new Date(b.metadata.publishedAt).getTime() -
+  new Date(a.metadata.publishedAt).getTime();
 
-export async function getBlogPosts(): Promise<BlogPost[]> {
-  return getAllPosts(path.join(process.cwd(), "content"));
-}
+/** All posts, newest first. */
+export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
+  const slugs = fs
+    .readdirSync(CONTENT_DIR)
+    .filter((file) => path.extname(file) === ".mdx")
+    .map((file) => path.basename(file, ".mdx"));
 
-const MAX_PINNED_POSTS = 3;
+  const posts = await Promise.all(slugs.map((slug) => getPost(slug)));
+  return posts.filter((post): post is BlogPost => post !== null).sort(byNewest);
+});
 
 /**
- * Get pinned blog posts (max 3), sorted by pinnedOrder (ascending)
- * Posts without pinnedOrder come after those with explicit order
+ * Pinned posts (max 3), sorted by pinnedOrder ascending, then newest first.
+ * Posts without pinnedOrder come after those with an explicit order.
  */
 export async function getPinnedPosts(): Promise<BlogPost[]> {
-  const allPosts = await getBlogPosts();
-
-  const pinnedPosts = allPosts
+  const posts = await getBlogPosts();
+  return posts
     .filter((post) => post.metadata.pinned === true)
     .sort((a, b) => {
-      // Posts with pinnedOrder come first, sorted ascending
       const orderA = a.metadata.pinnedOrder ?? 999;
       const orderB = b.metadata.pinnedOrder ?? 999;
-      if (orderA !== orderB) return orderA - orderB;
-
-      // Fall back to date (newest first) if same order
-      return (
-        new Date(b.metadata.publishedAt).getTime() -
-        new Date(a.metadata.publishedAt).getTime()
-      );
+      return orderA !== orderB ? orderA - orderB : byNewest(a, b);
     })
     .slice(0, MAX_PINNED_POSTS);
-
-  return pinnedPosts;
 }
 
-/**
- * Get all blog posts sorted by date (newest first)
- * Pinned posts are NOT excluded - they appear in both sections
- */
-export async function getRegularPosts(): Promise<BlogPost[]> {
-  const allPosts = await getBlogPosts();
-
-  return allPosts.sort(
-    (a, b) =>
-      new Date(b.metadata.publishedAt).getTime() -
-      new Date(a.metadata.publishedAt).getTime(),
-  );
+/** Neighbouring posts by date, for prev/next navigation. */
+export async function getAdjacentPosts(
+  slug: string,
+): Promise<{ newer: BlogPost | null; older: BlogPost | null }> {
+  const posts = await getBlogPosts();
+  const index = posts.findIndex((post) => post.slug === slug);
+  if (index === -1) return { newer: null, older: null };
+  return {
+    newer: posts[index - 1] ?? null,
+    older: posts[index + 1] ?? null,
+  };
 }
