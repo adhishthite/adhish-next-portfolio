@@ -1,274 +1,264 @@
-import { getBlogPosts, getPost } from "@/data/blog";
-import { DATA } from "@/data/resume";
-import { formatDate } from "@/lib/utils";
+import { ArrowLeft } from "@phosphor-icons/react/ssr";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Image from "next/image";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import {
-  MDXImage,
-  MDXLink,
-  MDXParagraph,
-  MDXPre,
-  MDXCode,
-  MDXFigure,
-  MDXFigcaption,
-  MDXDiv,
-} from "@/components/mdx-components";
-import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Icons } from "@/components/icons";
 import Link from "next/link";
-import remarkGfm from "remark-gfm";
-import { remarkMermaid } from "@/lib/remark-mermaid";
-import rehypePrettyCode from "rehype-pretty-code";
+import { notFound } from "next/navigation";
+import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
+import rehypePrettyCode, {
+  type Options as PrettyCodeOptions,
+} from "rehype-pretty-code";
 import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
+import {
+  AuthorCard,
+  Avatar,
+  PostNavigation,
+} from "@/components/blog/post-footer";
+import { ReadingProgress } from "@/components/blog/reading-progress";
+import {
+  TableOfContents,
+  TableOfContentsDisclosure,
+} from "@/components/blog/table-of-contents";
+import { createMdxComponents } from "@/components/mdx-components";
+import { getAdjacentPosts, getBlogPosts, getPost } from "@/data/blog";
+import { CURRENT_ROLE, DATA } from "@/data/resume";
+import { postOgImage } from "@/lib/og";
+import { getLocalImageSize, rehypeImageSize } from "@/lib/rehype-image-size";
+import { remarkMermaid } from "@/lib/remark-mermaid";
+import { formatDate } from "@/lib/utils";
+import "../article.css";
+
+type Params = Promise<{ slug: string }>;
+
+/** Only slugs from content/ exist; anything else is a static 404. */
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+const prettyCodeOptions: PrettyCodeOptions = {
+  theme: { light: "github-light", dark: "github-dark-dimmed" },
+  keepBackground: false,
+  defaultLang: { block: "plaintext" },
+};
+
+/**
+ * rehype-raw rebuilds the tree and drops `node.data`, which is where the code
+ * fence meta (```json title="x.json") lives. Copy it to a property first;
+ * rehype-pretty-code reads `properties.metastring` as a fallback.
+ */
+function rehypePreserveCodeMeta() {
+  type Node = {
+    tagName?: string;
+    data?: { meta?: string };
+    properties?: Record<string, unknown>;
+    children?: Node[];
+  };
+  const walk = (node: Node) => {
+    if (node.tagName === "code" && node.data?.meta && node.properties) {
+      node.properties.metastring = node.data.meta;
+    }
+    node.children?.forEach(walk);
+  };
+  return (tree: Node) => walk(tree);
+}
+
+type MdxOptions = NonNullable<MDXRemoteProps["options"]>["mdxOptions"];
+
+const mdxOptions: MdxOptions = {
+  remarkPlugins: [remarkMermaid, remarkGfm],
+  rehypePlugins: [
+    rehypePreserveCodeMeta,
+    [
+      rehypeRaw,
+      {
+        passThrough: [
+          "mdxJsxFlowElement",
+          "mdxJsxTextElement",
+          "mdxFlowExpression",
+          "mdxTextExpression",
+        ],
+      },
+    ],
+    rehypeSlug,
+    rehypeImageSize,
+    [rehypePrettyCode, prettyCodeOptions],
+  ],
+};
+
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata | undefined> {
+  params: Params;
+}): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
+  if (!post) return { title: "Not found" };
 
-  const {
-    title,
-    publishedAt: publishedTime,
-    summary: description,
-    image,
-  } = post.metadata;
+  const { title, publishedAt, summary, image } = post.metadata;
+  const url = `/blog/${slug}/`;
   const ogImage = image
-    ? `${DATA.url}${image}`
-    : `${DATA.url}${DATA.avatarUrl}`;
+    ? { url: image, ...getLocalImageSize(image), alt: title }
+    : { url: postOgImage(slug), width: 1200, height: 630, alt: title };
 
   return {
     title,
-    description,
+    description: summary,
+    alternates: { canonical: url },
     openGraph: {
       title,
-      description,
+      description: summary,
       type: "article",
-      publishedTime,
-      url: `${DATA.url}/blog/${post.slug}`,
-      images: [
-        {
-          url: ogImage,
-        },
-      ],
+      url,
+      publishedTime: publishedAt,
+      authors: [DATA.url],
+      images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title,
-      description,
-      images: [ogImage],
+      description: summary,
+      creator: "@xadhish",
+      images: [ogImage.url],
     },
   };
 }
 
-export default async function Blog({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+/** Hero frame: natural aspect ratio, narrowed so it never exceeds MAX_HERO_HEIGHT. */
+const HERO_WIDTH = 600;
+const MAX_HERO_HEIGHT = 520;
+
+function HeroImage({ src, alt }: { src: string; alt: string }) {
+  const size = getLocalImageSize(src);
+  if (!size) return null;
+  const display = Math.round(
+    Math.min(HERO_WIDTH, (MAX_HERO_HEIGHT * size.width) / size.height),
+  );
+  return (
+    <div className="mt-10 sm:mt-12">
+      <Image
+        src={src}
+        alt={alt}
+        width={size.width}
+        height={size.height}
+        priority
+        sizes={`(min-width: 768px) ${display}px, 100vw`}
+        style={{ maxWidth: display }}
+        className="mx-auto h-auto w-full rounded-xl border border-border/60 bg-secondary"
+      />
+    </div>
+  );
+}
+
+export default async function BlogPostPage({ params }: { params: Params }) {
   const { slug } = await params;
   const post = await getPost(slug);
+  if (!post) notFound();
 
-  if (!post) {
-    notFound();
-  }
+  const { newer, older } = await getAdjacentPosts(slug);
+  const { title, publishedAt, summary, image } = post.metadata;
+  // Skip the hero when the post body already shows the same image.
+  const showHero = Boolean(image) && !post.content.includes(image as string);
+  const hasToc = post.headings.length >= 2;
 
-  // Use the client components for MDX rendering
-  const components = {
-    Image: MDXImage,
-    a: MDXLink,
-    p: MDXParagraph,
-    pre: MDXPre,
-    code: MDXCode,
-    figure: MDXFigure,
-    figcaption: MDXFigcaption,
-    div: MDXDiv,
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    datePublished: publishedAt,
+    dateModified: publishedAt,
+    description: summary,
+    image: `${DATA.url}${image ?? postOgImage(slug)}`,
+    url: `${DATA.url}/blog/${slug}/`,
+    mainEntityOfPage: `${DATA.url}/blog/${slug}/`,
+    author: { "@type": "Person", name: DATA.name, url: DATA.url },
   };
 
-  // Calculate reading time
-  const words = post.rawContent.split(/\s+/).length;
-  const readingTime = Math.ceil(words / 200);
-
   return (
-    <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
-      <ScrollProgress className="top-0" />
+    <main className="container-page pb-12 pt-10 sm:pb-16 sm:pt-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ReadingProgress targetId="post-body" />
 
-      <section id="blog" className="relative">
-        <script
-          type="application/ld+json"
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BlogPosting",
-              headline: post.metadata.title,
-              datePublished: post.metadata.publishedAt,
-              dateModified: post.metadata.publishedAt,
-              description: post.metadata.summary,
-              image: post.metadata.image
-                ? `${DATA.url}${post.metadata.image}`
-                : `${DATA.url}${DATA.avatarUrl}`,
-              url: `${DATA.url}/blog/${post.slug}`,
-              author: {
-                "@type": "Person",
-                name: DATA.name,
-              },
-            }),
-          }}
-        />
-
-        {/* Back Button */}
-        <div className="mb-8">
-          <Link href="/blog">
-            <InteractiveHoverButton>Back to Blog</InteractiveHoverButton>
+      <article className="post-grid">
+        <header className="post-main animate-rise">
+          <Link
+            href="/blog/"
+            className="group -ml-1 inline-flex min-h-10 items-center gap-1.5 px-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft
+              aria-hidden
+              className="size-4 transition-transform duration-300 group-hover:-translate-x-0.5"
+            />
+            All writing
           </Link>
-        </div>
 
-        {/* Article Header */}
-        <header className="space-y-6 mb-12">
-          <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-              {formatDate(post.metadata.publishedAt)}
+          <p className="mt-8 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-muted-foreground sm:mt-10">
+            <time dateTime={publishedAt}>{formatDate(publishedAt)}</time>
+            <span aria-hidden className="mx-2">
+              ·
+            </span>
+            {post.readingTime} min read
+          </p>
+
+          <h1 className="mt-4 text-balance font-serif text-[2.6rem] leading-[1.05] tracking-tight sm:text-[3.5rem] sm:leading-[1.02]">
+            {title}
+          </h1>
+
+          {summary && (
+            <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl sm:leading-relaxed">
+              {summary}
             </p>
+          )}
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight leading-tight">
-              {post.metadata.title}
-            </h1>
-
-            {post.metadata.summary && (
-              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl leading-relaxed">
-                {post.metadata.summary}
-              </p>
-            )}
+          <div className="mt-8 flex items-center gap-3 border-t border-border/60 pt-6">
+            <Avatar className="size-8" />
+            <p className="text-sm leading-tight">
+              <span className="font-medium">{DATA.name}</span>
+              <span className="block text-[0.8125rem] text-muted-foreground">
+                {CURRENT_ROLE.title}, {CURRENT_ROLE.company}
+              </span>
+            </p>
           </div>
 
-          <div className="flex items-center gap-6 text-sm text-muted-foreground pt-4 border-t border-border/40">
-            <span>{readingTime} min read</span>
-            <span>•</span>
-            <span>By {DATA.name}</span>
-          </div>
+          {showHero && <HeroImage src={image as string} alt={title} />}
+
+          {post.headings.length >= 4 && (
+            <div className="mt-10 xl:hidden">
+              <TableOfContentsDisclosure headings={post.headings} />
+            </div>
+          )}
         </header>
 
-        {/* Hero Image */}
-        {post.metadata.image && (
-          <div className="relative w-full h-[400px] overflow-hidden rounded-xl shadow-md mb-10">
-            <Image
-              src={post.metadata.image}
-              alt={post.metadata.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 1024px"
-            />
-          </div>
+        {hasToc && (
+          <aside className="post-rail hidden xl:block">
+            <div className="sticky top-28 max-h-[calc(100dvh-9rem)] overflow-y-auto pb-6">
+              <TableOfContents headings={post.headings} />
+            </div>
+          </aside>
         )}
 
-        {/* Article Content */}
-        <article
-          className="prose prose-lg dark:prose-invert max-w-none
-          prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight
-          prose-h1:text-4xl prose-h1:mt-12 prose-h1:mb-6
-          prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4
-          prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3
-          prose-p:leading-relaxed prose-p:text-foreground/90
-          prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-          prose-strong:text-foreground prose-strong:font-semibold
-          prose-code:text-accent prose-code:bg-muted/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
-          prose-pre:bg-muted/30 prose-pre:border prose-pre:border-border/40
-          prose-img:rounded-lg prose-img:shadow-lg
-          prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:italic
-          prose-li:marker:text-muted-foreground
-          prose-table:w-full prose-table:border-collapse prose-table:my-6
-          prose-th:border prose-th:border-border/40 prose-th:bg-muted/30 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-semibold
-          prose-td:border prose-td:border-border/40 prose-td:px-4 prose-td:py-2
-        "
+        <div
+          id="post-body"
+          className="post-main article prose mt-12 max-w-none sm:mt-14"
         >
           <MDXRemote
-            source={post.rawContent}
-            components={components}
-            options={{
-              mdxOptions: {
-                remarkPlugins: [remarkMermaid, remarkGfm],
-                rehypePlugins: [
-                  [
-                    rehypeRaw,
-                    {
-                      passThrough: [
-                        "mdxJsxFlowElement",
-                        "mdxJsxTextElement",
-                        "mdxFlowExpression",
-                        "mdxTextExpression",
-                      ],
-                    },
-                  ],
-                  [
-                    rehypePrettyCode,
-                    {
-                      theme: {
-                        dark: "github-dark-dimmed",
-                        light: "github-light",
-                      },
-                      keepBackground: true,
-                      defaultLang: "plaintext",
-                    },
-                  ],
-                ],
-              },
-            }}
+            source={post.content}
+            components={createMdxComponents({ leadImage: image })}
+            options={{ mdxOptions }}
           />
-        </article>
-
-        {/* Author CTA */}
-        <div className="mt-16 pt-8 border-t border-border/40 space-y-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 p-6 rounded-2xl bg-muted/30 border border-border/40">
-            <Avatar className="size-16 border">
-              <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
-              <AvatarFallback>{DATA.initials}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-2">
-              <h3 className="font-heading font-semibold text-lg">
-                Want to discuss this further?
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                I&apos;m always happy to chat about AI, ML, or interesting
-                engineering challenges.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Link
-                href={`mailto:${DATA.contact.email}`}
-                className="inline-flex items-center justify-center px-6 py-2.5 bg-foreground text-background rounded-lg text-sm font-medium hover:bg-foreground/90 transition-colors"
-              >
-                Get in Touch
-              </Link>
-              <Link
-                href={DATA.contact.social.X.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-4 py-2 border border-border rounded-lg text-sm font-medium hover:bg-muted/50 transition-colors gap-2"
-              >
-                <Icons.x className="h-4 w-4" />
-                DM on X
-              </Link>
-            </div>
-          </div>
-
-          <Link href="/blog">
-            <InteractiveHoverButton>Back to Blog</InteractiveHoverButton>
-          </Link>
         </div>
-      </section>
-    </div>
+
+        <footer className="post-main mt-16 space-y-4 sm:mt-20">
+          <AuthorCard />
+          <PostNavigation newer={newer} older={older} />
+        </footer>
+      </article>
+    </main>
   );
 }

@@ -1,199 +1,104 @@
-import { TextAnimate } from "@/components/ui/text-animate";
-import { MagicCard } from "@/components/ui/magic-card";
-import { BorderBeam } from "@/components/ui/border-beam";
-import { getPinnedPosts, getRegularPosts, type BlogPost } from "@/data/blog";
-import Link from "next/link";
-import Image from "next/image";
-import { GridPattern } from "@/components/ui/grid-pattern";
-import { PinIcon } from "lucide-react";
+import { ArrowUpRight } from "@phosphor-icons/react/ssr";
+import type { Metadata } from "next";
+import { PinnedPostCard, PostArchive } from "@/components/blog/post-index";
+import { getBlogPosts, getPinnedPosts } from "@/data/blog";
+import { buildWritingTimeline, MEDIUM_PROFILE_URL } from "@/data/medium";
+import { siteOgImage } from "@/lib/og";
 
-export const metadata = {
-  title: "Blog",
-  description: "My thoughts on software development, AI/ML, and engineering.",
+const title = "Writing";
+const description =
+  "Adhish Thite's notes from building with LLMs and agents, write-ups of his side projects, and a few setup guides.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: { canonical: "/blog/" },
+  openGraph: {
+    title,
+    description,
+    url: "/blog/",
+    type: "website",
+    images: [{ url: siteOgImage(), width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [siteOgImage()],
+  },
 };
 
-export default async function BlogPage() {
-  const [pinnedPosts, regularPosts] = await Promise.all([
-    getPinnedPosts(),
-    getRegularPosts(),
-  ]);
-
-  // Calculate reading time (rough estimate: 200 words per minute)
-  const getReadingTime = (rawContent: string) => {
-    const words = rawContent.split(/\s+/).length;
-    const minutes = Math.ceil(words / 200);
-    return `${minutes} min read`;
-  };
-
-  // Reusable blog card renderer
-  const renderBlogCard = (
-    post: BlogPost,
-    options: { featured?: boolean; compact?: boolean } = {},
-  ) => {
-    const hasImage = !!post.metadata.image;
-    const contentPaddingClass = options.compact ? "p-5" : "p-8";
-
-    return (
-      <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
-        <MagicCard
-          className={`h-full transition-all duration-300 rounded-2xl border border-border/40 hover:border-accent/50 overflow-hidden ${
-            options.featured ? "md:col-span-2" : ""
-          } ${hasImage ? "" : `${contentPaddingClass} flex flex-col justify-center`}`}
-          gradientColor="#5B122D"
-          gradientColorDark="#d4a5a5"
-          gradientOpacity={0.15}
-        >
-          {/* Thumbnail image */}
-          {hasImage && (
-            <div className="relative w-full aspect-[5/2]">
-              <Image
-                src={post.metadata.image as string}
-                alt={post.metadata.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-              />
-            </div>
-          )}
-
-          <div
-            className={`${hasImage ? contentPaddingClass : ""} ${options.compact ? "space-y-2" : "space-y-4"}`}
-          >
-            {/* Date & Pin indicator */}
-            <div className="flex items-center justify-between">
-              <time className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-                {new Date(post.metadata.publishedAt).toLocaleDateString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  },
-                )}
-              </time>
-              {options.compact && (
-                <span className="flex items-center gap-1 text-xs text-accent font-medium">
-                  <PinIcon className="size-3 fill-accent" />
-                </span>
-              )}
-            </div>
-
-            {/* Title */}
-            <h2
-              className={`font-heading font-bold tracking-tight group-hover:text-accent transition-colors ${
-                options.compact
-                  ? "text-lg md:text-xl line-clamp-2"
-                  : "text-2xl md:text-3xl"
-              }`}
-            >
-              {post.metadata.title}
-            </h2>
-
-            {/* Summary - hidden on compact */}
-            {!options.compact && post.metadata.summary && (
-              <p className="text-muted-foreground leading-relaxed line-clamp-2">
-                {post.metadata.summary}
-              </p>
-            )}
-
-            {/* Reading Time & Arrow */}
-            <div
-              className={`flex items-center justify-between ${options.compact ? "pt-2" : "pt-4"}`}
-            >
-              <span className="text-sm text-muted-foreground">
-                {getReadingTime(post.rawContent)}
-              </span>
-              <span className="text-accent group-hover:translate-x-2 transition-transform">
-                →
-              </span>
-            </div>
-          </div>
-          {options.featured && (
-            <BorderBeam size={250} duration={12} delay={9} />
-          )}
-        </MagicCard>
-      </Link>
-    );
-  };
+export default async function BlogIndexPage() {
+  const [posts, pinned] = await Promise.all([getBlogPosts(), getPinnedPosts()]);
+  const items = buildWritingTimeline(posts);
+  const mediumCount = items.filter((item) => item.kind === "medium").length;
+  const firstYear = items.at(-1)?.publishedAt.slice(0, 4);
 
   return (
-    <div className="max-w-5xl mx-auto py-12 sm:py-24 px-6">
-      <section className="relative">
-        <div className="absolute inset-0 -z-10 h-full w-full">
-          <GridPattern
-            width={40}
-            height={40}
-            strokeDasharray={"4 2"}
-            className="fill-neutral-200/5 stroke-neutral-200/20 dark:fill-neutral-800/5 dark:stroke-neutral-800/20"
-            x={-1}
-            y={-1}
+    <main className="container-page pb-12 pt-16 sm:pb-16 sm:pt-24">
+      <header className="max-w-2xl animate-rise">
+        <p className="eyebrow">
+          {items.length} {items.length === 1 ? "post" : "posts"}
+          {mediumCount > 0 ? ` · ${mediumCount} on Medium` : ""}
+          {firstYear ? ` · since ${firstYear}` : ""}
+        </p>
+        <h1 className="mt-5 font-serif text-6xl leading-[1.02] tracking-tight sm:text-7xl">
+          Writing
+        </h1>
+        <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
+          Notes from building with LLMs and agents, write-ups of my side
+          projects, and a few setup guides.
+        </p>
+        <a
+          href={MEDIUM_PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mt-4 inline-flex min-h-10 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Also on Medium
+          <ArrowUpRight
+            aria-hidden
+            className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
           />
-        </div>
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      </header>
 
-        <div className="space-y-12">
-          {/* Header */}
-          <div className="space-y-4">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-              Blog
-            </p>
-            <TextAnimate
-              animation="blurInUp"
-              by="word"
-              className="text-4xl md:text-5xl font-heading font-bold tracking-tight"
-            >
-              Thoughts & Insights
-            </TextAnimate>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Writings on software development, AI/ML, and engineering best
-              practices.
-            </p>
+      {pinned.length > 0 && (
+        <section
+          aria-labelledby="pinned-heading"
+          className="mt-16 animate-rise sm:mt-20"
+          style={{ animationDelay: "80ms" }}
+        >
+          <h2 id="pinned-heading" className="eyebrow mb-5">
+            Pinned
+          </h2>
+          <div className="grid gap-4 md:grid-cols-3 md:gap-5">
+            {pinned.map((post, index) => (
+              <PinnedPostCard
+                key={post.slug}
+                post={post}
+                priority={index < 3}
+              />
+            ))}
           </div>
+        </section>
+      )}
 
-          {/* Pinned Posts Section */}
-          {pinnedPosts.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <PinIcon className="size-4 text-accent fill-accent" />
-                <h2 className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
-                  Pinned
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {pinnedPosts.map((post) =>
-                  renderBlogCard(post, { compact: true }),
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Regular Posts Section */}
-          {regularPosts.length > 0 && (
-            <div className="space-y-6">
-              {pinnedPosts.length > 0 && (
-                <h2 className="text-sm uppercase tracking-widest text-muted-foreground font-medium">
-                  All Posts
-                </h2>
-              )}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {regularPosts.map((post, idx) =>
-                  renderBlogCard(post, {
-                    featured: idx === 0 && pinnedPosts.length === 0,
-                  }),
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Empty State */}
-          {pinnedPosts.length === 0 && regularPosts.length === 0 && (
-            <div className="text-center py-24">
-              <p className="text-muted-foreground">
-                No posts yet. Check back soon!
-              </p>
-            </div>
-          )}
-        </div>
+      <section
+        aria-labelledby="archive-heading"
+        className="mt-20 animate-rise sm:mt-24"
+        style={{ animationDelay: "140ms" }}
+      >
+        <h2 id="archive-heading" className="eyebrow mb-8">
+          All posts
+        </h2>
+        {items.length > 0 ? (
+          <PostArchive items={items} />
+        ) : (
+          <p className="text-muted-foreground">Nothing published yet.</p>
+        )}
       </section>
-    </div>
+    </main>
   );
 }

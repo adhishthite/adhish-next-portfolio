@@ -16,7 +16,7 @@ description: >-
 
 - Posts are MDX files at `content/<slug>.mdx`. The **slug is the filename** (no `.mdx`), and it's also the URL path.
 - Images live in `public/blog/<slug>/` and are referenced as `/blog/<slug>/<file>`.
-- **OG image:** 1200×630px (1.91:1). Set it in frontmatter `image`; it falls back to the avatar if omitted.
+- **OG image:** 1200×630px (1.91:1). Set it in frontmatter `image`; if omitted, a branded card with the post title is generated automatically (`/og/blog/<slug>.png`).
 
 ## Frontmatter
 
@@ -38,6 +38,8 @@ The `summary` shows on listing cards and in social previews, so it has to read h
 - GitHub-Flavored Markdown (`remark-gfm`): tables, task lists, strikethrough.
 - Fenced code blocks with a language get Shiki highlighting (```` ```swift ````, ```` ```bash ````, etc.).
 - Mermaid diagrams render via the theme-aware `mermaid` component — use a ```` ```mermaid ```` block.
+- Don't start the body with `# Title` — the page renders the title (a leading H1 is stripped anyway). Use `##`/`###` for sections; they feed the table of contents.
+- Markdown images (`![alt](/blog/<slug>/x.png)`) are sized at build time and served through `next/image`, so large screenshots are fine — but always write real alt text.
 - Inline JSX and `<a>` links are fine; keep attributes valid so the MDX compiles.
 
 ## Write it human from the start
@@ -70,3 +72,7 @@ image: "/blog/<slug>/og.png"
 - Create `public/blog/<slug>/` for images if the post has any.
 - Run `make build` to confirm the MDX compiles (a stray `<` or `{` can break MDX rendering).
 - Consider a final pass with the `humanize-blog-copy` skill before publishing.
+
+## Medium posts
+
+Posts published on Medium aren't MDX files. Add them by hand to the top of `MEDIUM_POSTS` in `src/data/medium.ts` (title, `publishedAt`, URL without the `?source=` query, one-line summary taken from the post's own subtitle). They appear in the `/blog/` archive and the homepage teaser as external links, and are deliberately left out of the RSS feed and sitemap.

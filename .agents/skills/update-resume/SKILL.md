@@ -16,9 +16,17 @@ All profile/résumé content is structured data in **`src/data/resume.tsx`** (th
 
 ## What actually renders
 
-The homepage (`src/app/page.tsx`) renders only these sections: **hero** (name, avatar, `summary`, `location`, `contact`), **Work Experience** (`DATA.work`), **Skills** (marquee of `DATA.skills`), **Certifications** (`DATA.certificates`), and **Contact**.
+The homepage (`src/app/page.tsx` + `src/components/home/*`) renders, in order (section eyebrows are unnumbered):
 
-`DATA.education`, `DATA.projects`, and `DATA.hackathons` exist in the file but are **not rendered** (legacy). Don't put new content there expecting it to show up.
+- **Hero** — `name`, `avatarUrl` (`/portrait.jpg`), `summary`, `location`, contact links, and `CURRENT_ROLE` (exported from `resume.tsx`: the first `work` entry with `end: "Present"` and no badges). The hero's fact row (Based in / Experience / Focus) lives in `src/components/home/hero.tsx`; the Focus value is hand-written there.
+- **Experience** — `DATA.work`. Entries badged `"Internship"` or `"Assistantship"` move to a smaller "Internships & research" list; everything else is a main row with expandable bullets.
+- **Expertise** — `DATA.expertise` (`{ title, primary?, summary, items }[]`): the four headline areas (Enterprise AI Architecture, Agentic AI, Generative AI & LLMs, Machine Learning) shown as large cards; `primary: true` (currently the first two) adds the "Primary focus" marker, then `DATA.skillGroups` (`{ label, items }[]`) as the "Tools & platforms" band. Keep items grounded in real work (roles, projects, posts).
+- **Selected work** — `DATA.projects` (`title`, `year`, `description`, `tags`, `image`, `links[]`). Order = display order. The first link is the project itself (live site or repo) and is what the card's image and title open; the homepage deliberately doesn't link projects to blog posts. `image: ""` gets a typographic cover.
+- **Education & certifications** — `DATA.education`, plus four featured certificates named in the `FEATURED` list in `src/components/home/education.tsx`; the rest sit behind "Show all".
+- **From the blog** — a small teaser with the 3 latest post titles (automatic). The blog is kept separate from the portfolio; don't add more blog content to the homepage.
+- **Contact** — `contact.email` and the X link.
+
+The site header nav reads `DATA.navbar`; the footer and JSON-LD read `CURRENT_ROLE`, so a job switch updates them automatically.
 
 ## `work` entry schema
 
@@ -53,15 +61,16 @@ There is **no description field** on certificates — only name/issuer/date/link
 ## Where to place a new item
 
 - **Full-time job / role** → `work` entry.
-- **Plain credential** (course, exam, badge with no narrative) → `certificates` entry.
+- **Plain credential** (course, exam, badge with no narrative) → `certificates` entry. Add its `name` to `FEATURED` in `src/components/home/education.tsx` if it should show without expanding. `iconUrl` is no longer rendered.
 - **Ambassador / advisor / community role with real activity to describe** → `work` entry with a `badge` (e.g. `["Ambassador"]`). Certificates can't hold the bullets, so use `work` even though it's not a 9-to-5. The badge keeps it visually distinct in the timeline.
-- If community/recognition items start to pile up, that's the signal to build a dedicated section (new `DATA` key + component in `page.tsx`) rather than stretching `certificates`.
+- **Side project worth showing** → `DATA.projects` entry, using only facts from its blog post.
+- If community/recognition items start to pile up, that's the signal to build a dedicated section (new `DATA` key + component in `src/components/home/`) rather than stretching `certificates`.
 
 ## Logos
 
 - Live as local files in `public/` (e.g. `/elastic.svg`, `/google.svg`). Reference them via `logoUrl` (work) or `iconUrl` (certs, which also accept remote URLs).
-- Rendered through an `Avatar`/`AvatarImage` (a plain `<img>`), with a **letter fallback** (`company[0]`) if the file is missing — so a wrong path degrades gracefully rather than breaking.
-- **Prefer square, dual-theme-visible SVGs.** A wide wordmark gets squished in the circular avatar; a black-only mark vanishes in dark mode.
+- Rendered with `next/image` in a small rounded tile on a white background (so dark marks stay visible in dark mode). An entry without `logoUrl` gets a serif monogram (`company[0]`). Use local files only — remote logo URLs expire (the old LinkedIn CDN one did).
+- **Prefer square SVGs.** A wide wordmark gets squished in the square tile.
 - **Sourcing** (verified in this sandbox): `upload.wikimedia.org` works well for full-color brand SVGs. `cdn.simpleicons.org` is blocked, but the same icons are reachable via `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/<slug>.svg` or `unpkg.com`. Simple-icons marks are monochrome — tint them so they read on both themes, e.g. `sed 's/<svg /<svg fill="#10A37F" /'`. Always validate the download is real SVG (`head -c 60 file.svg | grep -qi '<svg'`).
 
 ## Voice & honesty
