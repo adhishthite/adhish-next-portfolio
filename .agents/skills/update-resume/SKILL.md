@@ -38,7 +38,7 @@ The `work` array is **ordered newest-first by start date**. Each entry:
   href: "https://google.com",          // company site or LinkedIn
   badges: [],                          // e.g. ["Internship"], ["Ambassador"]
   location: "Mumbai, India",           // or "Remote"
-  title: "Sr. Solutions Architect, AI",
+  title: "Sr. AI Architect",
   logoUrl: "/google.svg",              // local file in public/ (see Logos)
   start: "Jun 2026",                   // "Mon YYYY"
   end: "Present",                      // "Present" for current, else "Mon YYYY"

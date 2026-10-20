@@ -10,7 +10,7 @@ export const DATA = {
   url: "https://www.adhishthite.com",
   location: "Pune, India",
   locationLink: "https://www.google.com/maps/place/pune",
-  description: `Sr. Solutions Architect, AI at Google. ${YEARS_OF_EXPERIENCE}+ years in applied AI, now focused on enterprise AI architecture and agentic AI in production.`,
+  description: `Sr. AI Architect at Google. ${YEARS_OF_EXPERIENCE}+ years in applied AI, now focused on enterprise AI architecture and agentic AI in production.`,
   summary: `I help enterprises put Gemini and the rest of Google's AI stack into production. Most of my work starts where the demo ends: architecture, evaluation, latency and cost, the things that decide whether a model or a harness holds up in front of real customers. Before Google I led AI engineering at Elastic and spent four years building fraud, sign-up risk and identity-verification models at Synapse. I'm also one of OpenAI's Codex Ambassadors, testing pre-release models against real engineering work.`,
   avatarUrl: "/portrait.jpg",
   /**
@@ -177,7 +177,7 @@ export const DATA = {
       href: "https://google.com",
       badges: [],
       location: "Mumbai, India",
-      title: "Sr. Solutions Architect, AI",
+      title: "Sr. AI Architect",
       logoUrl: "/google.svg",
       start: "Jun 2026",
       end: "Present",
