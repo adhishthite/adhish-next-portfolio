@@ -28,7 +28,7 @@ function ExpertiseCard({ area, primary }: { area: Area; primary: boolean }) {
           aria-hidden
           className="inline-flex size-10 items-center justify-center rounded-lg border border-border/70 bg-background text-foreground/80"
         >
-          <Icon className="size-[22px]" weight="duotone" />
+          <Icon className="size-[1.375rem]" weight="duotone" />
         </span>
         {primary ? (
           <span className="eyebrow inline-flex items-center gap-2">
@@ -41,7 +41,7 @@ function ExpertiseCard({ area, primary }: { area: Area; primary: boolean }) {
       <h3 className="mt-6 font-serif text-[1.875rem] leading-[1.1] tracking-tight sm:text-[2.125rem]">
         {area.title}
       </h3>
-      <p className="mt-3 max-w-[52ch] text-[15px] leading-relaxed text-muted-foreground">
+      <p className="mt-3 max-w-[52ch] text-[0.9375rem] leading-relaxed text-muted-foreground">
         {area.summary}
       </p>
 
@@ -51,7 +51,7 @@ function ExpertiseCard({ area, primary }: { area: Area; primary: boolean }) {
           {area.items.map((item) => (
             <li
               key={item}
-              className="flex items-baseline gap-2.5 border-b border-border/40 py-2.5 text-[14.5px] leading-snug text-foreground/85"
+              className="flex items-baseline gap-2.5 border-b border-border/40 py-2.5 text-[0.90625rem] leading-snug text-foreground/85"
             >
               <span
                 aria-hidden
@@ -95,7 +95,7 @@ export function Expertise() {
             <div key={group.label}>
               {/* Reserve two lines so lists start level when a label wraps on narrow screens */}
               <h4 className="eyebrow min-h-[2lh] sm:min-h-0">{group.label}</h4>
-              <ul className="mt-3 space-y-1.5 text-[15px] text-foreground/85">
+              <ul className="mt-3 space-y-1.5 text-[0.9375rem] text-foreground/85">
                 {group.items.map((item) => (
                   <li key={item}>{item}</li>
                 ))}

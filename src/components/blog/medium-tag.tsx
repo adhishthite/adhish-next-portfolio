@@ -7,7 +7,7 @@ export function MediumTag({ className }: { className?: string }) {
     <span
       aria-hidden
       className={cn(
-        "inline-flex shrink-0 items-center rounded-full border border-border px-1.5 py-[3px] font-mono text-[10px] uppercase leading-none tracking-[0.12em] text-muted-foreground",
+        "inline-flex shrink-0 items-center rounded-full border border-border px-1.5 py-[3px] font-mono text-[0.625rem] uppercase leading-none tracking-[0.12em] text-muted-foreground",
         className,
       )}
     >

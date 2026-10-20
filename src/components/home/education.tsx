@@ -58,7 +58,7 @@ function SchoolMark({ school }: { school: School }) {
 function CertificateRow({ cert }: { cert: Certificate }) {
   const content = (
     <>
-      <span className="text-[15px] leading-snug text-foreground">
+      <span className="text-[0.9375rem] leading-snug text-foreground">
         {cert.name}
         {cert.url ? (
           <ArrowUpRight
@@ -67,7 +67,7 @@ function CertificateRow({ cert }: { cert: Certificate }) {
           />
         ) : null}
       </span>
-      <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+      <span className="mt-1 block font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-muted-foreground">
         {cert.issuer} · {year(cert.date)}
       </span>
     </>
@@ -116,7 +116,7 @@ export function Education() {
                       href={school.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="-my-2.5 py-2.5 text-[15px] font-medium tracking-tight decoration-accent/50 underline-offset-[5px] hover:underline"
+                      className="-my-2.5 py-2.5 text-[0.9375rem] font-medium tracking-tight decoration-accent/50 underline-offset-[5px] hover:underline"
                     >
                       {school.school}
                     </a>

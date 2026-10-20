@@ -61,7 +61,7 @@ function Logo({
       <span
         className={cn(
           "font-serif leading-none text-muted-foreground",
-          compact ? "text-[13px]" : "text-base",
+          compact ? "text-[0.8125rem]" : "text-base",
         )}
       >
         {entry.company.charAt(0)}
@@ -113,7 +113,7 @@ export function ExperienceItem({
         <span
           className={cn(
             "hidden font-mono tabular-nums text-muted-foreground sm:block",
-            compact ? "text-[11px]" : "text-xs",
+            compact ? "text-[0.6875rem]" : "text-xs",
           )}
         >
           {dates}
@@ -127,7 +127,7 @@ export function ExperienceItem({
                 "flex flex-wrap items-center gap-x-2.5 gap-y-1 tracking-tight",
                 compact
                   ? "text-sm text-foreground/85"
-                  : "text-[15px] font-medium sm:text-base",
+                  : "text-[0.9375rem] font-medium sm:text-base",
               )}
             >
               <button
@@ -142,7 +142,7 @@ export function ExperienceItem({
               {badges.map((badge) => (
                 <span
                   key={badge}
-                  className="rounded-full border border-border/80 px-1.5 py-px font-mono text-[10px] font-normal uppercase tracking-[0.08em] text-muted-foreground"
+                  className="rounded-full border border-border/80 px-1.5 py-px font-mono text-[0.625rem] font-normal uppercase tracking-[0.08em] text-muted-foreground"
                 >
                   {badge}
                 </span>
@@ -151,7 +151,7 @@ export function ExperienceItem({
             <p
               className={cn(
                 "mt-0.5 truncate text-muted-foreground",
-                compact ? "text-[13px]" : "text-sm",
+                compact ? "text-[0.8125rem]" : "text-sm",
               )}
             >
               <a
@@ -169,7 +169,7 @@ export function ExperienceItem({
                 {entry.location}
               </span>
             </p>
-            <p className="mt-1 font-mono text-[11px] tabular-nums text-muted-foreground sm:hidden">
+            <p className="mt-1 font-mono text-[0.6875rem] tabular-nums text-muted-foreground sm:hidden">
               {dates}
             </p>
           </div>
@@ -204,10 +204,10 @@ export function ExperienceItem({
             )}
           >
             <div className="sm:pl-[2.875rem]">
-              <p className="mb-3 text-[13px] text-muted-foreground md:hidden">
+              <p className="mb-3 text-[0.8125rem] text-muted-foreground md:hidden">
                 {entry.location}
               </p>
-              <ul className="max-w-[68ch] space-y-2 text-[15px] leading-relaxed text-muted-foreground">
+              <ul className="max-w-[68ch] space-y-2 text-[0.9375rem] leading-relaxed text-muted-foreground">
                 {bullets(entry.description).map((item) => (
                   <li key={item} className="relative pl-4">
                     <span

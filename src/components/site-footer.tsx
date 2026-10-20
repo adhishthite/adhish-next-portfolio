@@ -49,7 +49,7 @@ export function SiteFooter() {
               );
             })}
           </ul>
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted-foreground">
             © {new Date().getFullYear()} {DATA.name}
           </p>
         </div>

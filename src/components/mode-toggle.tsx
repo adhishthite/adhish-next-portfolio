@@ -18,8 +18,8 @@ export function ModeToggle({ className }: { className?: string }) {
       )}
     >
       {/* Both icons render; CSS picks one so there is no hydration flash */}
-      <Sun className="size-[17px] dark:hidden" />
-      <Moon className="hidden size-[17px] dark:block" />
+      <Sun className="size-[1.0625rem] dark:hidden" />
+      <Moon className="hidden size-[1.0625rem] dark:block" />
     </button>
   );
 }

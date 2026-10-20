@@ -22,7 +22,7 @@ export default function NotFound() {
           There&rsquo;s no page <em className="italic">here.</em>
         </h1>
         <p
-          className="animate-rise mt-6 max-w-md text-[17px] leading-relaxed text-muted-foreground"
+          className="animate-rise mt-6 max-w-md text-[1.0625rem] leading-relaxed text-muted-foreground"
           style={{ animationDelay: "160ms" }}
         >
           The link may be out of date, or the page has moved.

@@ -132,7 +132,7 @@ function TocList({
   roomy?: boolean;
 }) {
   return (
-    <ol className={cn("text-[13px] leading-snug", roomy && "text-sm")}>
+    <ol className={cn("text-[0.8125rem] leading-snug", roomy && "text-sm")}>
       {headings.map((heading) => {
         const isActive = heading.id === active;
         return (
@@ -198,7 +198,7 @@ export function TableOfContentsDisclosure({
     <details className="group rounded-lg border border-border/70 bg-card">
       <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 text-sm font-medium [&::-webkit-details-marker]:hidden">
         <span>On this page</span>
-        <span className="font-mono text-[11px] text-muted-foreground">
+        <span className="font-mono text-[0.6875rem] text-muted-foreground">
           {sections} {sections === 1 ? "section" : "sections"}
           <span
             aria-hidden

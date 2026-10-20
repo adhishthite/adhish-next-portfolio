@@ -198,7 +198,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             All writing
           </Link>
 
-          <p className="mt-8 font-mono text-[12px] uppercase tracking-[0.12em] text-muted-foreground sm:mt-10">
+          <p className="mt-8 font-mono text-[0.75rem] uppercase tracking-[0.12em] text-muted-foreground sm:mt-10">
             <time dateTime={publishedAt}>{formatDate(publishedAt)}</time>
             <span aria-hidden className="mx-2">
               ·
@@ -220,7 +220,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             <Avatar className="size-8" />
             <p className="text-sm leading-tight">
               <span className="font-medium">{DATA.name}</span>
-              <span className="block text-[13px] text-muted-foreground">
+              <span className="block text-[0.8125rem] text-muted-foreground">
                 {CURRENT_ROLE.title}, {CURRENT_ROLE.company}
               </span>
             </p>

@@ -16,7 +16,7 @@ export function Contact() {
         >
           Have something in <em className="italic">mind?</em>
         </h2>
-        <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-muted-foreground sm:text-[17px]">
+        <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-muted-foreground sm:text-[1.0625rem]">
           Email is the best way to reach me. A DM on{" "}
           <a
             href={DATA.contact.social.X.url}
@@ -35,7 +35,7 @@ export function Contact() {
           >
             Email me
           </a>
-          <span className="font-mono text-[13px] text-muted-foreground">
+          <span className="font-mono text-[0.8125rem] text-muted-foreground">
             {DATA.contact.email}
           </span>
         </div>

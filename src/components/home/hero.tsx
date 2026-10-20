@@ -70,7 +70,7 @@ export function Hero() {
           </p>
 
           <p
-            className="animate-rise-soft mt-6 max-w-[60ch] text-base leading-relaxed text-muted-foreground sm:text-[17px]"
+            className="animate-rise-soft mt-6 max-w-[60ch] text-base leading-relaxed text-muted-foreground sm:text-[1.0625rem]"
             style={rise(200)}
           >
             {DATA.summary}
@@ -141,7 +141,7 @@ export function Hero() {
 
         {/* Portrait: a small thumbnail above the name on mobile, a full column on desktop */}
         <figure
-          className="animate-rise-soft order-first w-[84px] md:order-none md:col-span-5 md:w-auto lg:col-span-4"
+          className="animate-rise-soft order-first w-[5.25rem] md:order-none md:col-span-5 md:w-auto lg:col-span-4"
           style={rise(0)}
         >
           <div className="relative aspect-[3/4] overflow-hidden rounded-lg border md:rounded-xl border-border/70 bg-muted shadow-[0_1px_2px_rgb(0_0_0/0.04)]">

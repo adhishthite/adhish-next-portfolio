@@ -94,7 +94,7 @@ function AdjacentLink({
         !older && "sm:col-start-2 sm:items-end sm:text-right",
       )}
     >
-      <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+      <span className="flex items-center gap-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted-foreground">
         {!older && <span>Newer</span>}
         <Arrow
           aria-hidden
@@ -107,7 +107,7 @@ function AdjacentLink({
         />
         {older && <span>Older</span>}
       </span>
-      <span className="text-pretty text-[15px] font-medium leading-snug">
+      <span className="text-pretty text-[0.9375rem] font-medium leading-snug">
         {post.metadata.title}
       </span>
     </Link>

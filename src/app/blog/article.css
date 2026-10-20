@@ -73,14 +73,14 @@
   --tw-prose-th-borders: hsl(var(--border));
   --tw-prose-td-borders: hsl(var(--border) / 0.7);
 
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.75;
   overflow-wrap: break-word;
 }
 
 @media (min-width: 640px) {
   .article.prose {
-    font-size: 17px;
+    font-size: 1.0625rem;
   }
 }
 
@@ -242,7 +242,7 @@
 .article thead th {
   padding: 0 0.85rem 0.7rem;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -307,7 +307,7 @@
   border-bottom: 1px solid hsl(var(--border) / 0.9);
   color: hsl(var(--muted-foreground));
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.5;
   text-align: left;
 }
@@ -319,7 +319,7 @@
   background: transparent;
   color: hsl(var(--foreground));
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.7;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -328,7 +328,7 @@
 
 @media (min-width: 640px) {
   .article .code-block pre {
-    font-size: 13.5px;
+    font-size: 0.84375rem;
   }
 }
 
@@ -435,7 +435,7 @@
 .article .article-figure figcaption {
   margin-top: 0.85rem;
   color: hsl(var(--muted-foreground));
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.5;
   text-align: center;
   text-wrap: balance;
@@ -528,7 +528,7 @@
   background: hsl(var(--card));
   color: hsl(var(--muted-foreground));
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition:
@@ -654,6 +654,6 @@
   border-radius: 12px;
   background: hsl(var(--code-bg));
   color: hsl(var(--muted-foreground));
-  font-size: 13px;
+  font-size: 0.8125rem;
   overflow-x: auto;
 }

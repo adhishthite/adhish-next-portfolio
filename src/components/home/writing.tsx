@@ -16,7 +16,7 @@ function TeaserRow({ item }: { item: WritingItem }) {
   const isMedium = item.kind === "medium";
   const body = (
     <>
-      <span className="line-clamp-2 min-w-0 text-[15px] text-foreground/90 decoration-accent/50 underline-offset-[5px] group-hover:underline sm:line-clamp-1">
+      <span className="line-clamp-2 min-w-0 text-[0.9375rem] text-foreground/90 decoration-accent/50 underline-offset-[5px] group-hover:underline sm:line-clamp-1">
         {item.title}
       </span>
       <span className="flex shrink-0 items-center gap-3 font-mono text-xs tabular-nums text-muted-foreground">

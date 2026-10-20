@@ -34,7 +34,7 @@ function GridCover({ project }: { project: Project }) {
         aria-hidden
         className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.6)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.6)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
       />
-      <span className="relative font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+      <span className="relative font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted-foreground">
         {project.tags.join(" / ")}
       </span>
       <span className="relative font-serif text-5xl leading-none tracking-tight sm:text-6xl">
@@ -59,7 +59,7 @@ function RuledCover({ project }: { project: Project }) {
       {/* Ruled lines with a line-number gutter, fading out to the right */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_27px,hsl(var(--border)/0.7)_27px)] bg-[size:100%_28px] [mask-image:linear-gradient(to_right,black_35%,transparent_95%)]"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_1.6875rem,hsl(var(--border)/0.7)_1.6875rem)] bg-[size:100%_1.75rem] [mask-image:linear-gradient(to_right,black_35%,transparent_95%)]"
       />
       <div
         aria-hidden
@@ -67,7 +67,7 @@ function RuledCover({ project }: { project: Project }) {
       />
       <ol
         aria-hidden
-        className="absolute left-0 top-0 w-11 font-mono text-[10px] leading-[28px] tabular-nums text-muted-foreground/50 sm:w-14"
+        className="absolute left-0 top-0 w-11 font-mono text-[0.625rem] leading-7 tabular-nums text-muted-foreground/50 sm:w-14"
       >
         {RULED_LINES.map((n) => (
           <li key={n} className="pr-3 text-right">
@@ -75,12 +75,12 @@ function RuledCover({ project }: { project: Project }) {
           </li>
         ))}
       </ol>
-      {/* Everything sits on the 28px rows: tags on row 2, title on rows 3-4, command on row 6 */}
+      {/* Everything sits on the 1.75rem rows: tags on row 2, title on rows 3-4, command on row 6 */}
       <div className="absolute inset-y-0 left-11 right-0 pl-5 pr-6 pt-7 sm:left-14 sm:pl-6 sm:pr-8">
-        <span className="block font-mono text-[11px] uppercase leading-7 tracking-[0.16em] text-muted-foreground">
+        <span className="block font-mono text-[0.6875rem] uppercase leading-7 tracking-[0.16em] text-muted-foreground">
           {project.tags.join(" / ")}
         </span>
-        <span className="block font-serif text-5xl leading-[56px] tracking-tight sm:text-6xl sm:leading-[56px]">
+        <span className="block font-serif text-5xl leading-[3.5rem] tracking-tight sm:text-6xl sm:leading-[3.5rem]">
           {project.title}
           <span className="text-accent">.</span>
         </span>
@@ -156,7 +156,7 @@ function ProjectCard({ project }: { project: Project }) {
         </span>
       </div>
 
-      <p className="mt-2 max-w-[56ch] text-[15px] leading-relaxed text-muted-foreground">
+      <p className="mt-2 max-w-[56ch] text-[0.9375rem] leading-relaxed text-muted-foreground">
         {project.description}
       </p>
 
@@ -164,7 +164,7 @@ function ProjectCard({ project }: { project: Project }) {
         {project.tags.map((tag) => (
           <li
             key={tag}
-            className="rounded-full border border-border/80 px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
+            className="rounded-full border border-border/80 px-2 py-0.5 font-mono text-[0.6875rem] text-muted-foreground"
           >
             {tag}
           </li>

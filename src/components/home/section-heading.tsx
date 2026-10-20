@@ -64,7 +64,7 @@ export function SectionHeading({
           {title}
         </h2>
         {intro ? (
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
+          <p className="mt-4 max-w-xl text-[0.9375rem] leading-relaxed text-muted-foreground sm:text-base">
             {intro}
           </p>
         ) : null}

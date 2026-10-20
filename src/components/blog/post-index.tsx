@@ -33,16 +33,16 @@ export function PinnedPostCard({
             className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         ) : (
-          <p className="absolute inset-0 hidden items-end p-5 font-serif md:flex text-[22px] italic leading-snug text-muted-foreground">
+          <p className="absolute inset-0 hidden items-end p-5 font-serif md:flex text-[1.375rem] italic leading-snug text-muted-foreground">
             <span className="line-clamp-3">{summary}</span>
           </p>
         )}
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-3 p-4 sm:p-5">
-        <h3 className="text-pretty text-[15.5px] font-medium leading-snug">
+        <h3 className="text-pretty text-[0.96875rem] font-medium leading-snug">
           {title}
         </h3>
-        <p className="mt-auto flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="mt-auto flex items-center justify-between font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted-foreground">
           <span>
             <time dateTime={publishedAt}>{formatDate(publishedAt)}</time>
             <span aria-hidden> · </span>
@@ -83,13 +83,13 @@ function ArchiveRow({ item }: { item: WritingItem }) {
       />
       <time
         dateTime={item.publishedAt}
-        className="font-mono text-[12px] uppercase tracking-[0.06em] text-muted-foreground tabular-nums"
+        className="font-mono text-[0.75rem] uppercase tracking-[0.06em] text-muted-foreground tabular-nums"
       >
         {formatDate(item.publishedAt, { month: "short", day: "numeric" })}
       </time>
       <span className="sr-only">: </span>
       <span className="min-w-0">
-        <span className="text-pretty text-[15.5px] font-medium leading-snug text-foreground/90 transition-colors group-hover:text-foreground">
+        <span className="text-pretty text-[0.96875rem] font-medium leading-snug text-foreground/90 transition-colors group-hover:text-foreground">
           {item.title}
         </span>
         {isMedium && (
@@ -102,7 +102,7 @@ function ArchiveRow({ item }: { item: WritingItem }) {
           </span>
         )}
       </span>
-      <span className="hidden items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground sm:flex">
+      <span className="hidden items-center gap-3 font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted-foreground sm:flex">
         {isMedium ? (
           <>
             <MediumTag />
@@ -162,7 +162,7 @@ export function PostArchive({ items }: { items: WritingItem[] }) {
             >
               {year}
               <span className="sr-only">, </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground md:mt-3 md:block">
+              <span className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted-foreground md:mt-3 md:block">
                 {yearItems.length} {yearItems.length === 1 ? "post" : "posts"}
               </span>
             </h3>
