@@ -142,44 +142,27 @@
 }
 
 @layer utilities {
-  /* Entrance animation. Runs in CSS so content never depends on JS to appear. */
+  /*
+   * Entrance animation. Runs in CSS so content never depends on JS to appear,
+   * and moves without fading so server-rendered content is visible (and can
+   * count as the Largest Contentful Paint) from the first frame.
+   */
   .animate-rise {
     animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /*
-   * Same motion without the fade, for the largest above-the-fold elements
-   * (hero name, portrait). They paint on the first frame, so the browser can
-   * count them as the Largest Contentful Paint.
-   */
-  .animate-rise-soft {
-    animation: rise-soft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .animate-rise,
-    .animate-rise-soft {
+    .animate-rise {
       animation: none;
     }
   }
 }
 
-@keyframes rise-soft {
-  from {
-    transform: translateY(10px);
-  }
-  to {
-    transform: none;
-  }
-}
-
 @keyframes rise {
   from {
-    opacity: 0;
     transform: translateY(10px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }

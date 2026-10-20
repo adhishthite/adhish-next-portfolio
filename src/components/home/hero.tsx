@@ -30,7 +30,7 @@ export function Hero() {
       <div className="grid items-start gap-8 md:grid-cols-12 md:gap-12 lg:gap-16">
         <div className="md:col-span-7 lg:col-span-8">
           <h1
-            className="animate-rise-soft font-serif text-[3.75rem] leading-[0.95] tracking-display sm:text-7xl lg:text-[6.5rem]"
+            className="animate-rise font-serif text-[3.75rem] leading-[0.95] tracking-display sm:text-7xl lg:text-[6.5rem]"
             style={rise(80)}
           >
             {DATA.name}
@@ -59,7 +59,7 @@ export function Hero() {
           </p>
 
           <p
-            className="animate-rise-soft mt-6 max-w-[60ch] text-base leading-relaxed text-muted-foreground sm:text-[1.0625rem]"
+            className="animate-rise mt-6 max-w-[60ch] text-base leading-relaxed text-muted-foreground sm:text-[1.0625rem]"
             style={rise(200)}
           >
             {DATA.summary}
@@ -130,7 +130,7 @@ export function Hero() {
 
         {/* Portrait: a small thumbnail above the name on mobile, a full column on desktop */}
         <figure
-          className="animate-rise-soft order-first w-[5.25rem] md:order-none md:col-span-5 md:w-auto lg:col-span-4"
+          className="animate-rise order-first w-[5.25rem] md:order-none md:col-span-5 md:w-auto lg:col-span-4"
           style={rise(0)}
         >
           <div className="relative aspect-[3/4] overflow-hidden rounded-lg border md:rounded-xl border-border/70 bg-muted shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
