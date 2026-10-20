@@ -13,21 +13,10 @@ const socials = [
   { label: "X", href: DATA.contact.social.X.url, Icon: Icons.x },
 ];
 
-const ambassadorRole = DATA.work.find(
-  (w) => w.end === "Present" && w !== CURRENT_ROLE,
-);
-
 const facts = [
   { term: "Based in", value: DATA.location },
   { term: "Experience", value: `${YEARS_OF_EXPERIENCE}+ years` },
-  ...(ambassadorRole
-    ? [
-        {
-          term: "Also",
-          value: `${ambassadorRole.title}, ${ambassadorRole.company}`,
-        },
-      ]
-    : []),
+  { term: "Focus", value: "Enterprise & agentic AI" },
 ];
 
 const rise = (ms: number) => ({ animationDelay: `${ms}ms` });
