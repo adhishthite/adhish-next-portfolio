@@ -6,18 +6,11 @@ import { cn } from "@/lib/utils";
 export const sectionClass =
   "container-page relative py-20 sm:py-28 before:absolute before:inset-x-5 before:top-0 before:h-px before:bg-border/60 sm:before:inset-x-8";
 
-/** "01 — Selected work" label shown above every section title */
-export function SectionEyebrow({
-  index,
-  label,
-}: {
-  index: string;
-  label: string;
-}) {
+/** Short label shown above every section title, led by a small accent rule */
+export function SectionEyebrow({ label }: { label: string }) {
   return (
-    <p className="eyebrow flex items-center gap-2">
-      <span className="text-foreground/70">{index}</span>
-      <span aria-hidden className="h-px w-5 bg-border" />
+    <p className="eyebrow flex items-center gap-2.5">
+      <span aria-hidden className="h-px w-6 bg-accent" />
       <span>{label}</span>
     </p>
   );
@@ -31,8 +24,6 @@ export function SectionEyebrow({
 export const anchorClass = "scroll-mt-3";
 
 interface SectionHeadingProps {
-  /** Two-digit index shown in the eyebrow, e.g. "01" */
-  index: string;
   /** Short eyebrow label, e.g. "Selected work" */
   label: string;
   /** Serif section title */
@@ -47,7 +38,6 @@ interface SectionHeadingProps {
 }
 
 export function SectionHeading({
-  index,
   label,
   title,
   id,
@@ -66,7 +56,7 @@ export function SectionHeading({
       )}
     >
       <div className="max-w-2xl">
-        <SectionEyebrow index={index} label={label} />
+        <SectionEyebrow label={label} />
         <h2
           id={id}
           className="mt-4 font-serif text-4xl leading-[1.05] tracking-tight sm:text-5xl"

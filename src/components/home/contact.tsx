@@ -9,7 +9,7 @@ export function Contact() {
       className={cn(sectionClass, "pb-8 sm:pb-8")}
     >
       <div id="contact" className={cn("max-w-3xl", anchorClass)}>
-        <SectionEyebrow index="05" label="Contact" />
+        <SectionEyebrow label="Contact" />
         <h2
           id="contact-title"
           className="mt-5 text-balance font-serif text-5xl leading-[1.02] tracking-display sm:text-6xl lg:text-7xl"

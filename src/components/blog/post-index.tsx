@@ -1,7 +1,9 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { BlogPost } from "@/data/blog";
+import type { WritingItem } from "@/data/medium";
+import { MediumTag, OnMediumLabel } from "@/components/blog/medium-tag";
 import { formatDate } from "@/lib/utils";
 
 const postHref = (slug: string) => `/blog/${slug}/`;
@@ -58,22 +60,100 @@ export function PinnedPostCard({
   );
 }
 
-function groupByYear(posts: BlogPost[]) {
-  const groups = new Map<string, BlogPost[]>();
-  for (const post of posts) {
-    const year = post.metadata.publishedAt.slice(0, 4);
+function groupByYear(items: WritingItem[]) {
+  const groups = new Map<string, WritingItem[]>();
+  for (const item of items) {
+    const year = item.publishedAt.slice(0, 4);
     const list = groups.get(year);
-    if (list) list.push(post);
-    else groups.set(year, [post]);
+    if (list) list.push(item);
+    else groups.set(year, [item]);
   }
   return [...groups.entries()];
 }
 
-/** Every post, grouped by year, as compact rows. */
-export function PostArchive({ posts }: { posts: BlogPost[] }) {
+const rowClass =
+  "group relative grid grid-cols-[3.75rem_minmax(0,1fr)_auto] items-baseline gap-x-4 py-4 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto]";
+
+function ArchiveRow({ item }: { item: WritingItem }) {
+  const isMedium = item.kind === "medium";
+  const body = (
+    <>
+      <span
+        aria-hidden
+        className="absolute -left-3.5 top-[1.45rem] size-1.5 scale-0 rounded-full bg-accent transition-transform duration-200 group-hover:scale-100 group-focus-visible:scale-100 motion-reduce:transition-none"
+      />
+      <time
+        dateTime={item.publishedAt}
+        className="font-mono text-[12px] uppercase tracking-[0.06em] text-muted-foreground tabular-nums"
+      >
+        {formatDate(item.publishedAt, { month: "short", day: "numeric" })}
+      </time>
+      <span className="sr-only">: </span>
+      <span className="min-w-0">
+        <span className="text-pretty text-[15.5px] font-medium leading-snug text-foreground/90 transition-colors group-hover:text-foreground">
+          {item.title}
+        </span>
+        {isMedium && (
+          <span className="mt-2 flex items-center gap-1.5 text-muted-foreground sm:hidden">
+            <MediumTag />
+            <ArrowUpRight
+              aria-hidden
+              strokeWidth={1.75}
+              className="size-3.5 transition-colors group-hover:text-accent"
+            />
+          </span>
+        )}
+      </span>
+      <span className="hidden items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground sm:flex">
+        {isMedium ? (
+          <>
+            <MediumTag />
+            <ArrowUpRight
+              aria-hidden
+              strokeWidth={1.75}
+              className="size-4 opacity-40 transition-[transform,opacity,color] duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
+            />
+          </>
+        ) : (
+          <>
+            <span>
+              <span className="sr-only">, </span>
+              {item.readingTime} min
+              <span className="sr-only"> read</span>
+            </span>
+            <ArrowRight
+              aria-hidden
+              strokeWidth={1.75}
+              className="size-4 opacity-40 transition-[transform,opacity,color] duration-300 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
+            />
+          </>
+        )}
+      </span>
+      {isMedium && <OnMediumLabel />}
+    </>
+  );
+
+  return isMedium ? (
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={rowClass}
+    >
+      {body}
+    </a>
+  ) : (
+    <Link href={item.href} className={rowClass}>
+      {body}
+    </Link>
+  );
+}
+
+/** Every post (local and Medium), grouped by year, as compact rows. */
+export function PostArchive({ items }: { items: WritingItem[] }) {
   return (
     <div className="space-y-14 sm:space-y-16">
-      {groupByYear(posts).map(([year, yearPosts]) => (
+      {groupByYear(items).map(([year, yearItems]) => (
         <section
           key={year}
           aria-labelledby={`year-${year}`}
@@ -87,47 +167,14 @@ export function PostArchive({ posts }: { posts: BlogPost[] }) {
               {year}
               <span className="sr-only">, </span>
               <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground md:mt-3 md:block">
-                {yearPosts.length} {yearPosts.length === 1 ? "post" : "posts"}
+                {yearItems.length} {yearItems.length === 1 ? "post" : "posts"}
               </span>
             </h3>
           </div>
           <ul className="border-t border-border/70">
-            {yearPosts.map((post) => (
-              <li key={post.slug} className="border-b border-border/70">
-                <Link
-                  href={postHref(post.slug)}
-                  className="group relative grid grid-cols-[3.75rem_minmax(0,1fr)_auto] items-baseline gap-x-4 py-4 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto]"
-                >
-                  <span
-                    aria-hidden
-                    className="absolute -left-3.5 top-[1.45rem] size-1.5 scale-0 rounded-full bg-accent transition-transform duration-200 group-hover:scale-100 group-focus-visible:scale-100 motion-reduce:transition-none"
-                  />
-                  <time
-                    dateTime={post.metadata.publishedAt}
-                    className="font-mono text-[12px] uppercase tracking-[0.06em] text-muted-foreground tabular-nums"
-                  >
-                    {formatDate(post.metadata.publishedAt, {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </time>
-                  <span className="sr-only">: </span>
-                  <span className="text-pretty text-[15.5px] font-medium leading-snug text-foreground/90 transition-colors group-hover:text-foreground">
-                    {post.metadata.title}
-                  </span>
-                  <span className="hidden items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground sm:flex">
-                    <span>
-                      <span className="sr-only">, </span>
-                      {post.readingTime} min
-                      <span className="sr-only"> read</span>
-                    </span>
-                    <ArrowRight
-                      aria-hidden
-                      strokeWidth={1.75}
-                      className="size-4 opacity-40 transition-[transform,opacity,color] duration-300 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
-                    />
-                  </span>
-                </Link>
+            {yearItems.map((item) => (
+              <li key={item.key} className="border-b border-border/70">
+                <ArchiveRow item={item} />
               </li>
             ))}
           </ul>

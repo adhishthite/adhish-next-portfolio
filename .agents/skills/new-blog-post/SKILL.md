@@ -72,3 +72,7 @@ image: "/blog/<slug>/og.png"
 - Create `public/blog/<slug>/` for images if the post has any.
 - Run `make build` to confirm the MDX compiles (a stray `<` or `{` can break MDX rendering).
 - Consider a final pass with the `humanize-blog-copy` skill before publishing.
+
+## Medium posts
+
+Posts published on Medium aren't MDX files. Add them by hand to the top of `MEDIUM_POSTS` in `src/data/medium.ts` (title, `publishedAt`, URL without the `?source=` query, one-line summary taken from the post's own subtitle). They appear in the `/blog/` archive and the homepage teaser as external links, and are deliberately left out of the RSS feed and sitemap.

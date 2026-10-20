@@ -205,7 +205,6 @@ export function Projects() {
       <SectionHeading
         id="projects-title"
         anchor="projects"
-        index="01"
         label="Selected work"
         title="Things I've built"
         intro="Side projects I've shipped outside work."

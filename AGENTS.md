@@ -6,7 +6,7 @@
 - `src/components`: Shared components (site header/footer, MDX renderers, mermaid, theme toggle).
 - `src/components/home`: Homepage sections. `src/components/blog`: blog index/post pieces (TOC, reading progress, prev/next).
 - `src/lib`: Utilities (`utils.ts`, `og.ts`, remark/rehype plugins).
-- `src/data`: Typed content feeds (e.g., `blog.ts`, `resume.tsx`).
+- `src/data`: Typed content feeds (`blog.ts`, `resume.tsx`, `medium.ts` for off-site Medium posts).
 - `content`: MDX posts/articles.
 - `public`: Static assets (images, icons).
 - Config: `tailwind.config.ts`, `postcss.config.mjs`, `biome.json`, `next.config.mjs`, `Makefile`.

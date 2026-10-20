@@ -1,11 +1,13 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { MEDIUM_PROFILE_URL } from "@/data/medium";
 import { CURRENT_ROLE, DATA } from "@/data/resume";
 
 const links = [
   { label: "GitHub", href: DATA.contact.social.GitHub.url },
   { label: "LinkedIn", href: DATA.contact.social.LinkedIn.url },
   { label: "X", href: DATA.contact.social.X.url },
+  { label: "Medium", href: MEDIUM_PROFILE_URL },
   { label: "RSS", href: "/rss.xml" },
 ];
 

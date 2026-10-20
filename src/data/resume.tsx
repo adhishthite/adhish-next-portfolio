@@ -10,71 +10,125 @@ export const DATA = {
   url: "https://www.adhishthite.com",
   location: "Pune, India",
   locationLink: "https://www.google.com/maps/place/pune",
-  description: `Sr. Solutions Architect, AI at Google. ${YEARS_OF_EXPERIENCE}+ years building production ML and GenAI systems.`,
+  description: `Sr. Solutions Architect, AI at Google. ${YEARS_OF_EXPERIENCE}+ years across enterprise AI architecture, agentic AI, generative AI, and production ML.`,
   summary: `I help enterprises put Gemini and the rest of Google's AI stack into production. Before that I led AI engineering at Elastic and spent four years on fraud and risk ML at Synapse. Outside work I build small tools, like a Rust CLI, a macOS menu-bar app, and an MCP server for my air purifier.`,
   avatarUrl: "/me.jpg",
-  skillGroups: [
+  /**
+   * Headline areas of expertise, shown as the large blocks in the Expertise
+   * section. `items` are the specific capabilities under each area.
+   */
+  expertise: [
     {
-      label: "AI & ML",
+      title: "Enterprise AI Architecture",
+      summary:
+        "Designing how AI fits into an enterprise: platforms, reference architectures, and the security, cost, and scale questions that decide whether a system ships.",
       items: [
-        "Generative AI",
-        "LLM agents",
-        "RAG",
+        "AI solution architecture",
+        "Reference architectures",
+        "AI platform strategy",
+        "Security & identity",
+        "Cost & token economics",
+        "Scalability & reliability",
+        "Technical roadmaps",
+        "Customer architecture reviews",
+      ],
+    },
+    {
+      title: "Agentic AI",
+      summary:
+        "Agents that plan, call tools, and remember, plus the orchestration, evaluation, and security around them.",
+      items: [
+        "Multi-agent systems",
+        "Tool use & function calling",
+        "Model Context Protocol (MCP)",
+        "Agent memory & context",
+        "LangGraph",
+        "Agent evaluation",
+        "Agent observability",
+        "Agent security",
+      ],
+    },
+    {
+      title: "Generative AI & LLMs",
+      summary:
+        "Taking LLM applications from prototype to production on Gemini and other frontier models.",
+      items: [
+        "Gemini & Google Cloud AI",
+        "RAG & retrieval",
+        "Vector & hybrid search",
+        "Prompt engineering",
         "Fine-tuning",
+        "LLM benchmarking",
+        "LLMOps",
+        "Prompt-injection defense",
+      ],
+    },
+    {
+      title: "Machine Learning",
+      summary:
+        "A decade of production ML before the LLM wave: risk, fraud, vision, and language models running in real products.",
+      items: [
+        "Fraud & risk modeling",
+        "Identity verification",
         "Deep learning",
         "NLP",
         "Computer vision",
+        "Feature engineering",
+        "MLOps",
+        "Model deployment",
+      ],
+    },
+  ],
+  /** Tools and platforms, listed under the expertise blocks */
+  skillGroups: [
+    {
+      label: "Languages",
+      items: ["Python", "TypeScript", "Java", "Rust", "SQL"],
+    },
+    {
+      label: "AI frameworks",
+      items: [
+        "LangChain",
+        "LangGraph",
+        "LlamaIndex",
         "PyTorch",
         "TensorFlow",
         "Hugging Face",
+        "scikit-learn",
       ],
     },
     {
-      label: "Languages & frameworks",
-      items: [
-        "Python",
-        "TypeScript",
-        "Java",
-        "React",
-        "Next.js",
-        "Node.js",
-        "FastAPI",
-        "Django",
-        "LangChain",
-        "LlamaIndex",
-      ],
-    },
-    {
-      label: "Data & infrastructure",
+      label: "Cloud & data",
       items: [
         "Google Cloud",
         "AWS",
         "Azure",
-        "Docker",
-        "Kubernetes",
         "Elasticsearch",
         "PostgreSQL",
         "Redis",
         "MongoDB",
-        "MLflow",
+        "Convex",
       ],
     },
     {
-      label: "Practice",
+      label: "Engineering",
       items: [
-        "MLOps",
-        "Model deployment",
-        "Microservices",
-        "REST & GraphQL",
+        "FastAPI",
+        "Django",
+        "Next.js",
+        "React",
+        "Docker",
+        "Kubernetes",
+        "MLflow",
         "CI/CD",
-        "Observability",
-        "Edge AI",
+        "Datadog",
       ],
     },
   ],
   navbar: [
-    { href: "/#projects", label: "Projects" },
     { href: "/#work", label: "Experience" },
+    { href: "/#expertise", label: "Expertise" },
+    { href: "/#projects", label: "Projects" },
     { href: "/blog/", label: "Writing" },
   ],
   contact: {

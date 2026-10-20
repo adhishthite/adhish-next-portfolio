@@ -5,6 +5,7 @@ import Script from "next/script";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
+import { MEDIUM_PROFILE_URL } from "@/data/medium";
 import { CURRENT_ROLE, DATA } from "@/data/resume";
 import { siteOgImage } from "@/lib/og";
 import { cn } from "@/lib/utils";
@@ -88,6 +89,7 @@ const personJsonLd = {
     DATA.contact.social.GitHub.url,
     DATA.contact.social.LinkedIn.url,
     DATA.contact.social.X.url,
+    MEDIUM_PROFILE_URL,
   ],
   jobTitle: CURRENT_ROLE.title,
   worksFor: { "@type": "Organization", name: CURRENT_ROLE.company },
@@ -95,7 +97,7 @@ const personJsonLd = {
     "@type": "EducationalOrganization",
     name: school.school,
   })),
-  knowsAbout: DATA.skillGroups[0].items,
+  knowsAbout: DATA.expertise.map((area) => area.title),
 };
 
 export default function RootLayout({

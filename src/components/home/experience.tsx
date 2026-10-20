@@ -16,7 +16,6 @@ export function Experience() {
       <SectionHeading
         id="work-title"
         anchor="work"
-        index="02"
         label="Experience"
         title="Where I've worked"
       />
