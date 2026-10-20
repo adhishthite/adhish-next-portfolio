@@ -55,32 +55,31 @@ function useActiveHeading(ids: string[], enabled: boolean) {
       setActive(current);
     };
 
-    // The observer fires whenever a heading crosses the active line; the
-    // scroll listener only catches the very end of the page.
+    // Recompute once per frame on scroll and resize. Instant jumps (End key,
+    // scrollTo) can carry a heading past the active line between frames, so
+    // the observer alone misses them; it stays to catch headings that move
+    // without a scroll, e.g. when a diagram above them renders.
     const observer = new IntersectionObserver(compute, {
       rootMargin: `0px 0px -${(1 - ACTIVE_LINE) * 100}% 0px`,
     });
     for (const el of elements) observer.observe(el);
 
     let frame = 0;
-    const onScroll = () => {
+    const schedule = () => {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         frame = 0;
-        if (
-          window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 4
-        ) {
-          compute();
-        }
+        compute();
       });
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     compute();
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, [ids, enabled]);
