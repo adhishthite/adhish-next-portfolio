@@ -80,7 +80,7 @@ export async function GET() {
         >
           <MonoLabel>{DATA.location}</MonoLabel>
           <MonoLabel color={OG_COLORS.rule}>/</MonoLabel>
-          <MonoLabel>Production ML & GenAI</MonoLabel>
+          <MonoLabel>Agentic AI in production</MonoLabel>
         </div>
       </div>
 
