@@ -207,6 +207,37 @@ function useFittedDiagram(
 }
 
 /**
+ * Diagrams are rendered on the client and Mermaid is a heavy import (graph
+ * layout runs on the main thread), so wait until the placeholder is within a
+ * screen or so of the viewport instead of rendering every diagram on load.
+ */
+function useNearViewport(ref: RefObject<HTMLElement | null>) {
+  const [near, setNear] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (near || !el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setNear(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "800px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, near]);
+
+  return near;
+}
+
+/**
  * Full-viewport view of a diagram at its natural size with two-axis
  * scrolling. Native <dialog>: focus trap, Esc and top-layer for free.
  */
@@ -267,13 +298,15 @@ export function Mermaid({ chart }: MermaidProps) {
   // Natural SVG width while the full-size dialog is open, else null
   const [fullWidth, setFullWidth] = useState<number | null>(null);
   const frameRef = useRef<HTMLDivElement>(null);
+  const placeholderRef = useRef<HTMLDivElement>(null);
+  const near = useNearViewport(placeholderRef);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const svg = rendered.svg;
   const tooSmall = useFittedDiagram(frameRef, svg);
 
   useEffect(() => {
-    if (!themeClass) return;
+    if (!themeClass || !near) return;
     let cancelled = false;
 
     (async () => {
@@ -302,7 +335,7 @@ export function Mermaid({ chart }: MermaidProps) {
     return () => {
       cancelled = true;
     };
-  }, [chart, id, themeClass]);
+  }, [chart, id, themeClass, near]);
 
   const openFullSize = useCallback(() => {
     const dialog = dialogRef.current;
@@ -338,7 +371,7 @@ export function Mermaid({ chart }: MermaidProps) {
 
   if (!svg) {
     return (
-      <div className="mermaid-frame" aria-busy="true">
+      <div ref={placeholderRef} className="mermaid-frame" aria-busy="true">
         <span className="sr-only">Loading diagram</span>
         <div aria-hidden className="mermaid-skeleton" />
       </div>

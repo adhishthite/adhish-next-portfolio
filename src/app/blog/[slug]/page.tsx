@@ -23,6 +23,7 @@ import {
 import { createMdxComponents } from "@/components/mdx-components";
 import { getAdjacentPosts, getBlogPosts, getPost } from "@/data/blog";
 import { CURRENT_ROLE, DATA } from "@/data/resume";
+import { accessibleGithubLight } from "@/lib/code-theme";
 import { postOgImage } from "@/lib/og";
 import { getLocalImageSize, rehypeImageSize } from "@/lib/rehype-image-size";
 import { remarkMermaid } from "@/lib/remark-mermaid";
@@ -40,7 +41,7 @@ export async function generateStaticParams() {
 }
 
 const prettyCodeOptions: PrettyCodeOptions = {
-  theme: { light: "github-light", dark: "github-dark-dimmed" },
+  theme: { light: await accessibleGithubLight(), dark: "github-dark-dimmed" },
   keepBackground: false,
   defaultLang: { block: "plaintext" },
 };

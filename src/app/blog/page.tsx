@@ -74,11 +74,12 @@ export default async function BlogIndexPage() {
             Pinned
           </h2>
           <div className="grid gap-4 md:grid-cols-3 md:gap-5">
+            {/* Cards stack below md, so only the first is sure to be on screen at load */}
             {pinned.map((post, index) => (
               <PinnedPostCard
                 key={post.slug}
                 post={post}
-                priority={index < 3}
+                priority={index === 0}
               />
             ))}
           </div>

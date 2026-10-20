@@ -7,10 +7,32 @@ import { cn } from "@/lib/utils";
 /** Headings above this line (fraction of viewport height) count as "read". */
 const ACTIVE_LINE = 0.3;
 
-function useActiveHeading(ids: string[]) {
+/** Tailwind's xl breakpoint; below it the rail is hidden with CSS. */
+const RAIL_QUERY = "(min-width: 1280px)";
+
+/**
+ * The rail stays mounted while CSS hides it on smaller screens, so its scroll
+ * and geometry work is switched on only while it can actually be seen.
+ */
+function useRailVisible() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia(RAIL_QUERY);
+    const update = () => setVisible(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return visible;
+}
+
+function useActiveHeading(ids: string[], enabled: boolean) {
   const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!enabled) return;
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
@@ -61,7 +83,7 @@ function useActiveHeading(ids: string[]) {
       window.removeEventListener("scroll", onScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [ids]);
+  }, [ids, enabled]);
 
   return active;
 }
@@ -70,10 +92,14 @@ function useActiveHeading(ids: string[]) {
  * Wide diagrams widen symmetrically over the rail. While one overlaps the
  * sticky TOC, fade the TOC out instead of drawing the diagram on top of it.
  */
-function useHiddenByBreakout(ref: RefObject<HTMLElement | null>) {
+function useHiddenByBreakout(
+  ref: RefObject<HTMLElement | null>,
+  enabled: boolean,
+) {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return;
     let frame = 0;
     const check = () => {
       frame = 0;
@@ -116,7 +142,7 @@ function useHiddenByBreakout(ref: RefObject<HTMLElement | null>) {
       observer.disconnect();
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [ref]);
+  }, [ref, enabled]);
 
   return hidden;
 }
@@ -166,9 +192,10 @@ function TocList({
 /** Sticky right-rail table of contents with the current section highlighted. */
 export function TableOfContents({ headings }: { headings: BlogHeading[] }) {
   const [ids] = useState(() => headings.map((h) => h.id));
-  const active = useActiveHeading(ids);
+  const visible = useRailVisible();
+  const active = useActiveHeading(ids, visible);
   const navRef = useRef<HTMLElement>(null);
-  const hidden = useHiddenByBreakout(navRef);
+  const hidden = useHiddenByBreakout(navRef, visible);
 
   return (
     <nav
