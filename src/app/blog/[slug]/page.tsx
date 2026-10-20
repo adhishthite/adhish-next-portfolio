@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@phosphor-icons/react/ssr";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -193,7 +193,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           >
             <ArrowLeft
               aria-hidden
-              strokeWidth={1.75}
               className="size-4 transition-transform duration-300 group-hover:-translate-x-0.5"
             />
             All writing

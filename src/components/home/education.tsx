@@ -1,4 +1,4 @@
-import { ArrowUpRight, Plus } from "lucide-react";
+import { ArrowUpRight, Plus } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import { DATA } from "@/data/resume";
 import { SectionHeading, sectionClass } from "./section-heading";
@@ -64,7 +64,6 @@ function CertificateRow({ cert }: { cert: Certificate }) {
           <ArrowUpRight
             aria-hidden
             className="ml-0.5 inline size-3.5 -translate-y-px text-muted-foreground opacity-60 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-px group-hover:opacity-100"
-            strokeWidth={1.75}
           />
         ) : null}
       </span>
@@ -149,7 +148,6 @@ export function Education() {
                 <Plus
                   aria-hidden
                   className="size-4 transition-transform duration-200 group-open/more:rotate-45"
-                  strokeWidth={1.75}
                 />
                 <span className="group-open/more:hidden">
                   Show all {DATA.certificates.length}

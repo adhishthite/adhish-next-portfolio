@@ -11,13 +11,13 @@
     "check": "biome check --write src/"
   },
   "dependencies": {
+    "@phosphor-icons/react": "2.1.10",
     "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^1.6.1",
     "clsx": "^2.1.1",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "image-size": "^2.0.4",
-    "lucide-react": "^0.562.0",
     "mermaid": "^11.12.2",
     "next": "16.1.1",
     "next-mdx-remote": "^6.0.0",

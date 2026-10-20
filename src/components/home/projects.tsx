@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import { DATA } from "@/data/resume";
@@ -148,7 +148,6 @@ function ProjectCard({ project }: { project: Project }) {
             <ArrowUpRight
               aria-hidden
               className="size-4 self-center text-muted-foreground transition-all duration-200 group-hover/title:-translate-y-px group-hover/title:translate-x-px group-hover/title:text-foreground"
-              strokeWidth={1.75}
             />
           </a>
         </h3>
@@ -188,10 +187,7 @@ function ProjectCard({ project }: { project: Project }) {
             )}
           >
             {link.label}
-            <ArrowUpRight
-              className="size-3.5 opacity-60 transition-all duration-200 group-hover/link:-translate-y-px group-hover/link:translate-x-px group-hover/link:opacity-100"
-              strokeWidth={1.75}
-            />
+            <ArrowUpRight className="size-3.5 opacity-60 transition-all duration-200 group-hover/link:-translate-y-px group-hover/link:translate-x-px group-hover/link:opacity-100" />
           </a>
         ))}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "lucide-react";
+import { Moon, Sun } from "@phosphor-icons/react/ssr";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
@@ -18,8 +18,8 @@ export function ModeToggle({ className }: { className?: string }) {
       )}
     >
       {/* Both icons render; CSS picks one so there is no hydration flash */}
-      <SunIcon className="size-[17px] dark:hidden" strokeWidth={1.75} />
-      <MoonIcon className="hidden size-[17px] dark:block" strokeWidth={1.75} />
+      <Sun className="size-[17px] dark:hidden" />
+      <Moon className="hidden size-[17px] dark:block" />
     </button>
   );
 }

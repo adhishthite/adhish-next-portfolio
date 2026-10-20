@@ -1,4 +1,8 @@
-import { ArrowLeft, ArrowRight, Mail } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  EnvelopeSimple,
+} from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
@@ -54,7 +58,7 @@ export function AuthorCard() {
             href={`mailto:${DATA.contact.email}`}
             className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-85"
           >
-            <Mail aria-hidden strokeWidth={1.75} className="size-4" />
+            <EnvelopeSimple aria-hidden className="size-4" />
             Email me
           </a>
           <a
@@ -94,7 +98,6 @@ function AdjacentLink({
         {!older && <span>Newer</span>}
         <Arrow
           aria-hidden
-          strokeWidth={1.75}
           className={cn(
             "size-3.5 transition-transform duration-300 group-hover:text-accent",
             older

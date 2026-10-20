@@ -1,19 +1,25 @@
-import { Bot, Brain, type LucideIcon, Network, Sparkles } from "lucide-react";
+import type { Icon } from "@phosphor-icons/react";
+import {
+  Brain,
+  Robot,
+  Sparkle,
+  TreeStructure,
+} from "@phosphor-icons/react/ssr";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import { SectionHeading, sectionClass } from "./section-heading";
 
-const ICONS: Record<string, LucideIcon> = {
-  "Enterprise AI Architecture": Network,
-  "Agentic AI": Bot,
-  "Generative AI & LLMs": Sparkles,
+const ICONS: Record<string, Icon> = {
+  "Enterprise AI Architecture": TreeStructure,
+  "Agentic AI": Robot,
+  "Generative AI & LLMs": Sparkle,
   "Machine Learning": Brain,
 };
 
 type Area = (typeof DATA.expertise)[number];
 
 function ExpertiseCard({ area, primary }: { area: Area; primary: boolean }) {
-  const Icon = ICONS[area.title] ?? Sparkles;
+  const Icon = ICONS[area.title] ?? Sparkle;
 
   return (
     <li className="flex flex-col rounded-xl border border-border/70 bg-card p-6 shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-colors duration-200 hover:border-foreground/20 sm:p-8">
@@ -22,7 +28,7 @@ function ExpertiseCard({ area, primary }: { area: Area; primary: boolean }) {
           aria-hidden
           className="inline-flex size-10 items-center justify-center rounded-lg border border-border/70 bg-background text-foreground/80"
         >
-          <Icon className="size-[18px]" strokeWidth={1.5} />
+          <Icon className="size-[22px]" weight="duotone" />
         </span>
         {primary ? (
           <span className="eyebrow inline-flex items-center gap-2">

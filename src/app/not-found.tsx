@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/ssr";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -37,7 +37,6 @@ export default function NotFound() {
           >
             <ArrowLeft
               aria-hidden
-              strokeWidth={1.75}
               className="size-4 transition-transform group-hover:-translate-x-0.5"
             />
             Back home
@@ -49,7 +48,6 @@ export default function NotFound() {
             Read the writing
             <ArrowRight
               aria-hidden
-              strokeWidth={1.75}
               className="size-4 transition-transform group-hover:translate-x-0.5"
             />
           </Link>

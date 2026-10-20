@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { CaretDown } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import { useId, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -179,12 +179,11 @@ export function ExperienceItem({
           aria-hidden
           className="flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors group-hover/row:bg-secondary group-hover/row:text-foreground"
         >
-          <ChevronDown
+          <CaretDown
             className={cn(
               "size-4 transition-transform duration-300",
               open && "rotate-180",
             )}
-            strokeWidth={1.75}
           />
         </span>
       </div>

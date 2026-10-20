@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@phosphor-icons/react/ssr";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -75,10 +75,7 @@ export function SectionHeading({
           className="group -my-2.5 inline-flex min-h-10 shrink-0 items-center gap-1.5 self-start text-sm text-muted-foreground transition-colors hover:text-foreground md:self-auto md:-mb-1"
         >
           {action.label}
-          <ArrowRight
-            className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
-            strokeWidth={1.75}
-          />
+          <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       ) : null}
     </div>

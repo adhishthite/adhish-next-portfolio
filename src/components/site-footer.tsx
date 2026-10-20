@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "@phosphor-icons/react/ssr";
 import Link from "next/link";
 import { MEDIUM_PROFILE_URL } from "@/data/medium";
 import { CURRENT_ROLE, DATA } from "@/data/resume";
@@ -43,10 +43,7 @@ export function SiteFooter() {
                     className="group inline-flex min-h-10 items-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {link.label}
-                    <ArrowUpRight
-                      className="size-3.5 opacity-50 transition-all group-hover:-translate-y-px group-hover:translate-x-px group-hover:opacity-100"
-                      strokeWidth={1.75}
-                    />
+                    <ArrowUpRight className="size-3.5 opacity-50 transition-all group-hover:-translate-y-px group-hover:translate-x-px group-hover:opacity-100" />
                   </Link>
                 </li>
               );

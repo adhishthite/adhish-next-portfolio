@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import type { BlogPost } from "@/data/blog";
@@ -51,7 +51,6 @@ export function PinnedPostCard({
           </span>
           <ArrowRight
             aria-hidden
-            strokeWidth={1.75}
             className="size-4 transition-[transform,color] duration-300 group-hover:translate-x-0.5 group-hover:text-accent"
           />
         </p>
@@ -98,7 +97,6 @@ function ArchiveRow({ item }: { item: WritingItem }) {
             <MediumTag />
             <ArrowUpRight
               aria-hidden
-              strokeWidth={1.75}
               className="size-3.5 transition-colors group-hover:text-accent"
             />
           </span>
@@ -110,7 +108,6 @@ function ArchiveRow({ item }: { item: WritingItem }) {
             <MediumTag />
             <ArrowUpRight
               aria-hidden
-              strokeWidth={1.75}
               className="size-4 opacity-40 transition-[transform,opacity,color] duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
             />
           </>
@@ -123,7 +120,6 @@ function ArchiveRow({ item }: { item: WritingItem }) {
             </span>
             <ArrowRight
               aria-hidden
-              strokeWidth={1.75}
               className="size-4 opacity-40 transition-[transform,opacity,color] duration-300 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
             />
           </>

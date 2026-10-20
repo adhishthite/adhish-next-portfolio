@@ -1,6 +1,6 @@
 "use client";
 
-import { Maximize2, X } from "lucide-react";
+import { ArrowsOut, X } from "@phosphor-icons/react/ssr";
 import {
   type RefObject,
   useCallback,
@@ -240,7 +240,7 @@ function DiagramDialog({
           aria-label="Close full-size diagram"
           className="mermaid-dialog-close"
         >
-          <X aria-hidden strokeWidth={1.75} className="size-5" />
+          <X aria-hidden className="size-5" />
         </button>
       </div>
       {svg && (
@@ -366,7 +366,7 @@ export function Mermaid({ chart }: MermaidProps) {
             aria-haspopup="dialog"
             className="mermaid-expand"
           >
-            <Maximize2 aria-hidden strokeWidth={1.75} className="size-3.5" />
+            <ArrowsOut aria-hidden className="size-3.5" />
             View full size
           </button>
           <DiagramDialog

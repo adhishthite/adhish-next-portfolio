@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/ssr";
 import Link from "next/link";
 import { MediumTag, OnMediumLabel } from "@/components/blog/medium-tag";
 import { getBlogPosts } from "@/data/blog";
@@ -25,7 +25,6 @@ function TeaserRow({ item }: { item: WritingItem }) {
             <MediumTag />
             <ArrowUpRight
               aria-hidden
-              strokeWidth={1.75}
               className="size-3.5 transition-colors group-hover:text-accent"
             />
           </span>
@@ -79,7 +78,6 @@ export async function Writing() {
               <ArrowRight
                 aria-hidden
                 className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
-                strokeWidth={1.75}
               />
             </Link>
             <a
@@ -92,7 +90,6 @@ export async function Writing() {
               <ArrowUpRight
                 aria-hidden
                 className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                strokeWidth={1.75}
               />
               <span className="sr-only"> profile (opens in a new tab)</span>
             </a>

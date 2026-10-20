@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy } from "lucide-react";
+import { Check, Copy } from "@phosphor-icons/react/ssr";
 import { useRef, useState } from "react";
 
 /**
@@ -33,9 +33,9 @@ export function CodeCopyButton() {
       data-copied={copied || undefined}
     >
       {copied ? (
-        <Check className="size-3.5" strokeWidth={2} aria-hidden />
+        <Check className="size-3.5" weight="bold" aria-hidden />
       ) : (
-        <Copy className="size-3.5" strokeWidth={1.75} aria-hidden />
+        <Copy className="size-3.5" aria-hidden />
       )}
       <span className="sr-only" aria-live="polite">
         {copied ? "Copied to clipboard" : ""}

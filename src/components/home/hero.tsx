@@ -1,4 +1,4 @@
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight, EnvelopeSimple } from "@phosphor-icons/react/ssr";
 import Image from "next/image";
 import { Icons } from "@/components/icons";
 import { CURRENT_ROLE, DATA, YEARS_OF_EXPERIENCE } from "@/data/resume";
@@ -84,7 +84,7 @@ export function Hero() {
               href={`mailto:${DATA.contact.email}`}
               className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-85"
             >
-              <Mail className="size-4" aria-hidden strokeWidth={1.75} />
+              <EnvelopeSimple className="size-4" aria-hidden />
               Email me
             </a>
             <a
@@ -96,7 +96,6 @@ export function Hero() {
               Résumé
               <ArrowUpRight
                 className="size-4 text-muted-foreground transition-transform duration-200 group-hover:-translate-y-px group-hover:translate-x-px"
-                strokeWidth={1.75}
                 aria-hidden
               />
             </a>
@@ -116,7 +115,7 @@ export function Hero() {
                       aria-label={label}
                       className="inline-flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                     >
-                      <Icon className="size-[17px]" aria-hidden />
+                      <Icon className="size-5" aria-hidden />
                     </a>
                   </li>
                 ))}
