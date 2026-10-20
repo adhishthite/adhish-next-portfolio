@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { DATA } from "@/data/resume";
@@ -47,7 +47,7 @@ function GridCover({ project }: { project: Project }) {
 
 const RULED_LINES = Array.from({ length: 16 }, (_, i) => i + 1);
 
-/** Install commands quoted from the project write-ups */
+/** Install commands quoted from the project READMEs/posts */
 const INSTALL: Record<string, string> = {
   ocloc: "cargo install ocloc",
 };
@@ -119,10 +119,16 @@ function ProjectMedia({ project }: { project: Project }) {
 }
 
 function ProjectCard({ project }: { project: Project }) {
+  // The first link is the project itself (live site or repo)
+  const [primary, ...secondary] = project.links;
+
   return (
     <article className="group flex flex-col">
+      {/* Duplicate of the title link for pointer users; hidden from keyboard and screen readers */}
       <Link
-        href={project.post}
+        href={primary.href}
+        target="_blank"
+        rel="noopener noreferrer"
         tabIndex={-1}
         aria-hidden
         className="relative block aspect-[16/10] overflow-hidden rounded-xl border border-border/70 bg-secondary shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-colors group-hover:border-foreground/20"
@@ -132,12 +138,19 @@ function ProjectCard({ project }: { project: Project }) {
 
       <div className="mt-5 flex items-baseline justify-between gap-4">
         <h3 className="text-lg font-medium tracking-tight">
-          <Link
-            href={project.post}
-            className="decoration-accent/50 underline-offset-[5px] hover:underline"
+          <a
+            href={primary.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/title inline-flex items-baseline gap-1 decoration-accent/50 underline-offset-[5px] hover:underline"
           >
             {project.title}
-          </Link>
+            <ArrowUpRight
+              aria-hidden
+              className="size-4 self-center text-muted-foreground transition-all duration-200 group-hover/title:-translate-y-px group-hover/title:translate-x-px group-hover/title:text-foreground"
+              strokeWidth={1.75}
+            />
+          </a>
         </h3>
         <span className="font-mono text-xs tabular-nums text-muted-foreground">
           {project.year}
@@ -161,24 +174,18 @@ function ProjectCard({ project }: { project: Project }) {
 
       {/* 40px-tall links; the negative bottom margin keeps the row visually tight */}
       <div className="-mb-2.5 mt-2.5 flex flex-wrap items-center gap-x-5 text-sm">
-        <Link
-          href={project.post}
-          className="group/link inline-flex min-h-10 items-center gap-1 font-medium text-foreground"
-          aria-label={`Read the write-up on ${project.title}`}
-        >
-          Read the write-up
-          <ArrowRight
-            className="size-3.5 transition-transform duration-200 group-hover/link:translate-x-0.5"
-            strokeWidth={1.75}
-          />
-        </Link>
-        {project.links.map((link) => (
+        {[primary, ...secondary].map((link, i) => (
           <a
             key={link.href}
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group/link inline-flex min-h-10 items-center gap-0.5 text-muted-foreground transition-colors hover:text-foreground"
+            className={cn(
+              "group/link inline-flex min-h-10 items-center gap-0.5 transition-colors",
+              i === 0
+                ? "font-medium text-foreground"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
             {link.label}
             <ArrowUpRight
@@ -201,24 +208,12 @@ export function Projects() {
         index="01"
         label="Selected work"
         title="Things I've built"
-        intro="Side projects, mostly. Each one has a write-up on the blog."
+        intro="Side projects I've shipped outside work."
       />
       <div className="grid gap-x-10 gap-y-16 md:grid-cols-2 lg:gap-x-12">
         {DATA.projects.map((project) => (
           <ProjectCard key={project.title} project={project} />
         ))}
-      </div>
-      <div className="mt-11">
-        <Link
-          href="/blog/"
-          className="group inline-flex min-h-10 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          More on the blog
-          <ArrowRight
-            className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
-            strokeWidth={1.75}
-          />
-        </Link>
       </div>
     </section>
   );

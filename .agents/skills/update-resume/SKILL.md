@@ -19,9 +19,9 @@ All profile/résumé content is structured data in **`src/data/resume.tsx`** (th
 The homepage (`src/app/page.tsx` + `src/components/home/*`) renders:
 
 - **Hero** — `name`, `avatarUrl` (`/me.jpg`), `summary`, `location`, contact links, and `CURRENT_ROLE` (exported from `resume.tsx`: the first `work` entry with `end: "Present"` and no badges). Any *other* `Present` entry (e.g. the Codex Ambassador role) shows as the hero's "Also" fact.
-- **Selected work** — `DATA.projects` (`title`, `year`, `description`, `tags`, `image`, `post`, `links[]`). Order = display order. `image: ""` gets a typographic cover.
+- **Selected work** — `DATA.projects` (`title`, `year`, `description`, `tags`, `image`, `links[]`). Order = display order. The first link is the project itself (live site or repo) and is what the card's image and title open; the homepage deliberately doesn't link projects to blog posts. `image: ""` gets a typographic cover.
 - **Experience** — `DATA.work`. Entries badged `"Internship"` or `"Assistantship"` move to a smaller "Internships & research" list; everything else is a main row with expandable bullets.
-- **Writing** — latest 3 blog posts (automatic).
+- **From the blog** — a small teaser with the 3 latest post titles (automatic). The blog is kept separate from the portfolio; don't add more blog content to the homepage.
 - **Skills** — `DATA.skillGroups` (`{ label, items }[]`).
 - **Education & certifications** — `DATA.education`, plus four featured certificates named in the `FEATURED` list in `src/components/home/education.tsx`; the rest sit behind "Show all".
 - **Contact** — `contact.email` and the X link.

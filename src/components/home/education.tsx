@@ -97,7 +97,7 @@ export function Education() {
     <section aria-labelledby="education-title" className={sectionClass}>
       <SectionHeading
         id="education-title"
-        index="05"
+        index="04"
         label="Education"
         title="Education & certifications"
       />

@@ -2,61 +2,59 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { getBlogPosts } from "@/data/blog";
 import { formatDate } from "@/lib/utils";
-import { SectionHeading, sectionClass } from "./section-heading";
 
+/**
+ * A quiet pointer to the blog, kept deliberately small: the homepage is about
+ * work, and the blog lives on its own at /blog/.
+ */
 export async function Writing() {
   const posts = (await getBlogPosts()).slice(0, 3);
   if (posts.length === 0) return null;
 
   return (
-    <section aria-labelledby="writing-title" className={sectionClass}>
-      <SectionHeading
-        id="writing-title"
-        index="03"
-        label="Writing"
-        title="Recent posts"
-        intro="Notes on agents, LLMs, and the small tools I build."
-        action={{ href: "/blog/", label: "All writing" }}
-      />
-
-      <ul className="border-y border-border/60">
-        {posts.map((post) => (
-          <li
-            key={post.slug}
-            className="border-t border-border/60 first:border-t-0"
+    <aside aria-labelledby="writing-teaser-title" className="container-page">
+      <div className="flex flex-col gap-5 rounded-xl border border-border/70 bg-card/60 p-5 sm:p-6 md:flex-row md:items-start md:gap-10">
+        <div className="flex shrink-0 items-center justify-between gap-6 md:w-44 md:flex-col md:items-start md:gap-3">
+          <h2 id="writing-teaser-title" className="eyebrow">
+            From the blog
+          </h2>
+          <Link
+            href="/blog/"
+            className="group -my-2.5 inline-flex min-h-10 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            <Link
-              href={`/blog/${post.slug}/`}
-              className="group -mx-3 grid gap-x-6 gap-y-2 rounded-lg px-3 py-6 transition-colors hover:bg-secondary/50 sm:grid-cols-[9.5rem_1fr_auto] sm:items-baseline"
-            >
-              <time
-                dateTime={post.metadata.publishedAt}
-                className="font-mono text-xs tabular-nums text-muted-foreground"
+            All posts
+            <ArrowRight
+              aria-hidden
+              className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+              strokeWidth={1.75}
+            />
+          </Link>
+        </div>
+
+        <ul className="min-w-0 flex-1 divide-y divide-border/60 [&>li:first-child>a]:pt-0">
+          {posts.map((post) => (
+            <li key={post.slug}>
+              <Link
+                href={`/blog/${post.slug}/`}
+                className="group flex min-h-10 items-baseline justify-between gap-4 py-2.5"
               >
-                {formatDate(post.metadata.publishedAt)}
-              </time>
-              <div className="min-w-0">
-                <h3 className="text-base font-medium tracking-tight text-foreground sm:text-[17px]">
+                <span className="line-clamp-2 text-[15px] sm:line-clamp-1 text-foreground/90 decoration-accent/50 underline-offset-[5px] group-hover:underline">
                   {post.metadata.title}
-                </h3>
-                {post.metadata.summary ? (
-                  <p className="mt-1.5 line-clamp-2 max-w-[72ch] text-[15px] leading-relaxed text-muted-foreground md:line-clamp-1">
-                    {post.metadata.summary}
-                  </p>
-                ) : null}
-              </div>
-              <span className="flex items-center gap-3 font-mono text-xs text-muted-foreground">
-                {post.readingTime} min read
-                <ArrowRight
-                  aria-hidden
-                  className="hidden size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-foreground sm:block"
-                  strokeWidth={1.75}
-                />
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+                </span>
+                <time
+                  dateTime={post.metadata.publishedAt}
+                  className="hidden shrink-0 font-mono text-xs tabular-nums text-muted-foreground sm:block"
+                >
+                  {formatDate(post.metadata.publishedAt, {
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </time>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </aside>
   );
 }

@@ -6,7 +6,7 @@ export function Skills() {
     <section aria-labelledby="skills-title" className={sectionClass}>
       <SectionHeading
         id="skills-title"
-        index="04"
+        index="03"
         label="Skills"
         title="Tools of the trade"
       />

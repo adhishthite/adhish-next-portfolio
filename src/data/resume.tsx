@@ -10,8 +10,8 @@ export const DATA = {
   url: "https://www.adhishthite.com",
   location: "Pune, India",
   locationLink: "https://www.google.com/maps/place/pune",
-  description: `Sr. Solutions Architect, AI at Google. ${YEARS_OF_EXPERIENCE}+ years building production ML and GenAI systems, and writing about agents, LLMs, and the tools I build.`,
-  summary: `I help enterprises put Gemini and the rest of Google's AI stack into production. Before that I led AI engineering at Elastic and spent four years on fraud and risk ML at Synapse. Outside work I build small tools and write about what breaks when you run agents for real.`,
+  description: `Sr. Solutions Architect, AI at Google. ${YEARS_OF_EXPERIENCE}+ years building production ML and GenAI systems.`,
+  summary: `I help enterprises put Gemini and the rest of Google's AI stack into production. Before that I led AI engineering at Elastic and spent four years on fraud and risk ML at Synapse. Outside work I build small tools, like a Rust CLI, a macOS menu-bar app, and an MCP server for my air purifier.`,
   avatarUrl: "/me.jpg",
   skillGroups: [
     {
@@ -431,7 +431,6 @@ export const DATA = {
         "A tiny native menu-bar monitor for macOS. I wanted one that was free, light, and did exactly what I needed, so I built it with Codex.",
       tags: ["Swift", "SwiftUI", "macOS"],
       image: "/blog/menustat/menustat-panel.png",
-      post: "/blog/menustat/",
       links: [
         { label: "Website", href: "https://menustat.adhishthite.vercel.app/" },
       ],
@@ -443,7 +442,6 @@ export const DATA = {
         "A lines-of-code counter and my first Rust project. It runs about 23x faster than cloc and ships on Homebrew and crates.io.",
       tags: ["Rust", "CLI"],
       image: "",
-      post: "/blog/ocloc/",
       links: [
         { label: "GitHub", href: "https://github.com/adhishthite/ocloc" },
         { label: "crates.io", href: "https://crates.io/crates/ocloc" },
@@ -456,7 +454,6 @@ export const DATA = {
         "A real-time dashboard for every token my OpenClaw agent burns, built after 457 million tokens turned into a $650 bill.",
       tags: ["Convex", "Next.js", "Recharts"],
       image: "/blog/observatory-dashboard/og-pic.jpg",
-      post: "/blog/observatory-dashboard/",
       links: [
         {
           label: "Live",
@@ -471,7 +468,6 @@ export const DATA = {
         "A Convex component for Jina AI's Reader and Search APIs, with durable caching and reactive queries. Listed in the official Convex Components directory.",
       tags: ["TypeScript", "Convex", "npm"],
       image: "",
-      post: "/blog/convex-jina/",
       links: [
         { label: "GitHub", href: "https://github.com/adhishthite/convex-jina" },
         { label: "npm", href: "https://www.npmjs.com/package/convex-jina" },
@@ -484,7 +480,6 @@ export const DATA = {
         "A full-stack tracker for glucose, weight, meals, and workouts. A blood report scared me into building it when existing apps fell short.",
       tags: ["Convex", "Next.js"],
       image: "/blog/glucowise/landing-page.png",
-      post: "/blog/glucowise/",
       links: [{ label: "Website", href: "https://glucowise.app" }],
     },
     {
@@ -494,7 +489,6 @@ export const DATA = {
         'An MCP server that lets Claude control my Dyson air purifier over local MQTT, so "make the air quieter" actually does something.',
       tags: ["Python", "MCP", "MQTT"],
       image: "/blog/dyson-mcp-server/og-pic.jpeg",
-      post: "/blog/dyson-mcp-server/",
       links: [
         {
           label: "GitHub",
