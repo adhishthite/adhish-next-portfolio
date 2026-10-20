@@ -11,8 +11,8 @@ import { CURRENT_ROLE, DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 
 /**
- * Small round avatar. me.jpg is a 3:4 portrait where the head is under half
- * the frame, so at 32-56px it's zoomed in around the face.
+ * Small round avatar. portrait.jpg is a 3:4 head-and-shoulders portrait, so at
+ * 32-56px it's zoomed in around the face.
  */
 export function Avatar({ className }: { className?: string }) {
   return (
@@ -30,9 +30,9 @@ export function Avatar({ className }: { className?: string }) {
         className="object-cover"
         style={{
           objectPosition: "50% 0%",
-          // Centres the face (head is turned left, so left of the hair)
-          transform: "scale(1.7)",
-          transformOrigin: "35% 57%",
+          // Centres the face, which sits slightly above the middle of the crop
+          transform: "scale(1.4)",
+          transformOrigin: "50% 25%",
         }}
       />
     </span>

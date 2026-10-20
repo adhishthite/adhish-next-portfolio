@@ -18,7 +18,7 @@ All profile/résumé content is structured data in **`src/data/resume.tsx`** (th
 
 The homepage (`src/app/page.tsx` + `src/components/home/*`) renders, in order (section eyebrows are unnumbered):
 
-- **Hero** — `name`, `avatarUrl` (`/me.jpg`), `summary`, `location`, contact links, and `CURRENT_ROLE` (exported from `resume.tsx`: the first `work` entry with `end: "Present"` and no badges). The hero's fact row (Based in / Experience / Focus) lives in `src/components/home/hero.tsx`; the Focus value is hand-written there.
+- **Hero** — `name`, `avatarUrl` (`/portrait.jpg`), `summary`, `location`, contact links, and `CURRENT_ROLE` (exported from `resume.tsx`: the first `work` entry with `end: "Present"` and no badges). The hero's fact row (Based in / Experience / Focus) lives in `src/components/home/hero.tsx`; the Focus value is hand-written there.
 - **Experience** — `DATA.work`. Entries badged `"Internship"` or `"Assistantship"` move to a smaller "Internships & research" list; everything else is a main row with expandable bullets.
 - **Expertise** — `DATA.expertise` (`{ title, summary, items }[]`): the four headline areas (Enterprise AI Architecture, Agentic AI, Generative AI & LLMs, Machine Learning) shown as large cards, then `DATA.skillGroups` (`{ label, items }[]`) as the "Tools & platforms" band. Keep items grounded in real work (roles, projects, posts).
 - **Selected work** — `DATA.projects` (`title`, `year`, `description`, `tags`, `image`, `links[]`). Order = display order. The first link is the project itself (live site or repo) and is what the card's image and title open; the homepage deliberately doesn't link projects to blog posts. `image: ""` gets a typographic cover.

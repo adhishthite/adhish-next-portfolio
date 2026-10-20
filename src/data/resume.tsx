@@ -12,7 +12,7 @@ export const DATA = {
   locationLink: "https://www.google.com/maps/place/pune",
   description: `Sr. Solutions Architect, AI at Google. ${YEARS_OF_EXPERIENCE}+ years across enterprise AI architecture, agentic AI, generative AI, and production ML.`,
   summary: `I help enterprises put Gemini and the rest of Google's AI stack into production. Most of my work starts where the demo ends: architecture, evaluation, latency and cost, the things that decide whether a model or a harness holds up in front of real customers. Before Google I led AI engineering at Elastic and spent four years building fraud, sign-up risk and identity-verification models at Synapse. I'm also one of OpenAI's Codex Ambassadors, testing pre-release models against real engineering work.`,
-  avatarUrl: "/me.jpg",
+  avatarUrl: "/portrait.jpg",
   /**
    * Headline areas of expertise, shown as the large blocks in the Expertise
    * section. `items` are the specific capabilities under each area.
