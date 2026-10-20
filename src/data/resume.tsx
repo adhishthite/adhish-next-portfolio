@@ -15,11 +15,13 @@ export const DATA = {
   avatarUrl: "/portrait.jpg",
   /**
    * Headline areas of expertise, shown as the large blocks in the Expertise
-   * section. `items` are the specific capabilities under each area.
+   * section. `items` are the specific capabilities under each area; `primary`
+   * areas get the "Primary focus" marker.
    */
   expertise: [
     {
       title: "Enterprise AI Architecture",
+      primary: true,
       summary:
         "Designing how AI fits into an enterprise: platforms, reference architectures, and the security, cost, and scale questions that decide whether a system ships.",
       items: [
@@ -35,17 +37,20 @@ export const DATA = {
     },
     {
       title: "Agentic AI",
+      primary: true,
       summary:
-        "Agents that plan, call tools, and remember, plus the orchestration, evaluation, and security around them.",
+        "Agents that plan, call tools, and remember, plus the harness, evaluation, and security around them.",
       items: [
+        "Harness engineering",
+        "Harness optimization",
+        "Agentic evaluations",
         "Multi-agent systems",
         "Tool use & function calling",
         "Model Context Protocol (MCP)",
         "Agent memory & context",
-        "LangGraph",
-        "Agent evaluation",
         "Agent observability",
         "Agent security",
+        "LangGraph",
       ],
     },
     {

@@ -18,7 +18,8 @@ const ICONS: Record<string, Icon> = {
 
 type Area = (typeof DATA.expertise)[number];
 
-function ExpertiseCard({ area, primary }: { area: Area; primary: boolean }) {
+function ExpertiseCard({ area }: { area: Area }) {
+  const primary = "primary" in area && area.primary;
   const Icon = ICONS[area.title] ?? Sparkle;
 
   return (
@@ -81,8 +82,8 @@ export function Expertise() {
       />
 
       <ul className="grid gap-4 md:grid-cols-2 lg:gap-5">
-        {DATA.expertise.map((area, index) => (
-          <ExpertiseCard key={area.title} area={area} primary={index === 0} />
+        {DATA.expertise.map((area) => (
+          <ExpertiseCard key={area.title} area={area} />
         ))}
       </ul>
 

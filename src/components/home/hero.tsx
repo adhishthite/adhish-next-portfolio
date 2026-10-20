@@ -16,7 +16,7 @@ const socials = [
 const facts = [
   { term: "Based in", value: DATA.location },
   { term: "Experience", value: `${YEARS_OF_EXPERIENCE}+ years` },
-  { term: "Focus", value: "Enterprise & agentic AI" },
+  { term: "Focus", value: "Enterprise & Agentic AI" },
 ];
 
 const rise = (ms: number) => ({ animationDelay: `${ms}ms` });
